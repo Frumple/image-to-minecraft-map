@@ -1,4 +1,11 @@
-window.onload = () => {
-  var textElement = document.getElementById('text') as HTMLSpanElement;
-  textElement.textContent = 'Hello World!';
+import ApplicationContainer from "@elements/autonomous/containers/application-container";
+
+async function init() {
+  await defineElements();
 }
+
+async function defineElements() {
+  await ApplicationContainer.define();
+}
+
+init();

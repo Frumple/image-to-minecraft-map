@@ -469,7 +469,7 @@
     "@parcel/utils" "2.7.0"
     posthtml "^0.16.4"
 
-"@parcel/plugin@2.7.0":
+"@parcel/plugin@2.7.0", "@parcel/plugin@^2.0.0":
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/@parcel/plugin/-/plugin-2.7.0.tgz#0211281025d02afbc5a23fba237b7aae02e34e51"
   integrity sha512-qqgx+nnMn6/0lRc4lKbLGmhNtBiT93S2gFNB4Eb4Pfz/SxVYoW+fmml+KdfOSiZffWOAH5L6NwhyD7N8aSikzw==
@@ -679,6 +679,22 @@
     posthtml-render "^3.0.0"
     semver "^5.7.1"
 
+"@parcel/transformer-typescript-tsc@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@parcel/transformer-typescript-tsc/-/transformer-typescript-tsc-2.7.0.tgz#fe8068da65ae77c0e38c0018d9c0f38f05a81e5c"
+  integrity sha512-s7poL/TQk+/zg09GKgxp7uErzzgJe+afuzgngqlOjsP0nXUAthQvtU+RwozOKSCNBh0/RwyD5gokp0SCQtIX+A==
+  dependencies:
+    "@parcel/plugin" "2.7.0"
+    "@parcel/source-map" "^2.0.0"
+    "@parcel/ts-utils" "2.7.0"
+
+"@parcel/ts-utils@2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@parcel/ts-utils/-/ts-utils-2.7.0.tgz#b5abe7eb5f977c238e11178bbf9a481481d60d1e"
+  integrity sha512-hxgWu9p9+zo9OvllYy12DRrAEyAGGLQysI6PyNvYvsZSmb7sQg9YQ7spD1QmWIQUC1H6BkyzQsowpK0hvPK1xg==
+  dependencies:
+    nullthrows "^1.1.1"
+
 "@parcel/types@2.7.0":
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/@parcel/types/-/types-2.7.0.tgz#c89e95964339324c1931ef7a17906a72291d6b73"
@@ -704,6 +720,17 @@
     "@parcel/markdown-ansi" "2.7.0"
     "@parcel/source-map" "^2.0.0"
     chalk "^4.1.0"
+
+"@parcel/validator-typescript@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@parcel/validator-typescript/-/validator-typescript-2.7.0.tgz#d00d7998acbc4fcc866f761f6a987ac69a928fd0"
+  integrity sha512-VZfFRbsCw0jaZVsVjbIFxa1ROVn7Yqq1zGDp30x/pPKC+vyWv0OkVybeCis7lO96Z/ojVB7hILzVi8nj+86JLA==
+  dependencies:
+    "@parcel/diagnostic" "2.7.0"
+    "@parcel/plugin" "2.7.0"
+    "@parcel/ts-utils" "2.7.0"
+    "@parcel/types" "2.7.0"
+    "@parcel/utils" "2.7.0"
 
 "@parcel/watcher@^2.0.0":
   version "2.0.5"
@@ -1591,6 +1618,11 @@ p-try@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
+
+parcel-resolver-tspaths@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/parcel-resolver-tspaths/-/parcel-resolver-tspaths-0.0.9.tgz#905578f0c3d8fe795f798452fcfbf211f021dbde"
+  integrity sha512-U+iYUT5BewncKijBFJqLMsU78SfGBEzfVZ0T9O4hw5dCedTsOJdXOmlsqBw9ipdCA55GpQFuSnIe1Xv3sF53Vg==
 
 parcel@^2.7.0:
   version "2.7.0"
