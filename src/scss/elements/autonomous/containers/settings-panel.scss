@@ -1,0 +1,17 @@
+@use 'variables';
+
+:host {
+  display: flex;
+}
+
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  background: #AAAAAA;
+  border: solid black 1px;
+  top: 0;
+  left: 0;
+  width: variables.$settings-panel-width;
+  padding: 5px;
+}

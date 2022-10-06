@@ -1,8 +1,10 @@
 import { fetchFromFile } from '@helpers/file-helpers';
 import { toKebabCase } from '@helpers/string-helpers';
 
-export default class CustomAutonomousElement extends HTMLElement {
+export default class AutonomousCustomElement extends HTMLElement {
   private static htmlContent = '';
+
+  private isInitialized = false;
 
   static get elementName(): string {
     throw new Error(`The class '${this.name}' must implement the elementName() getter.`);
@@ -10,7 +12,7 @@ export default class CustomAutonomousElement extends HTMLElement {
 
   static async define() {
     if (customElements.get(this.elementName) === undefined) {
-      CustomAutonomousElement.htmlContent = await fetchFromFile(this.htmlPath);
+      AutonomousCustomElement.htmlContent = await fetchFromFile(this.htmlPath);
       customElements.define(this.elementName, this);
     }
   }
@@ -23,11 +25,18 @@ export default class CustomAutonomousElement extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({mode: 'open'});
-    const fragment = document.createRange().createContextualFragment(CustomAutonomousElement.htmlContent);
+    const fragment = document.createRange().createContextualFragment(AutonomousCustomElement.htmlContent);
     this.shadowRoot?.appendChild(fragment.cloneNode(true));
   }
 
   connectedCallback() {
-    return;
+    if (this.isConnected && ! this.isInitialized) {
+      this.initialize();
+      this.isInitialized = true;
+    }
+  }
+
+  protected initialize() {
+    // Implemented by subclasses
   }
 }

@@ -1,0 +1,18 @@
+@use 'variables';
+
+:host {
+  display: flex;
+}
+
+.top-panel {
+  display: flex;
+  position: fixed;
+  background: #AAAAAA;
+  border: solid black 1px;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: variables.$top-panel-height;
+  padding: variables.$top-panel-padding;
+  z-index: 1;
+}

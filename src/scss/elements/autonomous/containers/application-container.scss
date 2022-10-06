@@ -1,0 +1,13 @@
+@use 'variables';
+
+.application-container {
+  display: flex;
+  min-height: 100%;
+}
+
+.application-container__main-panel {
+  display: flex;
+  padding-top: variables.$top-panel-height + (2 * variables.$top-panel-padding);
+  min-width: 100%;
+  min-height: 100%;
+}
