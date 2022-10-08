@@ -39,4 +39,12 @@ export default class AutonomousCustomElement extends HTMLElement {
   protected initialize() {
     // Implemented by subclasses
   }
+
+  protected getShadowElement(id: string): Element {
+    const element = this.shadowRoot?.getElementById(id) as Element;
+    if (element === null) {
+      throw new Error(`Could not find element with id '${id}'.`);
+    }
+    return element;
+  }
 }

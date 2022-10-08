@@ -6,13 +6,17 @@
 
 .top-panel {
   display: flex;
+  align-items: center;
   position: fixed;
-  background: #AAAAAA;
-  border: solid black 1px;
   top: 0;
   left: 0;
   width: 100vw;
   height: variables.$top-panel-height;
   padding: variables.$top-panel-padding;
   z-index: 1;
+}
+
+.top-panel__title {
+  font-weight: bold;
+  vertical-align: middle;
 }

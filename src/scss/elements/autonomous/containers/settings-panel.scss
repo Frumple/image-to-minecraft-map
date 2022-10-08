@@ -8,10 +8,76 @@
   display: flex;
   flex-direction: column;
   position: sticky;
-  background: #AAAAAA;
-  border: solid black 1px;
   top: 0;
   left: 0;
   width: variables.$settings-panel-width;
   padding: 5px;
+}
+
+.settings-panel__map-id-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  padding: 5px;
+}
+
+.settings-panel__map-id-label {
+  font-weight: bold;
+}
+
+.settings-panel__map-id-filename-container {
+  display: table-cell;
+  vertical-align: middle;
+  gap: 5px;
+}
+
+.settings-panel__map-id-filename {
+  font-family: 'Courier New';
+  font-weight: bold;
+}
+
+.settings-panel__map-id-input {
+  width: 6em;
+}
+
+.settings-panel__settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.settings-panel__settings-label {
+  font-weight: bold;
+  text-align: center;
+}
+
+.settings-panel__minecraft-settings-container {
+  display: grid;
+  grid-template:
+    [row1-start] "palette-label palette-select" auto [row1-end]
+    / 50% 50%;
+}
+
+.settings-panel__palette-label {
+  grid-area: palette-label;
+}
+
+.settings-panel__palette-select {
+  grid-area: palette-select;
+}
+
+.settings-panel__image-settings-container {
+  display: grid;
+  grid-template:
+    [row1-start] "dithering-label dithering-select" auto [row1-end]
+    / 50% 50%;
+}
+
+.settings-panelb__dithering-label {
+  grid-area: dithering-label;
+}
+
+.settings-panel__dithering-select {
+  grid-area: dithering-select;
 }

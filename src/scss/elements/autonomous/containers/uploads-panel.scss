@@ -6,7 +6,34 @@
 .uploads-panel {
   flex: 1 1 auto;
   display: flex;
-  background: #AAAAAA;
-  border: solid black 1px;
-  padding: 5px;
+}
+
+.uploads-panel__file-upload-drop-zone {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.uploads-panel__uploads {
+  display: flex;
+  flex-direction: column;
+}
+
+.uploads-panel__instructions {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  border: medium dashed #aaaaaa;
+  margin: 5px;
+}
+
+.uploads-panel__instructions-label {
+  font-size: x-large;
+}
+
+.uploads-panel__choose-file-button {
+  font-size: x-large;
 }
