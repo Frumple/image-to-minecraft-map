@@ -24,6 +24,7 @@ export default class AutonomousCustomElement extends HTMLElement {
 
   constructor() {
     super();
+
     this.attachShadow({mode: 'open'});
     const fragment = document.createRange().createContextualFragment(AutonomousCustomElement.htmlContent);
     this.shadowRoot?.appendChild(fragment.cloneNode(true));

@@ -13,10 +13,14 @@
   width: 100vw;
   height: variables.$top-panel-height;
   padding: variables.$top-panel-padding;
+  background: #121212;
+  color: white;
   z-index: 1;
 }
 
 .top-panel__title {
+  font-size: 2em;
   font-weight: bold;
   vertical-align: middle;
+  margin: 0;
 }

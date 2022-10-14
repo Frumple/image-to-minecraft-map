@@ -2,6 +2,8 @@ import ApplicationContainer from "@elements/autonomous/containers/application-co
 import TopPanel from "@elements/autonomous/containers/top-panel";
 import SettingsPanel from "@elements/autonomous/containers/settings-panel";
 import UploadsPanel from "@elements/autonomous/containers/uploads-panel";
+import UploadProgressPanel from "@elements/autonomous/containers/upload-progress-panel";
+
 
 async function init() {
   await defineElements();
@@ -12,6 +14,7 @@ async function defineElements() {
   await TopPanel.define();
   await SettingsPanel.define();
   await UploadsPanel.define();
+  await UploadProgressPanel.define();
 }
 
 init();

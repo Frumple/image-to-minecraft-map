@@ -7,6 +7,7 @@
 .settings-panel {
   display: flex;
   flex-direction: column;
+  gap: 5px;
   position: sticky;
   top: 0;
   left: 0;
@@ -23,6 +24,7 @@
 }
 
 .settings-panel__map-id-label {
+  font-size: 1.5em;
   font-weight: bold;
 }
 
@@ -41,15 +43,11 @@
   width: 6em;
 }
 
-.settings-panel__settings-container {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.settings-panel__settings-label {
+.settings-panel__settings-title {
+  font-size: 1.5em;
   font-weight: bold;
   text-align: center;
+  margin: 0;
 }
 
 .settings-panel__minecraft-settings-container {

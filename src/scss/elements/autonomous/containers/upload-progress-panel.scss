@@ -1,0 +1,21 @@
+.upload-progress-panel {
+  display: flex;
+  flex-direction: column;
+  border: solid black 1px;
+  padding: 5px;
+  margin: 5px;
+}
+
+.upload-progress-panel__title-panel {
+  display: flex;
+}
+
+.upload-progress-panel__filename-heading {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.upload-progress-panel__main-panel {
+  display: flex;
+}

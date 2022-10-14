@@ -1,12 +1,13 @@
 <link href="/src/scss/elements/autonomous/containers/uploads-panel.scss" rel="stylesheet" />
 
 <div class="uploads-panel">
+  <input id="file-input" class="uploads-panel__file-input" type="file" accept=".png,.jpg,.gif" multiple />
   <div id="file-upload-drop-zone" class="uploads-panel__file-upload-drop-zone">
-    <div id="uploads" class="uploads-panel__uploads"></div>
-    <div id="instructions" class="uploads-panel__instructions">
-      <label class="uploads-panel__instructions-label">Drag and drop an image file here (PNG / JPG / GIF)</label>
-      <label class="uploads-panel__instructions-label">OR</label>
-      <button id="choose-file-button" class="uploads-panel__choose-file-button">Choose File...</button>
+    <div id="uploads-container" class="uploads-panel__uploads-container"></div>
+    <div id="instructions-container" class="uploads-panel__instructions-container">
+      <span class="uploads-panel__instructions-text">Drag and drop image files here (PNG / JPG / GIF)</span>
+      <span class="uploads-panel__instructions-text">OR</span>
+      <button id="choose-files-button" class="uploads-panel__choose-file-button">Choose File(s)...</button>
     </div>
   </div>
 </div>

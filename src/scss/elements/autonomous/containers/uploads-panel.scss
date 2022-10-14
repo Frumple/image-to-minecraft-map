@@ -8,18 +8,26 @@
   display: flex;
 }
 
+.uploads-panel__file-input {
+  display: none;
+}
+
 .uploads-panel__file-upload-drop-zone {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
 }
 
-.uploads-panel__uploads {
+.uploads-panel__file-upload-drop-zone_drag-enter {
+  background: #90FF70;
+}
+
+.uploads-panel__uploads-container {
   display: flex;
   flex-direction: column;
 }
 
-.uploads-panel__instructions {
+.uploads-panel__instructions-container {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -30,7 +38,7 @@
   margin: 5px;
 }
 
-.uploads-panel__instructions-label {
+.uploads-panel__instructions-text {
   font-size: x-large;
 }
 
