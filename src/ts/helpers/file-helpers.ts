@@ -1,8 +1,8 @@
-export interface ImageFromFile {
+export interface UploadedImage {
   data: string;
   name: string;
-  size: number;
   type: string;
+  size: number;
 }
 
 export async function fetchFromFile(path: string): Promise<string> {
@@ -16,14 +16,14 @@ export async function convertFilesToImages(files: File[]) {
 }
 
 function readAsDataURLPromise(file: File) {
-  return new Promise<ImageFromFile>((resolve, reject) => {
+  return new Promise<UploadedImage>((resolve, reject) => {
     const fileReader = new FileReader();
     fileReader.addEventListener('load', () => {
       return resolve({
         data: fileReader.result as string,
         name: file.name,
-        size: file.size,
-        type: file.type
+        type: file.type,
+        size: file.size
       });
     });
     fileReader.readAsDataURL(file);

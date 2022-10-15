@@ -1,7 +1,8 @@
-import AutonomousCustomElement from "@elements/autonomous/autonomous-custom-element";
-import UploadProgressPanel from "@elements/autonomous/containers/upload-progress-panel";
+import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
+import UploadProgressPanel from '@elements/autonomous/containers/upload-progress-panel';
 
-import { convertFilesToImages } from "@helpers/file-helpers";
+import { convertFilesToImages } from '@helpers/file-helpers';
+import Upload from '@models/upload';
 
 const dragEnterClass = 'uploads-panel__file-upload-drop-zone_drag-enter';
 
@@ -83,8 +84,10 @@ export default class UploadsPanel extends AutonomousCustomElement {
     const images = await convertFilesToImages(files);
 
     for (const image of images) {
-      const uploadPanel = new UploadProgressPanel(image);
-      this.uploadsContainer.appendChild(uploadPanel);
+      const uploadProgressPanel = new UploadProgressPanel(image);
+      this.uploadsContainer.appendChild(uploadProgressPanel);
+
+      const upload = new Upload(image, uploadProgressPanel);
     }
   }
 }

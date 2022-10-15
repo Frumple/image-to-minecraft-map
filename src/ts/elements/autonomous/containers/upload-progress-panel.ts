@@ -1,31 +1,40 @@
-import AutonomousCustomElement from "@elements/autonomous/autonomous-custom-element";
-import { ImageFromFile } from "@helpers/file-helpers";
+import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
+import { UploadedImage } from '@helpers/file-helpers';
+import { drawScaledImageToCanvas } from '@helpers/image-helpers';
 
 export default class UploadProgressPanel extends AutonomousCustomElement {
   static get elementName() { return 'upload-progress-panel'; }
 
-  filenameHeading: HTMLHeadingElement;
+  sourceImageFilenameHeading: HTMLHeadingElement;
 
-  originalCanvas: HTMLCanvasElement;
-  originalCanvasContext: CanvasRenderingContext2D;
+  sourceCanvas: HTMLCanvasElement;
+  sourceCanvasContext: CanvasRenderingContext2D;
 
-  constructor(imageFromFile: ImageFromFile) {
+  constructor(uploadedImage: UploadedImage) {
     super();
 
-    this.filenameHeading = this.getShadowElement('filename-heading') as HTMLHeadingElement;
-    this.filenameHeading.textContent = imageFromFile.name;
+    this.sourceImageFilenameHeading = this.getShadowElement('source-image-filename-heading') as HTMLHeadingElement;
+    this.sourceCanvas = this.getShadowElement('source-canvas') as HTMLCanvasElement;
+    this.sourceCanvasContext = this.sourceCanvas.getContext('2d') as CanvasRenderingContext2D;
 
-    this.originalCanvas = this.getShadowElement('original-canvas') as HTMLCanvasElement;
-    this.originalCanvasContext = this.originalCanvas.getContext('2d') as CanvasRenderingContext2D;
+    this.sourceImageFilename = uploadedImage.name;
 
     const image = new Image();
     image.addEventListener('load', () => {
-      this.originalCanvasContext.drawImage(image, 0, 0);
+      drawScaledImageToCanvas(image, this.sourceCanvas, 'Fit');
     })
-    image.src = imageFromFile.data;
+    image.src = uploadedImage.data;
   }
 
   initialize() {
 
+  }
+
+  set sourceImageFilename(filename: string) {
+    this.sourceImageFilenameHeading.textContent = filename;
+  }
+
+  get sourceImageFilename(): string {
+    return this.sourceImageFilenameHeading.textContent as string;
   }
 }

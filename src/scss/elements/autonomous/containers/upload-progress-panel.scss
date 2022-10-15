@@ -10,12 +10,86 @@
   display: flex;
 }
 
-.upload-progress-panel__filename-heading {
+.upload-progress-panel__source-image-filename-heading {
   font-size: 1.17em;
   font-weight: bold;
   margin: 0;
 }
 
 .upload-progress-panel__main-panel {
-  display: flex;
+  display: grid;
+  grid-template:
+    "source-canvas      transformation-1      intermediate-canvas      transformation-2      final-canvas     " auto
+    "source-canvas-text transformation-text-1 intermediate-canvas-text transformation-text-2 final-canvas-text" auto
+    / auto auto auto auto auto;
+  gap: 5px;
+  justify-items: center;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.upload-progress-panel__canvas {
+  border: 1px solid black;
+}
+
+.upload-progress-panel__source-canvas {
+  @extend .upload-progress-panel__canvas;
+  grid-area: source-canvas;
+}
+
+.upload-progress-panel__intermediate_canvas {
+  @extend .upload-progress-panel__canvas;
+  grid-area: intermediate-canvas;
+}
+
+.upload-progress-panel__final_canvas {
+  @extend .upload-progress-panel__canvas;
+  grid-area: final-canvas;
+}
+
+.upload-progress-panel__transformation {
+  font-size: xx-large;
+}
+
+.upload-progress-panel__transformation-1 {
+  @extend .upload-progress-panel__transformation;
+  grid-area: transformation-1;
+}
+
+.upload-progress-panel__transformation-2 {
+  @extend .upload-progress-panel__transformation;
+  grid-area: transformation-2;
+}
+
+.upload-progress-panel__canvas-text {
+  font-weight: bold;
+}
+
+.upload-progress-panel__source-canvas-text {
+  @extend .upload-progress-panel__canvas-text;
+  grid-area: source-canvas-text;
+}
+
+.upload-progress-panel__intermediate-canvas-text {
+  @extend .upload-progress-panel__canvas-text;
+  grid-area: intermediate-canvas-text;
+}
+
+.upload-progress-panel__final-canvas-text {
+  @extend .upload-progress-panel__canvas-text;
+  grid-area: final-canvas-text;
+}
+
+.upload-progress-panel__transformation-text {
+  font-style: italic;
+}
+
+.upload-progress-panel__transformation-text-1 {
+  @extend .upload-progress-panel__transformation-text;
+  grid-area: transformation-text-1;
+}
+
+.upload-progress-panel__transformation-text-2 {
+  @extend .upload-progress-panel__transformation-text;
+  grid-area: transformation-text-2;
 }
