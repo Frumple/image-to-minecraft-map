@@ -1,4 +1,4 @@
-export interface UploadedImage {
+export interface UploadedFile {
   data: string;
   name: string;
   type: string;
@@ -9,14 +9,8 @@ export async function fetchFromFile(path: string): Promise<string> {
   return await fetch(path).then(stream => stream.text());
 }
 
-export async function convertFilesToImages(files: File[]) {
-  return Promise.all(
-    files.map(f => { return readAsDataURLPromise(f) })
-  );
-}
-
-function readAsDataURLPromise(file: File) {
-  return new Promise<UploadedImage>((resolve, reject) => {
+export async function readAsDataUrlAsync(file: File): Promise<UploadedFile> {
+  return new Promise<UploadedFile>((resolve, reject) => {
     const fileReader = new FileReader();
     fileReader.addEventListener('load', () => {
       return resolve({

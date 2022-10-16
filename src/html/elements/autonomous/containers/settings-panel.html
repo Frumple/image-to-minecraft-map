@@ -16,7 +16,7 @@
   <div class="settings-panel__minecraft-settings-container">
     <label class="settings-panel__palette-label" for="palette-select">Color Palette:</label>
     <select id="palette-select" class="settings-panel__palette-select">
-      <option>1.17+</option>
+      <option value="1.17">1.17+</option>
     </select>
   </div>
 
@@ -24,10 +24,16 @@
 
   <h2 class="settings-panel__settings-title">Image Settings</h2>
   <div class="settings-panel__image-settings-container">
-    <label class="settings-panelb__dithering-label" for="dithering-select">Dithering:</label>
+    <label class="settings-panel__scale-label" for="scale-select">Scaling:</label>
+    <select id="scale-select" class="settings-panel__scale-select">
+      <option value="fit">Fit to Map Size</option>
+      <option value="fill">Fill (Crop)</option>
+      <option value="stretch">Stretch</option>
+    </select>
+    <label class="settings-panel__dithering-label" for="dithering-select">Dithering:</label>
     <select id="dithering-select" class="settings-panel__dithering-select">
-      <option>None</option>
-      <option>Floyd-Steinberg</option>
+      <option value="none">None</option>
+      <option value="floyd-steinberg">Floyd-Steinberg</option>
     </select>
   </div>
 </div>

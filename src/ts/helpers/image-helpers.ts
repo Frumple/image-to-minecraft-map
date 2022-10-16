@@ -1,12 +1,33 @@
-export type ScaleType = 'Fit' | 'Fill' | 'Stretch';
+import { ScaleType } from '@models/settings';
 
-export function drawScaledImageToCanvas(image: HTMLImageElement, canvas: HTMLCanvasElement, scaleType: ScaleType) {
+export const MAP_SIZE = 128;
+
+export async function drawImageDataUrlToCanvas(
+  dataUrl: string,
+  canvas: HTMLCanvasElement | OffscreenCanvas,
+  scaleType: ScaleType) {
+
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.addEventListener('load', () => {
+      drawImageToCanvas(image, canvas, scaleType);
+      resolve(canvas);
+    });
+    image.src = dataUrl;
+  });
+}
+
+function drawImageToCanvas(
+  image: HTMLImageElement,
+  canvas: HTMLCanvasElement | OffscreenCanvas,
+  scaleType: ScaleType) {
+
   let x: number;
   let y: number;
   let width: number;
   let height: number;
 
-  if (scaleType === 'Stretch') {
+  if (scaleType === 'stretch') {
     x = 0;
     y = 0;
     width = canvas.width;
@@ -16,9 +37,9 @@ export function drawScaledImageToCanvas(image: HTMLImageElement, canvas: HTMLCan
     const heightScaleFactor = canvas.height / image.height;
 
     let scaleFactor: number;
-    if (scaleType === 'Fit') {
+    if (scaleType === 'fit') {
       scaleFactor = Math.min(widthScaleFactor, heightScaleFactor);
-    } else if (scaleType === 'Fill') {
+    } else if (scaleType === 'fill') {
       scaleFactor = Math.max(widthScaleFactor, heightScaleFactor);
     } else {
       throw new Error(`Unknown scale type: ${scaleType}`);

@@ -12,6 +12,7 @@
   top: 0;
   left: 0;
   width: variables.$settings-panel-width;
+  background: #eeeeee;
   padding: 5px;
 }
 
@@ -53,8 +54,9 @@
 .settings-panel__minecraft-settings-container {
   display: grid;
   grid-template:
-    [row1-start] "palette-label palette-select" auto [row1-end]
-    / 50% 50%;
+    "palette-label palette-select" auto
+    / 1fr 1fr;
+  gap: 5px;
 }
 
 .settings-panel__palette-label {
@@ -68,8 +70,18 @@
 .settings-panel__image-settings-container {
   display: grid;
   grid-template:
-    [row1-start] "dithering-label dithering-select" auto [row1-end]
-    / 50% 50%;
+    "scale-label     scale-select    " auto
+    "dithering-label dithering-select" auto
+    / 1fr 1fr;
+  gap: 5px;
+}
+
+.settings-panelb__scale-label {
+  grid-area: scale-label;
+}
+
+.settings-panel__scale-select {
+  grid-area: scale-select;
 }
 
 .settings-panelb__dithering-label {
