@@ -1,9 +1,10 @@
 import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
 import UploadProgressPanel from '@elements/autonomous/containers/upload-progress-panel';
 
-import { readAsDataUrlAsync } from '@helpers/file-helpers';
 import CurrentContext from '@models/current-context';
-import Upload from '@models/upload';
+import * as Settings from '@models/settings';
+
+import { UploadWorkerIncomingMessageParameters, UploadWorkerOutgoingMessageParameters } from '@workers/upload-worker';
 
 const dragEnterClass = 'uploads-panel__file-upload-drop-zone_drag-enter';
 
@@ -82,18 +83,35 @@ export default class UploadsPanel extends AutonomousCustomElement {
 
   async uploadFiles(fileList: FileList) {
     const files = Array.from(fileList);
+    const settings = CurrentContext.settings;
 
     for (const file of files) {
-      const image = await readAsDataUrlAsync(file);
-
-      const uploadProgressPanel = new UploadProgressPanel(image);
-      this.uploadsContainer.appendChild(uploadProgressPanel);
-      await uploadProgressPanel.drawSourceImage();
-
-      const settings = CurrentContext.settings.clone();
-      const upload = new Upload(settings, image, uploadProgressPanel);
-
-      upload.processImage();
+      await this.uploadFile(settings, file);
     }
+  }
+
+  async uploadFile(settings: Settings.Settings, file: File) {
+    // Create and show the UI panel
+    const uploadProgressPanel = new UploadProgressPanel(file.name);
+    this.uploadsContainer.appendChild(uploadProgressPanel);
+
+    // Setup a web worker to process the image in the background
+    const worker = new Worker(
+      new URL('/src/ts/workers/upload-worker.ts', import.meta.url),
+      {type: 'module'}
+    );
+
+    // Listen for messages from the worker to render images and update the UI panel
+    worker.addEventListener('message', (event: MessageEvent) => {
+      const parameters: UploadWorkerOutgoingMessageParameters = event.data;
+      uploadProgressPanel.renderCanvas(parameters.imageStep, parameters.bitmap);
+    });
+
+    // Send a message to the worker to start processing
+    const messageData: UploadWorkerIncomingMessageParameters = {
+      settings: settings,
+      file: file
+    };
+    worker.postMessage(messageData);
   }
 }

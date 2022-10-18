@@ -2,25 +2,13 @@ import { ScaleType } from '@models/settings';
 
 export const MAP_SIZE = 128;
 
-export async function drawImageDataUrlToCanvas(
-  dataUrl: string,
+export async function drawImageFileToCanvas(
+  file: File,
   canvas: HTMLCanvasElement | OffscreenCanvas,
   scaleType: ScaleType) {
 
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.addEventListener('load', () => {
-      drawImageToCanvas(image, canvas, scaleType);
-      resolve(canvas);
-    });
-    image.src = dataUrl;
-  });
-}
-
-function drawImageToCanvas(
-  image: HTMLImageElement,
-  canvas: HTMLCanvasElement | OffscreenCanvas,
-  scaleType: ScaleType) {
+  // TODO: Consider createImageBitmap options for image processing settings
+  const bitmap = await createImageBitmap(file);
 
   let x: number;
   let y: number;
@@ -33,8 +21,8 @@ function drawImageToCanvas(
     width = canvas.width;
     height = canvas.height;
   } else {
-    const widthScaleFactor = canvas.width / image.width;
-    const heightScaleFactor = canvas.height / image.height;
+    const widthScaleFactor = canvas.width / bitmap.width;
+    const heightScaleFactor = canvas.height / bitmap.height;
 
     let scaleFactor: number;
     if (scaleType === 'fit') {
@@ -45,12 +33,12 @@ function drawImageToCanvas(
       throw new Error(`Unknown scale type: ${scaleType}`);
     }
 
-    x = (canvas.width / 2) - (image.width / 2) * scaleFactor;
-    y = (canvas.height / 2) - (image.height / 2) * scaleFactor;
-    width = image.width * scaleFactor;
-    height = image.height * scaleFactor;
+    x = (canvas.width / 2) - (bitmap.width / 2) * scaleFactor;
+    y = (canvas.height / 2) - (bitmap.height / 2) * scaleFactor;
+    width = bitmap.width * scaleFactor;
+    height = bitmap.height * scaleFactor;
   }
 
   const context = canvas.getContext('2d');
-  context?.drawImage(image, x, y, width, height);
+  context?.drawImage(bitmap, x, y, width, height);
 }

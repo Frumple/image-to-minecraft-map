@@ -1,11 +1,8 @@
 import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
-import { UploadedFile } from '@helpers/file-helpers';
-import { drawImageDataUrlToCanvas } from '@helpers/image-helpers';
+import { ImageStep } from '@workers/upload-worker';
 
 export default class UploadProgressPanel extends AutonomousCustomElement {
   static get elementName() { return 'upload-progress-panel'; }
-
-  uploadedFile: UploadedFile;
 
   sourceImageFilenameHeading: HTMLHeadingElement;
 
@@ -13,10 +10,8 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
   intermediateCanvas: HTMLCanvasElement;
   finalCanvas: HTMLCanvasElement;
 
-  constructor(uploadedFile: UploadedFile) {
+  constructor(sourceImageFilename: string) {
     super();
-
-    this.uploadedFile = uploadedFile;
 
     this.sourceImageFilenameHeading = this.getShadowElement('source-image-filename-heading') as HTMLHeadingElement;
 
@@ -24,19 +19,11 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
     this.intermediateCanvas = this.getShadowElement('intermediate-canvas') as HTMLCanvasElement;
     this.finalCanvas = this.getShadowElement('final-canvas') as HTMLCanvasElement;
 
-    this.sourceImageFilename = uploadedFile.name;
+    this.sourceImageFilename = sourceImageFilename;
   }
 
   initialize() {
 
-  }
-
-  async drawSourceImage() {
-    await drawImageDataUrlToCanvas(
-      this.uploadedFile.data,
-      this.sourceCanvas,
-      'fit'
-    );
   }
 
   set sourceImageFilename(filename: string) {
@@ -45,5 +32,20 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
 
   get sourceImageFilename(): string {
     return this.sourceImageFilenameHeading.textContent as string;
+  }
+
+  renderCanvas(imageStep: ImageStep, bitmap: ImageBitmap) {
+    const canvas = this.getCanvas(imageStep);
+    const context = canvas.getContext('bitmaprenderer');
+    context?.transferFromImageBitmap(bitmap);
+  }
+
+  private getCanvas(imageStep: ImageStep) {
+    switch (imageStep) {
+      case 'source': return this.sourceCanvas;
+      case 'intermediate': return this.intermediateCanvas;
+      case 'final': return this.finalCanvas;
+      default: throw new Error(`Unknown image step: ${imageStep}`)
+    }
   }
 }
