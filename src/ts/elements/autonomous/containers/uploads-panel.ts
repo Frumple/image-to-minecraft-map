@@ -87,12 +87,23 @@ export default class UploadsPanel extends AutonomousCustomElement {
 
     for (const file of files) {
       await this.uploadFile(settings, file);
+      settings.mapId++;
     }
+
+    // Fire event so that the settings panel can update the next map id
+    const mapIdUpdatedEvent = new CustomEvent('mapIdUpdated', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        mapId: settings.mapId
+      }
+    });
+    this.dispatchEvent(mapIdUpdatedEvent);
   }
 
   async uploadFile(settings: Settings.Settings, file: File) {
     // Create and show the UI panel
-    const uploadProgressPanel = new UploadProgressPanel(file.name);
+    const uploadProgressPanel = new UploadProgressPanel(file.name, file.size, settings.mapId);
     this.uploadsContainer.appendChild(uploadProgressPanel);
 
     // Setup a web worker to process the image in the background
@@ -112,6 +123,7 @@ export default class UploadsPanel extends AutonomousCustomElement {
       settings: settings,
       file: file
     };
+    // TODO: Try to send the file data as a transferable array buffer and measure processing time and memory usage.
     worker.postMessage(messageData);
   }
 }

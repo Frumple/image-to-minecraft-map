@@ -8,9 +8,16 @@
 
 .upload-progress-panel__title-panel {
   display: flex;
+  justify-content: space-between;
 }
 
-.upload-progress-panel__source-image-filename-heading {
+.upload-progress-panel__image-filename-heading {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.upload-progress-panel__map-filename-heading {
   font-size: 1.17em;
   font-weight: bold;
   margin: 0;
@@ -19,9 +26,9 @@
 .upload-progress-panel__main-panel {
   display: grid;
   grid-template:
-    "source-canvas      transformation-1      intermediate-canvas      transformation-2      final-canvas     " auto
-    "source-canvas-text transformation-text-1 intermediate-canvas-text transformation-text-2 final-canvas-text" auto
-    / auto auto auto auto auto;
+    "source-canvas      transformation-1      intermediate-canvas      transformation-2      final-canvas      transformation-3      download-file" auto
+    "source-canvas-text transformation-text-1 intermediate-canvas-text transformation-text-2 final-canvas-text transformation-text-3 download-file-text" auto
+    / 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 5px;
   justify-items: center;
   align-items: center;
@@ -47,37 +54,54 @@
   grid-area: final-canvas;
 }
 
-.upload-progress-panel__transformation {
-  font-size: xx-large;
+.upload-progress-panel__material-symbol {
+  font-size: 128px;
+  width: 128px;
+  height: 128px;
+}
+
+.upload-progress-panel__download-file {
+  @extend .upload-progress-panel__material-symbol;
+  grid-area: download-file;
 }
 
 .upload-progress-panel__transformation-1 {
-  @extend .upload-progress-panel__transformation;
+  @extend .upload-progress-panel__material-symbol;
   grid-area: transformation-1;
 }
 
 .upload-progress-panel__transformation-2 {
-  @extend .upload-progress-panel__transformation;
+  @extend .upload-progress-panel__material-symbol;
   grid-area: transformation-2;
 }
 
-.upload-progress-panel__canvas-text {
+.upload-progress-panel__transformation-3 {
+  @extend .upload-progress-panel__material-symbol;
+  grid-area: transformation-3;
+}
+
+.upload-progress-panel__step-text {
   font-weight: bold;
 }
 
 .upload-progress-panel__source-canvas-text {
-  @extend .upload-progress-panel__canvas-text;
+  @extend .upload-progress-panel__step-text;
   grid-area: source-canvas-text;
 }
 
 .upload-progress-panel__intermediate-canvas-text {
-  @extend .upload-progress-panel__canvas-text;
+  @extend .upload-progress-panel__step-text;
   grid-area: intermediate-canvas-text;
 }
 
 .upload-progress-panel__final-canvas-text {
-  @extend .upload-progress-panel__canvas-text;
+  @extend .upload-progress-panel__step-text;
   grid-area: final-canvas-text;
+}
+
+.upload-progress-panel__download-file-text {
+  @extend .upload-progress-panel__step-text;
+  grid-area: download-file-text;
 }
 
 .upload-progress-panel__transformation-text {
@@ -92,4 +116,9 @@
 .upload-progress-panel__transformation-text-2 {
   @extend .upload-progress-panel__transformation-text;
   grid-area: transformation-text-2;
+}
+
+.upload-progress-panel__transformation-text-3 {
+  @extend .upload-progress-panel__transformation-text;
+  grid-area: transformation-text-3;
 }

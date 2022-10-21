@@ -1,37 +1,36 @@
 import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
+import { getFileSizeTextInReadableUnits } from '@helpers/file-helpers';
 import { ImageStep } from '@workers/upload-worker';
 
 export default class UploadProgressPanel extends AutonomousCustomElement {
   static get elementName() { return 'upload-progress-panel'; }
 
-  sourceImageFilenameHeading: HTMLHeadingElement;
+  imageFilenameHeading: HTMLHeadingElement;
+  mapFilenameHeading: HTMLHeadElement;
 
   sourceCanvas: HTMLCanvasElement;
   intermediateCanvas: HTMLCanvasElement;
   finalCanvas: HTMLCanvasElement;
 
-  constructor(sourceImageFilename: string) {
+  constructor(imageFilename: string, imageFileSizeInBytes: number, startingMapId: number) {
     super();
 
-    this.sourceImageFilenameHeading = this.getShadowElement('source-image-filename-heading') as HTMLHeadingElement;
+    this.imageFilenameHeading = this.getShadowElement('image-filename-heading') as HTMLHeadingElement;
+    this.mapFilenameHeading = this.getShadowElement('map-filename-heading') as HTMLHeadingElement;
 
     this.sourceCanvas = this.getShadowElement('source-canvas') as HTMLCanvasElement;
     this.intermediateCanvas = this.getShadowElement('intermediate-canvas') as HTMLCanvasElement;
     this.finalCanvas = this.getShadowElement('final-canvas') as HTMLCanvasElement;
 
-    this.sourceImageFilename = sourceImageFilename;
+    const fileSizeText = getFileSizeTextInReadableUnits(imageFileSizeInBytes);
+    this.imageFilenameHeading.textContent = `${imageFilename} (${fileSizeText})`;
+
+    // TODO: Multiple map files
+    this.mapFilenameHeading.textContent = `map_${startingMapId}.dat`;
   }
 
   initialize() {
 
-  }
-
-  set sourceImageFilename(filename: string) {
-    this.sourceImageFilenameHeading.textContent = filename;
-  }
-
-  get sourceImageFilename(): string {
-    return this.sourceImageFilenameHeading.textContent as string;
   }
 
   renderCanvas(imageStep: ImageStep, bitmap: ImageBitmap) {
