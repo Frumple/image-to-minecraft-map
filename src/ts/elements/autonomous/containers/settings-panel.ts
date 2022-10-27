@@ -4,6 +4,7 @@ import CurrentContext from '@models/current-context';
 import * as Settings from '@models/settings';
 
 import { convertToInteger } from '@helpers/number-helpers';
+import VersionLoader from '@loaders/version-loader';
 
 export default class SettingsPanel extends AutonomousCustomElement {
   static get elementName() { return 'settings-panel'; }
@@ -26,6 +27,19 @@ export default class SettingsPanel extends AutonomousCustomElement {
   }
 
   initialize() {
+    for (const version of VersionLoader.javaVersions.values()) {
+      // Only add "major" versions with the name attribute, snapshots without the name attribute are intentionally excluded
+      if (version.name !== null) {
+        const optionElement = new Option(version.name, version.id);
+        this.paletteSelect.add(optionElement);
+      }
+    }
+
+    // Select the last (latest) version by default
+    const lastOptionElement = this.paletteSelect.options[this.paletteSelect.options.length - 1];
+    lastOptionElement.selected = true;
+    lastOptionElement.defaultSelected = true;
+
     this.mapIdInput.addEventListener('input', this.onChangeSettings);
 
     this.paletteSelect.addEventListener('input', this.onChangeSettings);

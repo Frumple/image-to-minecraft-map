@@ -16,8 +16,4 @@ export class Settings {
   constructor() {
 
   }
-
-  clone() {
-    return structuredClone(this);
-  }
 }
