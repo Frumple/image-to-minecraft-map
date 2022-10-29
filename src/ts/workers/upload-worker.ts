@@ -114,11 +114,27 @@ class UploadWorker {
   }
 
   getNearestMapColorId(originalColor: Color, mapColors: Color[]) {
+    // Return the transparent map color if the original color doesn't meet the transparency threshold
+    if (originalColor.alpha < this.settings.transparency) {
+      return 0;
+    }
+
+    // Otherwise, search for the map color nearest to the original color
     let nearestDistance = Number.MAX_VALUE;
     let nearestMapColorId = 0;
+
     for (const [id, mapColor] of mapColors.entries()) {
+      // Don't include the transparency map colors in the search
+      if (mapColor.alpha === 0) {
+        continue;
+      }
       // TODO: Support different color difference algorithms
       const distance = originalColor.distance(mapColor, 'srgb');
+
+      // Return immediately if there is an exact match with a map color
+      if (distance === 0) {
+        return id;
+      }
 
       if (distance < nearestDistance) {
         nearestDistance = distance

@@ -15,6 +15,9 @@ export default class SettingsPanel extends AutonomousCustomElement {
   scaleSelect: HTMLSelectElement;
   ditheringSelect: HTMLSelectElement;
 
+  transparencyInputText: HTMLInputElement;
+  transparencyInputRange: HTMLInputElement;
+
   constructor() {
     super();
 
@@ -24,6 +27,9 @@ export default class SettingsPanel extends AutonomousCustomElement {
 
     this.scaleSelect = this.getShadowElement('scale-select') as HTMLSelectElement;
     this.ditheringSelect = this.getShadowElement('dithering-select') as HTMLSelectElement;
+
+    this.transparencyInputText = this.getShadowElement('transparency-input-text') as HTMLInputElement;
+    this.transparencyInputRange = this.getShadowElement('transparency-input-range') as HTMLInputElement;
   }
 
   initialize() {
@@ -46,15 +52,26 @@ export default class SettingsPanel extends AutonomousCustomElement {
 
     this.scaleSelect.addEventListener('input', this.onChangeSettings);
     this.ditheringSelect.addEventListener('input', this.onChangeSettings);
+
+    this.transparencyInputText.addEventListener('input', this.onChangeSettings);
+    this.transparencyInputRange.addEventListener('input', this.onChangeSettings);
   }
 
-  onChangeSettings = () => {
+  onChangeSettings = (event: Event) => {
     CurrentContext.settings.mapId = parseInt(this.mapIdInput.value);
 
     CurrentContext.settings.version = this.versionSelect.value;
 
     CurrentContext.settings.scale = this.scaleSelect.value as Settings.ScaleType;
     CurrentContext.settings.dithering = this.ditheringSelect.value as Settings.DitheringType;
+
+    if (event.target === this.transparencyInputText) {
+      this.transparencyInputRange.value = this.transparencyInputText.value;
+    } else if (event.target === this.transparencyInputRange) {
+      this.transparencyInputText.value = this.transparencyInputRange.value;
+    }
+
+    CurrentContext.settings.transparency = parseFloat(this.transparencyInputText.value);
   }
 
   set mapId(mapId: number) {

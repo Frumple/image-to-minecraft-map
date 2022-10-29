@@ -57,6 +57,7 @@
     "palette-label version-select" auto
     / 1fr 1fr;
   gap: 5px;
+  align-items: center;
 }
 
 .settings-panel__palette-label {
@@ -70,10 +71,13 @@
 .settings-panel__image-settings-container {
   display: grid;
   grid-template:
-    "scale-label     scale-select    " auto
-    "dithering-label dithering-select" auto
+    "scale-label              scale-select            " auto
+    "dithering-label          dithering-select        " auto
+    "transparency-label       transparency-input-text " auto
+    "transparency-input-range transparency-input-range" auto
     / 1fr 1fr;
   gap: 5px;
+  align-items: center;
 }
 
 .settings-panelb__scale-label {
@@ -90,4 +94,16 @@
 
 .settings-panel__dithering-select {
   grid-area: dithering-select;
+}
+
+.settings-panel__transparency-label {
+  grid-area: transparency-label;
+}
+
+.settings-panel__transparency-input-text {
+  grid-area: transparency-input-text;
+}
+
+.settings-panel__transparency-input-range {
+  grid-area: transparency-input-range;
 }

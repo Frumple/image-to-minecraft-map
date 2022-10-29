@@ -10,6 +10,7 @@ export class Settings {
   // Image Settings
   scale: ScaleType = 'fit';
   dithering: DitheringType = 'none';
+  transparency: number = 0.5;
 
   constructor() {
 

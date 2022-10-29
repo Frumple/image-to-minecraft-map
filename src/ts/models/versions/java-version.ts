@@ -1,6 +1,6 @@
 import { Version } from '@models/versions/version';
 
-import Color from 'colorjs.io/dist/color.js';
+import Color from 'colorjs.io';
 
 export class JavaVersion extends Version {
 
