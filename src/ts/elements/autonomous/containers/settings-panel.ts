@@ -11,7 +11,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
 
   mapIdInput: HTMLInputElement;
 
-  paletteSelect: HTMLSelectElement;
+  versionSelect: HTMLSelectElement;
   scaleSelect: HTMLSelectElement;
   ditheringSelect: HTMLSelectElement;
 
@@ -20,7 +20,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
 
     this.mapIdInput = this.getShadowElement('map-id-input') as HTMLInputElement;
 
-    this.paletteSelect = this.getShadowElement('palette-select') as HTMLSelectElement;
+    this.versionSelect = this.getShadowElement('version-select') as HTMLSelectElement;
 
     this.scaleSelect = this.getShadowElement('scale-select') as HTMLSelectElement;
     this.ditheringSelect = this.getShadowElement('dithering-select') as HTMLSelectElement;
@@ -31,18 +31,18 @@ export default class SettingsPanel extends AutonomousCustomElement {
       // Only add "major" versions with the name attribute, snapshots without the name attribute are intentionally excluded
       if (version.name !== null) {
         const optionElement = new Option(version.name, version.id);
-        this.paletteSelect.add(optionElement);
+        this.versionSelect.add(optionElement);
       }
     }
 
     // Select the last (latest) version by default
-    const lastOptionElement = this.paletteSelect.options[this.paletteSelect.options.length - 1];
+    const lastOptionElement = this.versionSelect.options[this.versionSelect.options.length - 1];
     lastOptionElement.selected = true;
     lastOptionElement.defaultSelected = true;
 
     this.mapIdInput.addEventListener('input', this.onChangeSettings);
 
-    this.paletteSelect.addEventListener('input', this.onChangeSettings);
+    this.versionSelect.addEventListener('input', this.onChangeSettings);
 
     this.scaleSelect.addEventListener('input', this.onChangeSettings);
     this.ditheringSelect.addEventListener('input', this.onChangeSettings);
@@ -51,7 +51,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
   onChangeSettings = () => {
     CurrentContext.settings.mapId = parseInt(this.mapIdInput.value);
 
-    CurrentContext.settings.colorPalette = this.paletteSelect.value as Settings.ColorPaletteType;
+    CurrentContext.settings.version = this.versionSelect.value;
 
     CurrentContext.settings.scale = this.scaleSelect.value as Settings.ScaleType;
     CurrentContext.settings.dithering = this.ditheringSelect.value as Settings.DitheringType;

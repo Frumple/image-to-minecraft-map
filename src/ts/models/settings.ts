@@ -1,5 +1,3 @@
-export type ColorPaletteType = '1.17';
-
 export type ScaleType = 'fit' | 'fill' | 'stretch';
 export type DitheringType = 'none' | 'floyd-steinberg';
 
@@ -7,11 +5,11 @@ export class Settings {
   mapId: number = 0;
 
   // Minecraft Settings
-  colorPalette: ColorPaletteType = "1.17";
+  version: string = '21w16a';
 
   // Image Settings
-  scale: ScaleType = "fit";
-  dithering: DitheringType = "none";
+  scale: ScaleType = 'fit';
+  dithering: DitheringType = 'none';
 
   constructor() {
 

@@ -25,7 +25,7 @@ class VersionLoader {
           // TODO: Replace this with Color.clone()
           const mapColor = new Color(baseColor.space, baseColor.coords, baseColor.alpha);
           for (let i = 0; i <= 2; i++) {
-            mapColor.srgb[i] = Math.floor(mapColor.srgb[i] * (multiplier / 255));
+            mapColor.srgb[i] = Math.floor(mapColor.srgb[i] * multiplier) / 255;
           }
           accumulatedMapColors.push(mapColor);
         }
