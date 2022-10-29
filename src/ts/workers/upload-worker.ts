@@ -3,7 +3,7 @@ import VersionLoader from '@loaders/version-loader';
 import * as Settings from '@models/settings';
 import { JavaVersion } from '@models/versions/java-version';
 
-import Color from 'colorjs.io/dist/color.js';
+import Color from 'colorjs.io';
 
 export type ImageStep = 'source' | 'intermediate' | 'final'
 

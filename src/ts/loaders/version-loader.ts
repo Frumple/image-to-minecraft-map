@@ -1,7 +1,7 @@
 import { JavaVersion } from '@models/versions/java-version';
 import versionsJson from '@json/versions.json';
 
-import Color from 'colorjs.io/dist/color.js';
+import Color from 'colorjs.io';
 
 class VersionLoader {
 
