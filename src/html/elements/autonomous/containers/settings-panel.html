@@ -36,6 +36,15 @@
       <option value="floyd-steinberg">Floyd-Steinberg</option>
     </select>
 
+    <label class="settings-panel__color-difference-label" for="color-difference-select">Color Difference:</label>
+    <select id="color-difference-select" class="settings-panel__color-difference-select">
+      <option value="euclidean">Euclidean</option>
+      <option value="metric" selected>Color Metric</option>
+      <option value="deltae-1976">DeltaE 1976</option>
+      <option value="cmc-1984">CMC 1984</option>
+      <option value="deltae-2000">DeltaE 2000</option>
+    </select>
+
     <label class="settings-panel__transparency-label" for="transparency-input">Transparency:</label>
     <input id="transparency-input-text" class="settings-panel__transparency-input-text" type="number" value="0.5" min="0" max="1" step="0.01" />
     <input id="transparency-input-range" class="settings-panel__transparency-input-range" type="range" value="0.5" min="0" max="1" step="0.01" />

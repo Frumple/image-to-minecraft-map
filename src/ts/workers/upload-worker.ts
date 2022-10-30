@@ -1,4 +1,5 @@
 import { MAP_SIZE, drawImageFileToCanvas } from '@helpers/image-helpers';
+import { calculateColorDifference } from '@helpers/color-difference-helpers';
 import VersionLoader from '@loaders/version-loader';
 import * as Settings from '@models/settings';
 import { JavaVersion } from '@models/versions/java-version';
@@ -128,8 +129,8 @@ class UploadWorker {
       if (mapColor.alpha === 0) {
         continue;
       }
-      // TODO: Support different color difference algorithms
-      const distance = originalColor.distance(mapColor, 'srgb');
+
+      const distance = calculateColorDifference(originalColor, mapColor, this.settings.colorDifference);
 
       // Return immediately if there is an exact match with a map color
       if (distance === 0) {

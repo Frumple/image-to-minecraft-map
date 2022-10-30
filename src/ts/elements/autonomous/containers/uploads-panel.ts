@@ -49,6 +49,9 @@ export default class UploadsPanel extends AutonomousCustomElement {
       throw new Error('No file selected.');
     }
     this.uploadFiles(files);
+
+    // Be sure to clear the file input so that the same file(s) can be uploaded again
+    this.fileInput.value = '';
   }
 
   onFileDragEnter = () => {

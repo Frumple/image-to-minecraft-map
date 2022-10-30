@@ -73,6 +73,7 @@
   grid-template:
     "scale-label              scale-select            " auto
     "dithering-label          dithering-select        " auto
+    "color-difference-label   color-difference-select " auto
     "transparency-label       transparency-input-text " auto
     "transparency-input-range transparency-input-range" auto
     / 1fr 1fr;
@@ -94,6 +95,14 @@
 
 .settings-panel__dithering-select {
   grid-area: dithering-select;
+}
+
+.settings-panel__color-difference-label {
+  grid-area: color-difference-label;
+}
+
+.settings-panel__color-difference-select {
+  grid-area: color-difference-select;
 }
 
 .settings-panel__transparency-label {
