@@ -12,6 +12,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
   mapIdInput: HTMLInputElement;
 
   versionSelect: HTMLSelectElement;
+  autoDownloadInput: HTMLInputElement;
 
   scaleSelect: HTMLSelectElement;
   ditheringSelect: HTMLSelectElement;
@@ -25,6 +26,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.mapIdInput = this.getShadowElement('map-id-input') as HTMLInputElement;
 
     this.versionSelect = this.getShadowElement('version-select') as HTMLSelectElement;
+    this.autoDownloadInput = this.getShadowElement('auto-download-input') as HTMLInputElement;
 
     this.scaleSelect = this.getShadowElement('scale-select') as HTMLSelectElement;
     this.ditheringSelect = this.getShadowElement('dithering-select') as HTMLSelectElement;
@@ -50,6 +52,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.mapIdInput.addEventListener('input', this.onChangeSettings);
 
     this.versionSelect.addEventListener('input', this.onChangeSettings);
+    this.autoDownloadInput.addEventListener('input', this.onChangeSettings);
 
     this.scaleSelect.addEventListener('input', this.onChangeSettings);
     this.ditheringSelect.addEventListener('input', this.onChangeSettings);
@@ -62,6 +65,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
     CurrentContext.settings.mapId = parseInt(this.mapIdInput.value);
 
     CurrentContext.settings.version = this.versionSelect.value;
+    CurrentContext.settings.autoDownload = this.autoDownloadInput.checked;
 
     CurrentContext.settings.scale = this.scaleSelect.value as Settings.ScaleType;
     CurrentContext.settings.dithering = this.ditheringSelect.value as Settings.DitheringType;

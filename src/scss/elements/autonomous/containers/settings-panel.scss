@@ -51,21 +51,30 @@
   margin: 0;
 }
 
-.settings-panel__minecraft-settings-container {
+.settings-panel__general-settings-container {
   display: grid;
   grid-template:
-    "palette-label version-select" auto
+    "version-label       version-select     " auto
+    "auto-download-label auto-download-input" auto
     / 1fr 1fr;
   gap: 5px;
   align-items: center;
 }
 
-.settings-panel__palette-label {
-  grid-area: palette-label;
+.settings-panel__version-label {
+  grid-area: version-label;
 }
 
 .settings-panel__version-select {
   grid-area: version-select;
+}
+
+.settings-panel__auto-download-label {
+  grid-area: auto-download-label;
+}
+
+.settings-panel__auto-download-input {
+  grid-area: auto-download-input;
 }
 
 .settings-panel__image-settings-container {

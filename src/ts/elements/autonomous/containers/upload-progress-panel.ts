@@ -18,8 +18,9 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
   downloadFileTextLink: HTMLAnchorElement;
 
   startingMapId: number;
+  autoDownload: boolean;
 
-  constructor(imageFilename: string, imageFileSizeInBytes: number, startingMapId: number) {
+  constructor(imageFilename: string, imageFileSizeInBytes: number, startingMapId: number, autoDownload: boolean) {
     super();
 
     this.imageFilenameHeading = this.getShadowElement('image-filename-heading') as HTMLHeadingElement;
@@ -39,6 +40,7 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
     this.mapFilenameHeading.textContent = getMapFilename(startingMapId);
 
     this.startingMapId = startingMapId;
+    this.autoDownload = autoDownload;
   }
 
   initialize() {
@@ -55,6 +57,10 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
 
      this.downloadFileTextLink.href = url;
      this.downloadFileTextLink.download = mapFilename;
+
+     if (this.autoDownload) {
+      this.downloadFileTextLink.click();
+     }
   }
 
   renderCanvas(uploadStep: UploadStep, bitmap: ImageBitmap) {

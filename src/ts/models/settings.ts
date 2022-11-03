@@ -5,8 +5,9 @@ export type ColorDifferenceType = 'euclidean' | 'metric' |  'deltae-1976' | 'cmc
 export class Settings {
   mapId: number = 0;
 
-  // Minecraft Settings
+  // General Settings
   version: string = '21w16a';
+  autoDownload: boolean = true;
 
   // Image Settings
   scale: ScaleType = 'fit';
