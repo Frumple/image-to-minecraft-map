@@ -1,12 +1,13 @@
 import { MAP_SIZE, drawImageFileToCanvas } from '@helpers/image-helpers';
 import { calculateColorDifference } from '@helpers/color-difference-helpers';
+import { encodeNbtMap } from '@helpers/nbt-helpers';
 import VersionLoader from '@loaders/version-loader';
 import * as Settings from '@models/settings';
 import { JavaVersion } from '@models/versions/java-version';
 
 import Color from 'colorjs.io';
 
-export type ImageStep = 'source' | 'intermediate' | 'final'
+export type UploadStep = 'source' | 'intermediate' | 'final' | 'download'
 
 export interface UploadWorkerIncomingMessageParameters {
   settings: Settings.Settings;
@@ -14,8 +15,8 @@ export interface UploadWorkerIncomingMessageParameters {
 }
 
 export interface UploadWorkerOutgoingMessageParameters {
-  imageStep: ImageStep,
-  bitmap: ImageBitmap
+  step: UploadStep,
+  data: ImageBitmap | ArrayBuffer
 }
 
 class UploadWorker {
@@ -24,11 +25,7 @@ class UploadWorker {
 
   version!: JavaVersion;
 
-  workCanvas: OffscreenCanvas;
-
   constructor() {
-    this.workCanvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);
-
     self.addEventListener('message', this.onMessageReceived);
   }
 
@@ -48,8 +45,10 @@ class UploadWorker {
 
   async run() {
     await this.drawSourceImage();
-    await this.processImage();
-    await this.reduceColors();
+    const workCanvas = await this.processImage();
+    const nbtColorArray = await this.reduceColors(workCanvas);
+    const nbtMapFileData = this.createNbtMapFileData(nbtColorArray);
+    this.sendMapFileDataToMainThread(nbtMapFileData);
   }
 
   async drawSourceImage() {
@@ -59,59 +58,84 @@ class UploadWorker {
       canvas,
       'fit');
 
-    this.sendBitmapToMainThread(canvas, 'source');
+    this.sendCanvasBitmapToMainThread(canvas, 'source');
   }
 
   async processImage() {
+    const workCanvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);
+
     // Draw scaled image to the work canvas for use in future "Reduce Colors" step
     await drawImageFileToCanvas(
       this.file,
-      this.workCanvas,
+      workCanvas,
       this.settings.scale);
 
     // Copy work canvas to temporary canvas
     const canvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);
     const context = canvas.getContext('2d');
-    context?.drawImage(this.workCanvas, 0, 0);
+    context?.drawImage(workCanvas, 0, 0);
 
-    this.sendBitmapToMainThread(canvas, 'intermediate');
+    this.sendCanvasBitmapToMainThread(canvas, 'intermediate');
+
+    return workCanvas;
   }
 
-  async reduceColors() {
-    const context = this.workCanvas.getContext('2d');
-    const imageData = context?.getImageData(0, 0, this.workCanvas.width, this.workCanvas.height);
-    const pixelData = imageData?.data;
+  async reduceColors(workCanvas: OffscreenCanvas) {
+    const context = workCanvas.getContext('2d');
+    const imageData = context?.getImageData(0, 0, workCanvas.width, workCanvas.height);
+    const imageDataArray = imageData?.data;
 
-    if (!pixelData) {
-      throw new Error('Pixel data is undefined.');
+    const nbtColorArray = new Uint8ClampedArray(MAP_SIZE * MAP_SIZE); // 16384 entries
+
+    if (!imageDataArray) {
+      throw new Error('Image data array is undefined.');
     }
 
     const mapColors = this.version.mapColors;
 
-    for (let index = 0; index < pixelData.length; index += 4) {
-      this.reducePixelColor(mapColors, pixelData, index);
+    for (let index = 0; index < imageDataArray.length / 4; index++) {
+      this.reducePixelColor(mapColors, imageDataArray, nbtColorArray, index);
     }
 
     context?.putImageData(imageData, 0, 0);
 
-    this.sendBitmapToMainThread(this.workCanvas, 'final');
+    this.sendCanvasBitmapToMainThread(workCanvas, 'final');
+
+    return nbtColorArray;
   }
 
-  reducePixelColor(mapColors: Color[], pixelData: Uint8ClampedArray, index: number) {
-    const r = pixelData[index] / 255;
-    const g = pixelData[index + 1] / 255;
-    const b = pixelData[index + 2] / 255;
-    const a = pixelData[index + 3] / 255;
+  createNbtMapFileData(unsignedNbtColorArray: Uint8ClampedArray) {
+    // Change the "view" of the color array from Uint8 to Int8 so that it can be written as an NBT byte array
+    // i.e. Values 0 to 127 remain the same
+    //      Values 128 to 255 wraparound to -128 to -1.
+    const signedNbtColorArray = new Int8Array(unsignedNbtColorArray.buffer);
+
+    return encodeNbtMap(signedNbtColorArray);
+  }
+
+  reducePixelColor(
+    mapColors: Color[],
+    imageDataArray: Uint8ClampedArray,
+    nbtColorArray: Uint8ClampedArray,
+    index: number) {
+
+    const imageDataArrayIndex = index * 4;
+    const r = imageDataArray[imageDataArrayIndex] / 255;
+    const g = imageDataArray[imageDataArrayIndex + 1] / 255;
+    const b = imageDataArray[imageDataArrayIndex + 2] / 255;
+    const a = imageDataArray[imageDataArrayIndex + 3] / 255;
 
     const originalColor = new Color('srgb', [r, g, b], a);
 
     const nearestMapColorId = this.getNearestMapColorId(originalColor, mapColors);
 
+    nbtColorArray[index] = nearestMapColorId;
+
     const closestMapColor = mapColors[nearestMapColorId];
-    pixelData[index] = closestMapColor.srgb.r * 255;
-    pixelData[index + 1] = closestMapColor.srgb.g * 255;
-    pixelData[index + 2] = closestMapColor.srgb.b * 255;
-    pixelData[index + 3] = closestMapColor.alpha * 255;
+    imageDataArray[imageDataArrayIndex] = closestMapColor.srgb.r * 255;
+    imageDataArray[imageDataArrayIndex + 1] = closestMapColor.srgb.g * 255;
+    imageDataArray[imageDataArrayIndex + 2] = closestMapColor.srgb.b * 255;
+    imageDataArray[imageDataArrayIndex + 3] = closestMapColor.alpha * 255;
   }
 
   getNearestMapColorId(originalColor: Color, mapColors: Color[]) {
@@ -126,6 +150,7 @@ class UploadWorker {
 
     for (const [id, mapColor] of mapColors.entries()) {
       // Don't include the transparency map colors in the search
+      // TODO: Does removing this check and just iterating a subset of opaque map colors save time?
       if (mapColor.alpha === 0) {
         continue;
       }
@@ -146,13 +171,22 @@ class UploadWorker {
     return nearestMapColorId;
   }
 
-  sendBitmapToMainThread(canvas: OffscreenCanvas, imageStep: ImageStep) {
+  sendCanvasBitmapToMainThread(canvas: OffscreenCanvas, uploadStep: UploadStep) {
     const bitmap = canvas.transferToImageBitmap();
     const messageData: UploadWorkerOutgoingMessageParameters = {
-      imageStep: imageStep,
-      bitmap: bitmap
+      step: uploadStep,
+      data: bitmap
     };
     postMessage(messageData, [bitmap]);
+  }
+
+  sendMapFileDataToMainThread(data: Uint8Array) {
+    const buffer = data.buffer;
+    const messageData: UploadWorkerOutgoingMessageParameters = {
+      step: 'download',
+      data: buffer
+    };
+    postMessage(messageData, [buffer]);
   }
 }
 

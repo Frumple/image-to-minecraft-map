@@ -1,5 +1,6 @@
 import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
 import UploadProgressPanel from '@elements/autonomous/containers/upload-progress-panel';
+import { downloadDataAsFile } from '@helpers/file-helpers';
 
 import CurrentContext from '@models/current-context';
 import * as Settings from '@models/settings';
@@ -105,8 +106,10 @@ export default class UploadsPanel extends AutonomousCustomElement {
   }
 
   async uploadFile(settings: Settings.Settings, file: File) {
+    const mapId = settings.mapId;
+
     // Create and show the UI panel
-    const uploadProgressPanel = new UploadProgressPanel(file.name, file.size, settings.mapId);
+    const uploadProgressPanel = new UploadProgressPanel(file.name, file.size, mapId);
     this.uploadsContainer.appendChild(uploadProgressPanel);
 
     // Setup a web worker to process the image in the background
@@ -118,7 +121,13 @@ export default class UploadsPanel extends AutonomousCustomElement {
     // Listen for messages from the worker to render images and update the UI panel
     worker.addEventListener('message', (event: MessageEvent) => {
       const parameters: UploadWorkerOutgoingMessageParameters = event.data;
-      uploadProgressPanel.renderCanvas(parameters.imageStep, parameters.bitmap);
+
+      if (parameters.step === 'download') {
+        // TODO: Create a stable download link in the upload progress panel and make it a settings option to download the file automatically or not
+        downloadDataAsFile(parameters.data, 'application/octet-stream', `map_${mapId}.dat`);
+      } else {
+        uploadProgressPanel.renderCanvas(parameters.step, parameters.data as ImageBitmap);
+      }
     });
 
     // Send a message to the worker to start processing

@@ -1,6 +1,6 @@
 import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
 import { getFileSizeTextInReadableUnits } from '@helpers/file-helpers';
-import { ImageStep } from '@workers/upload-worker';
+import { UploadStep } from '@workers/upload-worker';
 
 export default class UploadProgressPanel extends AutonomousCustomElement {
   static get elementName() { return 'upload-progress-panel'; }
@@ -33,18 +33,18 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
 
   }
 
-  renderCanvas(imageStep: ImageStep, bitmap: ImageBitmap) {
-    const canvas = this.getCanvas(imageStep);
+  renderCanvas(uploadStep: UploadStep, bitmap: ImageBitmap) {
+    const canvas = this.getCanvas(uploadStep);
     const context = canvas.getContext('bitmaprenderer');
     context?.transferFromImageBitmap(bitmap);
   }
 
-  private getCanvas(imageStep: ImageStep) {
-    switch (imageStep) {
+  private getCanvas(uploadStep: UploadStep) {
+    switch (uploadStep) {
       case 'source': return this.sourceCanvas;
       case 'intermediate': return this.intermediateCanvas;
       case 'final': return this.finalCanvas;
-      default: throw new Error(`Unknown image step: ${imageStep}`)
+      default: throw new Error(`Unknown upload step: ${uploadStep}`)
     }
   }
 }

@@ -2,6 +2,14 @@ export async function fetchFromFile(path: string): Promise<string> {
   return await fetch(path).then(stream => stream.text());
 }
 
+export function downloadDataAsFile(data: any, contentType: string, fileName: string) {
+  const blob = new Blob([data], { type: contentType });
+  const link = document.createElement('a');
+  link.download = fileName;
+  link.href = URL.createObjectURL(blob);
+  link.click();
+}
+
 export function getFileSizeTextInReadableUnits(sizeInBytes: number): string {
    if (sizeInBytes < 1024) {
      return `${sizeInBytes} bytes`;
