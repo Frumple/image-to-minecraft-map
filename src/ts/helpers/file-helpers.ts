@@ -1,3 +1,5 @@
+import pako from 'pako';
+
 export async function fetchFromFile(path: string): Promise<string> {
   return await fetch(path).then(stream => stream.text());
 }
@@ -8,6 +10,16 @@ export function downloadDataAsFile(data: any, contentType: string, fileName: str
   link.download = fileName;
   link.href = URL.createObjectURL(blob);
   link.click();
+}
+
+export function gzipData(data: Uint8Array) {
+  // TODO: Replace pako with the Compressed Streams API when it becomes more widely supported (and is just asz performant)
+
+  // At the time of this writing, the Compressed Streams API is supported by Chrome, but not Firefox or Safari.
+  // Firefox: Currently in the "worth prototyping" stage (https://github.com/mozilla/standards-positions/issues/207)
+  // Safari: Implemented in Safari Technology Preview 152 (https://webkit.org/blog/13137/release-notes-for-safari-technology-preview-152)
+
+  return pako.gzip(data);
 }
 
 export function getFileSizeTextInReadableUnits(sizeInBytes: number): string {

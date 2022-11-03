@@ -1,7 +1,10 @@
-import { MAP_SIZE, drawImageFileToCanvas } from '@helpers/image-helpers';
 import { calculateColorDifference } from '@helpers/color-difference-helpers';
+import { gzipData } from '@helpers/file-helpers';
+import { MAP_SIZE, drawImageFileToCanvas } from '@helpers/image-helpers';
 import { encodeNbtMap } from '@helpers/nbt-helpers';
+
 import VersionLoader from '@loaders/version-loader';
+
 import * as Settings from '@models/settings';
 import { JavaVersion } from '@models/versions/java-version';
 
@@ -109,8 +112,10 @@ class UploadWorker {
     // i.e. Values 0 to 127 remain the same
     //      Values 128 to 255 wraparound to -128 to -1.
     const signedNbtColorArray = new Int8Array(unsignedNbtColorArray.buffer);
+    const encodedArray = encodeNbtMap(signedNbtColorArray);
+    const gzippedArray = gzipData(encodedArray);
 
-    return encodeNbtMap(signedNbtColorArray);
+    return gzippedArray;
   }
 
   reducePixelColor(
