@@ -1,6 +1,7 @@
 import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
 import UploadProgressPanel from '@elements/autonomous/containers/upload-progress-panel';
-import { downloadDataAsFile } from '@helpers/file-helpers';
+
+import { createDownloadUrlFromData } from '@helpers/file-helpers';
 
 import CurrentContext from '@models/current-context';
 import * as Settings from '@models/settings';
@@ -123,8 +124,8 @@ export default class UploadsPanel extends AutonomousCustomElement {
       const parameters: UploadWorkerOutgoingMessageParameters = event.data;
 
       if (parameters.step === 'download') {
-        // TODO: Create a stable download link in the upload progress panel and make it a settings option to download the file automatically or not
-        downloadDataAsFile(parameters.data, 'application/octet-stream', `map_${mapId}.dat`);
+        const downloadUrl = createDownloadUrlFromData(parameters.data, 'application/octet-stream');
+        uploadProgressPanel.downloadUrl = downloadUrl;
       } else {
         uploadProgressPanel.renderCanvas(parameters.step, parameters.data as ImageBitmap);
       }

@@ -4,11 +4,15 @@ export async function fetchFromFile(path: string): Promise<string> {
   return await fetch(path).then(stream => stream.text());
 }
 
-export function downloadDataAsFile(data: any, contentType: string, fileName: string) {
+export function createDownloadUrlFromData(data: any, contentType: string) {
   const blob = new Blob([data], { type: contentType });
+  return URL.createObjectURL(blob);
+}
+
+export function downloadDataAsFile(data: any, contentType: string, fileName: string) {
   const link = document.createElement('a');
+  link.href = createDownloadUrlFromData(data, contentType);
   link.download = fileName;
-  link.href = URL.createObjectURL(blob);
   link.click();
 }
 
@@ -32,6 +36,10 @@ export function getFileSizeTextInReadableUnits(sizeInBytes: number): string {
     const sizeInMegabytes = roundToTwoDecimals(sizeInBytes / 1048576);
     return `${sizeInMegabytes} MB`
    }
+}
+
+export function getMapFilename(mapId: number) {
+  return `map_${mapId}.dat`;
 }
 
 // TODO: Move this to a number helpers module

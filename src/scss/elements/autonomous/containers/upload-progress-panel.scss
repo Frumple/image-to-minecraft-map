@@ -68,6 +68,11 @@
   grid-area: download-file;
 }
 
+.upload-progress-panel__download-file-link {
+  color: black;
+  text-decoration: none;
+}
+
 .upload-progress-panel__transformation-1 {
   @extend .upload-progress-panel__material-symbol;
   grid-area: transformation-1;

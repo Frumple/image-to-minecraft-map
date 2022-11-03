@@ -1,5 +1,7 @@
 import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
-import { getFileSizeTextInReadableUnits } from '@helpers/file-helpers';
+
+import { getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
+
 import { UploadStep } from '@workers/upload-worker';
 
 export default class UploadProgressPanel extends AutonomousCustomElement {
@@ -12,6 +14,11 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
   intermediateCanvas: HTMLCanvasElement;
   finalCanvas: HTMLCanvasElement;
 
+  downloadFileLink: HTMLAnchorElement;
+  downloadFileTextLink: HTMLAnchorElement;
+
+  startingMapId: number;
+
   constructor(imageFilename: string, imageFileSizeInBytes: number, startingMapId: number) {
     super();
 
@@ -22,15 +29,32 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
     this.intermediateCanvas = this.getShadowElement('intermediate-canvas') as HTMLCanvasElement;
     this.finalCanvas = this.getShadowElement('final-canvas') as HTMLCanvasElement;
 
+    this.downloadFileLink = this.getShadowElement('download-file-link') as HTMLAnchorElement;
+    this.downloadFileTextLink = this.getShadowElement('download-file-text-link') as HTMLAnchorElement;
+
     const fileSizeText = getFileSizeTextInReadableUnits(imageFileSizeInBytes);
     this.imageFilenameHeading.textContent = `${imageFilename} (${fileSizeText})`;
 
     // TODO: Multiple map files
-    this.mapFilenameHeading.textContent = `map_${startingMapId}.dat`;
+    this.mapFilenameHeading.textContent = getMapFilename(startingMapId);
+
+    this.startingMapId = startingMapId;
   }
 
   initialize() {
 
+  }
+
+  set downloadUrl(url: string) {
+     const mapFilename = getMapFilename(this.startingMapId);
+
+     this.downloadFileLink.href = url;
+     this.downloadFileLink.download = mapFilename;
+     this.downloadFileLink.textContent = 'task';
+     this.downloadFileLink.style.color = 'black';
+
+     this.downloadFileTextLink.href = url;
+     this.downloadFileTextLink.download = mapFilename;
   }
 
   renderCanvas(uploadStep: UploadStep, bitmap: ImageBitmap) {
