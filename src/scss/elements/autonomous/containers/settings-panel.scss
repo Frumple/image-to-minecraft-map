@@ -1,7 +1,8 @@
 @use 'variables';
 
 :host {
-  display: flex;
+  background: #eeeeee;
+  height: 100%;
 }
 
 .settings-panel {
@@ -9,10 +10,9 @@
   flex-direction: column;
   gap: 5px;
   position: sticky;
-  top: 0;
+  top: variables.$top-panel-height + (2 * variables.$top-panel-padding);
   left: 0;
   width: variables.$settings-panel-width;
-  background: #eeeeee;
   padding: 5px;
 }
 
