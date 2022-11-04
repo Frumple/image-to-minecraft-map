@@ -1,6 +1,7 @@
 import { calculateColorDifference } from '@helpers/color-difference-helpers';
+import { applyDitheringToImageData } from '@helpers/dithering-helpers';
 import { gzipData } from '@helpers/file-helpers';
-import { MAP_SIZE, drawImageFileToCanvas } from '@helpers/image-helpers';
+import { MAP_SIZE, drawImageFileToCanvas, getPixelColorFromImageData, setPixelColorToImageData } from '@helpers/image-helpers';
 import { encodeNbtMap } from '@helpers/nbt-helpers';
 
 import VersionLoader from '@loaders/version-loader';
@@ -88,18 +89,18 @@ class UploadWorker {
   async reduceColors(workCanvas: OffscreenCanvas) {
     const context = workCanvas.getContext('2d');
     const imageData = context?.getImageData(0, 0, workCanvas.width, workCanvas.height);
-    const imageDataArray = imageData?.data;
 
     const nbtColorArray = new Uint8ClampedArray(MAP_SIZE * MAP_SIZE); // 16384 entries
 
-    if (!imageDataArray) {
-      throw new Error('Image data array is undefined.');
+    if (!imageData) {
+      throw new Error('Image data is undefined.');
     }
 
     const mapColors = this.version.mapColors;
 
-    for (let index = 0; index < imageDataArray.length / 4; index++) {
-      this.reducePixelColor(mapColors, imageDataArray, nbtColorArray, index);
+    // TODO: Iterate over x and y to make dithering calculations easier
+    for (let index = 0; index < imageData.data.length / 4; index++) {
+      nbtColorArray[index] = this.reducePixelColor(mapColors, imageData, index * 4);
     }
 
     context?.putImageData(imageData, 0, 0);
@@ -109,40 +110,23 @@ class UploadWorker {
     return nbtColorArray;
   }
 
-  createNbtMapFileData(unsignedNbtColorArray: Uint8ClampedArray) {
-    // Change the "view" of the color array from Uint8 to Int8 so that it can be written as an NBT byte array
-    // i.e. Values 0 to 127 remain the same
-    //      Values 128 to 255 wraparound to -128 to -1.
-    const signedNbtColorArray = new Int8Array(unsignedNbtColorArray.buffer);
-    const encodedArray = encodeNbtMap(signedNbtColorArray);
-    const gzippedArray = gzipData(encodedArray);
-
-    return gzippedArray;
-  }
-
   reducePixelColor(
     mapColors: Color[],
-    imageDataArray: Uint8ClampedArray,
-    nbtColorArray: Uint8ClampedArray,
-    index: number) {
+    imageData: ImageData,
+    pixelStartIndex: number) {
 
-    const imageDataArrayIndex = index * 4;
-    const r = imageDataArray[imageDataArrayIndex] / 255;
-    const g = imageDataArray[imageDataArrayIndex + 1] / 255;
-    const b = imageDataArray[imageDataArrayIndex + 2] / 255;
-    const a = imageDataArray[imageDataArrayIndex + 3] / 255;
-
-    const originalColor = new Color('srgb', [r, g, b], a);
+    const originalColor = getPixelColorFromImageData(imageData, pixelStartIndex);
 
     const nearestMapColorId = this.getNearestMapColorId(originalColor, mapColors);
+    const nearestMapColor = mapColors[nearestMapColorId];
 
-    nbtColorArray[index] = nearestMapColorId;
+    setPixelColorToImageData(imageData, pixelStartIndex, nearestMapColor);
 
-    const closestMapColor = mapColors[nearestMapColorId];
-    imageDataArray[imageDataArrayIndex] = closestMapColor.srgb.r * 255;
-    imageDataArray[imageDataArrayIndex + 1] = closestMapColor.srgb.g * 255;
-    imageDataArray[imageDataArrayIndex + 2] = closestMapColor.srgb.b * 255;
-    imageDataArray[imageDataArrayIndex + 3] = closestMapColor.alpha * 255;
+    if (this.settings.dithering === 'floyd-steinberg') {
+      applyDitheringToImageData(imageData, pixelStartIndex, originalColor, nearestMapColor);
+    }
+
+    return nearestMapColorId;
   }
 
   getNearestMapColorId(originalColor: Color, mapColors: Color[]) {
@@ -176,6 +160,17 @@ class UploadWorker {
     }
 
     return nearestMapColorId;
+  }
+
+  createNbtMapFileData(unsignedNbtColorArray: Uint8ClampedArray) {
+    // Change the "view" of the color array from Uint8 to Int8 so that it can be written as an NBT byte array
+    // i.e. Values 0 to 127 remain the same
+    //      Values 128 to 255 wraparound to -128 to -1.
+    const signedNbtColorArray = new Int8Array(unsignedNbtColorArray.buffer);
+    const encodedArray = encodeNbtMap(signedNbtColorArray);
+    const gzippedArray = gzipData(encodedArray);
+
+    return gzippedArray;
   }
 
   sendCanvasBitmapToMainThread(canvas: OffscreenCanvas, uploadStep: UploadStep) {

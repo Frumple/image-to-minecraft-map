@@ -11,7 +11,7 @@ export function calculateColorDifference(color1: Color, color2: Color, algorithm
     case 'deltae-1976':
       return color1.deltaE76(color2);
     case 'cmc-1984':
-        return color1.deltaECMC(color2);
+      return color1.deltaECMC(color2);
     case 'deltae-2000':
       return color1.deltaE2000(color2);
     default:
