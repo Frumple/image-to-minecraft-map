@@ -81,8 +81,9 @@
   display: grid;
   grid-template:
     "scale-label              scale-select            " auto
-    "dithering-label          dithering-select        " auto
+    "scale-quality-label      scale-quality-select    " auto
     "color-difference-label   color-difference-select " auto
+    "dithering-label          dithering-select        " auto
     "transparency-label       transparency-input-text " auto
     "transparency-input-range transparency-input-range" auto
     / 1fr 1fr;
@@ -98,12 +99,12 @@
   grid-area: scale-select;
 }
 
-.settings-panelb__dithering-label {
-  grid-area: dithering-label;
+.settings-panel__scale-quality-label {
+  grid-area: scale-quality-label;
 }
 
-.settings-panel__dithering-select {
-  grid-area: dithering-select;
+.settings-panel__scale-quality-select {
+  grid-area: scale-quality-select;
 }
 
 .settings-panel__color-difference-label {
@@ -112,6 +113,14 @@
 
 .settings-panel__color-difference-select {
   grid-area: color-difference-select;
+}
+
+.settings-panelb__dithering-label {
+  grid-area: dithering-label;
+}
+
+.settings-panel__dithering-select {
+  grid-area: dithering-select;
 }
 
 .settings-panel__transparency-label {

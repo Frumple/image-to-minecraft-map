@@ -59,7 +59,8 @@ class UploadWorker {
     await drawImageFileToCanvas(
       this.file,
       canvas,
-      'fit');
+      'fit',
+      'high');
 
     this.sendCanvasBitmapToMainThread(canvas, 'source');
   }
@@ -71,7 +72,8 @@ class UploadWorker {
     await drawImageFileToCanvas(
       this.file,
       workCanvas,
-      this.settings.scale);
+      this.settings.scale,
+      this.settings.scaleQuality);
 
     // Copy work canvas to temporary canvas
     const canvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);

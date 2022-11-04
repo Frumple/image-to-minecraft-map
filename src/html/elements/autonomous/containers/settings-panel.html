@@ -25,17 +25,19 @@
 
   <h2 class="settings-panel__settings-title">Image Settings</h2>
   <div class="settings-panel__image-settings-container">
-    <label class="settings-panel__scale-label" for="scale-select">Scaling:</label>
+    <label class="settings-panel__scale-label" for="scale-select">Scale to:</label>
     <select id="scale-select" class="settings-panel__scale-select">
-      <option value="fit">Fit to Map Size</option>
+      <option value="fit">Fit Within Map</option>
       <option value="fill">Fill (Crop)</option>
       <option value="stretch">Stretch</option>
     </select>
 
-    <label class="settings-panel__dithering-label" for="dithering-select">Dithering:</label>
-    <select id="dithering-select" class="settings-panel__dithering-select">
-      <option value="none">None</option>
-      <option value="floyd-steinberg">Floyd-Steinberg</option>
+    <label class="settings-panel__scale-quality-label" for="scale-quality-select">Scaling Quality:</label>
+    <select id="scale-quality-select" class="settings-panel__scale-quality-select">
+      <option value="pixelated">None (Pixelated)</option>
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high" selected>High</option>
     </select>
 
     <label class="settings-panel__color-difference-label" for="color-difference-select">Color Difference:</label>
@@ -45,6 +47,12 @@
       <option value="deltae-1976">DeltaE 1976</option>
       <option value="cmc-1984">CMC 1984</option>
       <option value="deltae-2000">DeltaE 2000</option>
+    </select>
+
+    <label class="settings-panel__dithering-label" for="dithering-select">Dithering:</label>
+    <select id="dithering-select" class="settings-panel__dithering-select">
+      <option value="none">None</option>
+      <option value="floyd-steinberg">Floyd-Steinberg</option>
     </select>
 
     <label class="settings-panel__transparency-label" for="transparency-input">Transparency:</label>

@@ -1,13 +1,13 @@
-import { ScaleType } from '@models/settings';
+import { ScaleType, ScaleQualityType } from '@models/settings';
 
 export const MAP_SIZE = 128;
 
 export async function drawImageFileToCanvas(
   file: File,
   canvas: HTMLCanvasElement | OffscreenCanvas,
-  scaleType: ScaleType) {
+  scaleType: ScaleType,
+  scaleQualityType: ScaleQualityType) {
 
-  // TODO: Consider createImageBitmap options for image processing settings
   const bitmap = await createImageBitmap(file);
 
   let x: number;
@@ -40,5 +40,14 @@ export async function drawImageFileToCanvas(
   }
 
   const context = canvas.getContext('2d');
-  context?.drawImage(bitmap, x, y, width, height);
+  if (context === null) {
+    throw new Error('Canvas context is null.');
+  }
+  if (scaleQualityType === 'pixelated') {
+    context.imageSmoothingEnabled = false;
+  } else {
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = scaleQualityType;
+  }
+  context.drawImage(bitmap, x, y, width, height);
 }

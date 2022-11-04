@@ -15,8 +15,9 @@ export default class SettingsPanel extends AutonomousCustomElement {
   autoDownloadInput: HTMLInputElement;
 
   scaleSelect: HTMLSelectElement;
-  ditheringSelect: HTMLSelectElement;
+  scaleQualitySelect: HTMLSelectElement;
   colorDifferenceSelect: HTMLSelectElement;
+  ditheringSelect: HTMLSelectElement;
   transparencyInputText: HTMLInputElement;
   transparencyInputRange: HTMLInputElement;
 
@@ -29,8 +30,9 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.autoDownloadInput = this.getShadowElement('auto-download-input') as HTMLInputElement;
 
     this.scaleSelect = this.getShadowElement('scale-select') as HTMLSelectElement;
-    this.ditheringSelect = this.getShadowElement('dithering-select') as HTMLSelectElement;
+    this.scaleQualitySelect = this.getShadowElement('scale-quality-select') as HTMLSelectElement;
     this.colorDifferenceSelect = this.getShadowElement('color-difference-select') as HTMLSelectElement;
+    this.ditheringSelect = this.getShadowElement('dithering-select') as HTMLSelectElement;
     this.transparencyInputText = this.getShadowElement('transparency-input-text') as HTMLInputElement;
     this.transparencyInputRange = this.getShadowElement('transparency-input-range') as HTMLInputElement;
   }
@@ -55,8 +57,9 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.autoDownloadInput.addEventListener('input', this.onChangeSettings);
 
     this.scaleSelect.addEventListener('input', this.onChangeSettings);
-    this.ditheringSelect.addEventListener('input', this.onChangeSettings);
+    this.scaleQualitySelect.addEventListener('input', this.onChangeSettings);
     this.colorDifferenceSelect.addEventListener('input', this.onChangeSettings);
+    this.ditheringSelect.addEventListener('input', this.onChangeSettings);
     this.transparencyInputText.addEventListener('input', this.onChangeSettings);
     this.transparencyInputRange.addEventListener('input', this.onChangeSettings);
   }
@@ -68,6 +71,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
     CurrentContext.settings.autoDownload = this.autoDownloadInput.checked;
 
     CurrentContext.settings.scale = this.scaleSelect.value as Settings.ScaleType;
+    CurrentContext.settings.scaleQuality = this.scaleQualitySelect.value as Settings.ScaleQualityType;
     CurrentContext.settings.dithering = this.ditheringSelect.value as Settings.DitheringType;
     CurrentContext.settings.colorDifference = this.colorDifferenceSelect.value as Settings.ColorDifferenceType;
 

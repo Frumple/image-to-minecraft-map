@@ -1,6 +1,7 @@
 export type ScaleType = 'fit' | 'fill' | 'stretch';
+export type ScaleQualityType = 'pixelated' | 'low' | 'medium' | 'high';
+export type ColorDifferenceType = 'euclidean' | 'metric' | 'deltae-1976' | 'cmc-1984' | 'deltae-2000';
 export type DitheringType = 'none' | 'floyd-steinberg';
-export type ColorDifferenceType = 'euclidean' | 'metric' |  'deltae-1976' | 'cmc-1984' | 'deltae-2000';
 
 export class Settings {
   mapId: number = 0;
@@ -11,8 +12,9 @@ export class Settings {
 
   // Image Settings
   scale: ScaleType = 'fit';
-  dithering: DitheringType = 'none';
+  scaleQuality: ScaleQualityType = 'high';
   colorDifference: ColorDifferenceType = 'metric';
+  dithering: DitheringType = 'none';
   transparency: number = 0.5;
 
   constructor() {
