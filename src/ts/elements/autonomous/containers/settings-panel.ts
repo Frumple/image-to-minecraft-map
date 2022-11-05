@@ -81,7 +81,11 @@ export default class SettingsPanel extends AutonomousCustomElement {
       this.transparencyInputText.value = this.transparencyInputRange.value;
     }
 
-    CurrentContext.settings.transparency = parseFloat(this.transparencyInputText.value);
+    const transparency = convertToInteger(this.transparencyInputText.value);
+    if (transparency === null) {
+      throw new Error('Transparency is null.');
+    }
+    CurrentContext.settings.transparency = transparency;
   }
 
   set mapId(mapId: number) {

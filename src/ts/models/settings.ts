@@ -15,7 +15,7 @@ export class Settings {
   scaleQuality: ScaleQualityType = 'high';
   colorDifference: ColorDifferenceType = 'metric';
   dithering: DitheringType = 'none';
-  transparency: number = 0.5;
+  transparency: number = 128;
 
   constructor() {
 

@@ -131,7 +131,7 @@ class UploadWorker {
 
   getNearestMapColorId(originalColor: Color, mapColors: Color[]) {
     // Return the transparent map color if the original color doesn't meet the transparency threshold
-    if (originalColor.alpha < this.settings.transparency) {
+    if (originalColor.alpha * 255 < this.settings.transparency) {
       return 0;
     }
 
