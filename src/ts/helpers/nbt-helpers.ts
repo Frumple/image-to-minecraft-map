@@ -5,7 +5,7 @@ export function encodeNbtMap(colorArray: Int8Array) {
     data: {
       colors: colorArray,
       // TODO: For versions < 1.16, dimension is a byte
-      dimension: 'imagetominecraftmap',
+      dimension: 'minecraft:imagetominecraftmap',
       locked: new Byte(1),
       scale: new Byte(0),
       trackingPosition: new Byte(0),
