@@ -11,7 +11,7 @@ import { JavaVersion } from '@models/versions/java-version';
 
 import Color from 'colorjs.io';
 
-export type UploadStep = 'source' | 'intermediate' | 'final' | 'download'
+export type UploadStep = 'source' | 'intermediate' | 'final' | 'download' | 'progress';
 
 export interface UploadWorkerIncomingMessageParameters {
   settings: Settings.Settings;
@@ -19,8 +19,8 @@ export interface UploadWorkerIncomingMessageParameters {
 }
 
 export interface UploadWorkerOutgoingMessageParameters {
-  step: UploadStep,
-  data: ImageBitmap | ArrayBuffer
+  step: UploadStep;
+  data: ImageBitmap | ArrayBuffer | number;
 }
 
 class UploadWorker {
@@ -99,8 +99,16 @@ class UploadWorker {
     const mapColors = this.version.mapColors;
 
     // TODO: Iterate over x and y to make dithering calculations easier
-    for (let index = 0; index < imageData.data.length / 4; index++) {
+    const dataLength = imageData.data.length / 4;
+    let lastProgressPercentage = 0;
+    for (let index = 0; index < dataLength; index++) {
       nbtColorArray[index] = this.reducePixelColor(mapColors, imageData, index * 4);
+
+      const progressPercentage = Math.floor(index / dataLength * 100);
+      if (progressPercentage >= lastProgressPercentage + 1) {
+        this.sendProgressUpdateToMainUpdate(progressPercentage);
+        lastProgressPercentage = progressPercentage;
+      }
     }
 
     context?.putImageData(imageData, 0, 0);
@@ -189,6 +197,14 @@ class UploadWorker {
       data: buffer
     };
     postMessage(messageData, [buffer]);
+  }
+
+  sendProgressUpdateToMainUpdate(percent: number) {
+    const messageData: UploadWorkerOutgoingMessageParameters = {
+      step: 'progress',
+      data: percent
+    };
+    postMessage(messageData);
   }
 }
 

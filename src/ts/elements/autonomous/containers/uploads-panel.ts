@@ -121,9 +121,11 @@ export default class UploadsPanel extends AutonomousCustomElement {
     worker.addEventListener('message', (event: MessageEvent) => {
       const parameters: UploadWorkerOutgoingMessageParameters = event.data;
 
-      if (parameters.step === 'download') {
+      if (parameters.step === 'progress') {
+        uploadProgressPanel.progressPercentage = parameters.data as number;
+      } else if (parameters.step === 'download') {
         const downloadUrl = createDownloadUrlFromData(parameters.data, 'application/octet-stream');
-        uploadProgressPanel.downloadUrl = downloadUrl;
+        uploadProgressPanel.completeUpload(downloadUrl);
       } else {
         uploadProgressPanel.renderCanvas(parameters.step, parameters.data as ImageBitmap);
       }
