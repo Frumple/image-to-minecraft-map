@@ -20,11 +20,21 @@ export default class ApplicationContainer extends AutonomousCustomElement {
 
   initialize() {
     this.addEventListener('mapIdUpdated', this.onMapIdUpdated);
+    this.addEventListener('dragover', this.onFileDragOver);
+    this.addEventListener('drop', this.onFileDropped);
   }
 
   onMapIdUpdated = (event: Event) => {
     // TODO: Weirdly, using a CustomEvent as a parameter doesn't fit the parameter definitions for addEventListener
     const customEvent = event as CustomEvent;
     this.settingsPanel.mapId = customEvent.detail.mapId;
+  }
+
+  // Prevent the browser's default behaviour of opening a file when dragging and dropping it over any area outside of the drop zone.
+  onFileDragOver = (event: DragEvent) => {
+    event.preventDefault();
+  }
+  onFileDropped = (event: DragEvent) => {
+    event.preventDefault();
   }
 }
