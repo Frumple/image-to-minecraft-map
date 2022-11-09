@@ -21,12 +21,13 @@
 }
 
 .uploads-panel__file-upload-drop-zone_drag-enter {
-  background: #90FF70;
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .uploads-panel__uploads-container {
   display: flex;
   flex-direction: column;
+  z-index: -1;
 }
 
 .uploads-panel__instructions-container {
@@ -40,9 +41,11 @@
 }
 
 .uploads-panel__instructions-text {
-  font-size: x-large;
+  font-size: xx-large;
+  font-weight: bold;
 }
 
 .uploads-panel__choose-file-button {
-  font-size: x-large;
+  font-size: xx-large;
+  font-weight: bold;
 }

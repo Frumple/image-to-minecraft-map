@@ -76,10 +76,12 @@ export default class UploadsPanel extends AutonomousCustomElement {
   onFileDropped = (event: DragEvent) => {
     event.preventDefault();
 
+    this.dragEnterCounter = 0;
+    this.fileUploadDropZone.classList.remove(dragEnterClass);
+
     const files = event.dataTransfer?.files;
 
     if (files) {
-      this.fileUploadDropZone.classList.remove(dragEnterClass);
       this.uploadFiles(files);
     } else {
       throw new Error('No file data found.');
