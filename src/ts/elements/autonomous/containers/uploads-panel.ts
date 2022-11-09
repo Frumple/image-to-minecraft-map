@@ -113,32 +113,52 @@ export default class UploadsPanel extends AutonomousCustomElement {
     const uploadProgressPanel = new UploadProgressPanel(file.name, file.size, settings.mapId, settings.autoDownload);
     this.uploadsContainer.appendChild(uploadProgressPanel);
 
-    // Setup a web worker to process the image in the background
-    const worker = new Worker(
-      new URL('/src/ts/workers/upload-worker.ts', import.meta.url),
-      {type: 'module'}
-    );
-
-    // Listen for messages from the worker to render images and update the UI panel
-    worker.addEventListener('message', (event: MessageEvent) => {
-      const parameters: UploadWorkerOutgoingMessageParameters = event.data;
-
-      if (parameters.step === 'progress') {
-        uploadProgressPanel.progressPercentage = parameters.data as number;
-      } else if (parameters.step === 'download') {
-        const downloadUrl = createDownloadUrlFromData(parameters.data, 'application/octet-stream');
-        uploadProgressPanel.completeUpload(downloadUrl);
-      } else {
-        uploadProgressPanel.renderCanvas(parameters.step, parameters.data as ImageBitmap);
+    try {
+      // Premptively fail the upload if the file is an invalid type
+      const validFileTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/webp'];
+      if (!validFileTypes.includes(file.type)) {
+        throw new Error(`Invalid file type: ${file.type}`);
       }
-    });
 
-    // Send a message to the worker to start processing
-    const messageData: UploadWorkerIncomingMessageParameters = {
-      settings: settings,
-      file: file
-    };
-    // TODO: Try to send the file data as a transferable array buffer and measure processing time and memory usage.
-    worker.postMessage(messageData);
+      // Setup a web worker to process the image in the background
+      const worker = new Worker(
+        new URL('/src/ts/workers/upload-worker.ts', import.meta.url),
+        {type: 'module'}
+      );
+
+      // Listen for messages from the worker to render images and update the UI panel
+      worker.addEventListener('message', (event: MessageEvent) => {
+        const parameters: UploadWorkerOutgoingMessageParameters = event.data;
+
+        if (parameters.step == 'error' ) {
+          uploadProgressPanel.failUpload(parameters.data as string);
+        } else if (parameters.step === 'progress') {
+          uploadProgressPanel.progressPercentage = parameters.data as number;
+        } else if (parameters.step === 'download') {
+          const downloadUrl = createDownloadUrlFromData(parameters.data, 'application/octet-stream');
+          uploadProgressPanel.completeUpload(downloadUrl);
+        } else {
+          uploadProgressPanel.renderCanvas(parameters.step, parameters.data as ImageBitmap);
+        }
+      });
+
+      // Send a message to the worker to start processing
+      const messageData: UploadWorkerIncomingMessageParameters = {
+        settings: settings,
+        file: file
+      };
+      // TODO: Try to send the file data as a transferable array buffer and measure processing time and memory usage.
+      worker.postMessage(messageData);
+
+    } catch (error) {
+
+      // TODO: Catch other types of errors and exceptions here
+      if (error instanceof Error) {
+        uploadProgressPanel.failUpload(error.message);
+      } else {
+        throw error;
+      }
+
+    }
   }
 }

@@ -10,6 +10,7 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
   uploadProgressPanel: HTMLDivElement;
 
   imageFilenameHeading: HTMLHeadingElement;
+  errorHeading: HTMLHeadingElement;
   mapFilenameHeading: HTMLHeadElement;
 
   canvasMap: Map<UploadStep, HTMLCanvasElement>;
@@ -26,6 +27,7 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
     this.uploadProgressPanel = this.getShadowElement('upload-progress-panel') as HTMLDivElement;
 
     this.imageFilenameHeading = this.getShadowElement('image-filename-heading') as HTMLHeadingElement;
+    this.errorHeading = this.getShadowElement('error-heading') as HTMLHeadingElement;
     this.mapFilenameHeading = this.getShadowElement('map-filename-heading') as HTMLHeadingElement;
 
     this.canvasMap = new Map();
@@ -94,5 +96,12 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
       ${backgroundColor} ${percent}% 100%)`;
 
     this.uploadProgressPanel.style.background = linearGradient;
+  }
+
+  failUpload(message: string) {
+    this.uploadProgressPanel.style.background = 'lightpink';
+    this.downloadFileLink.textContent = 'close';
+    this.errorHeading.style.display = 'block';
+    this.errorHeading.textContent = `Error - ${message}`;
   }
 }

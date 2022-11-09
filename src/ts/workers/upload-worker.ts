@@ -11,7 +11,7 @@ import { JavaVersion } from '@models/versions/java-version';
 
 import Color from 'colorjs.io';
 
-export type UploadStep = 'source' | 'intermediate' | 'final' | 'download' | 'progress';
+export type UploadStep = 'source' | 'intermediate' | 'final' | 'download' | 'progress' | 'error';
 
 export interface UploadWorkerIncomingMessageParameters {
   settings: Settings.Settings;
@@ -20,7 +20,7 @@ export interface UploadWorkerIncomingMessageParameters {
 
 export interface UploadWorkerOutgoingMessageParameters {
   step: UploadStep;
-  data: ImageBitmap | ArrayBuffer | number;
+  data: ImageBitmap | ArrayBuffer | number | string;
 }
 
 class UploadWorker {
@@ -48,11 +48,25 @@ class UploadWorker {
   }
 
   async run() {
-    await this.drawSourceImage();
-    const workCanvas = await this.processImage();
-    const nbtColorArray = await this.reduceColors(workCanvas);
-    const nbtMapFileData = this.createNbtMapFileData(nbtColorArray);
-    this.sendMapFileDataToMainThread(nbtMapFileData);
+    try {
+
+      await this.drawSourceImage();
+      const workCanvas = await this.processImage();
+      const nbtColorArray = await this.reduceColors(workCanvas);
+      const nbtMapFileData = this.createNbtMapFileData(nbtColorArray);
+      this.sendMapFileDataToMainThread(nbtMapFileData);
+
+    } catch (error) {
+
+      // TODO: Catch other types of errors and exceptions here
+      // For now, we are handling the DOMException when a source image cannot be decoded.
+      if (error instanceof DOMException) {
+        this.sendErrorToMainThread(error.message);
+      } else {
+        throw error;
+      }
+
+    }
   }
 
   async drawSourceImage() {
@@ -106,7 +120,7 @@ class UploadWorker {
 
       const progressPercentage = Math.floor(index / dataLength * 100);
       if (progressPercentage >= lastProgressPercentage + 1) {
-        this.sendProgressUpdateToMainUpdate(progressPercentage);
+        this.sendProgressUpdateToMainThread(progressPercentage);
         lastProgressPercentage = progressPercentage;
       }
     }
@@ -199,10 +213,18 @@ class UploadWorker {
     postMessage(messageData, [buffer]);
   }
 
-  sendProgressUpdateToMainUpdate(percent: number) {
+  sendProgressUpdateToMainThread(percent: number) {
     const messageData: UploadWorkerOutgoingMessageParameters = {
       step: 'progress',
       data: percent
+    };
+    postMessage(messageData);
+  }
+
+  sendErrorToMainThread(message: string) {
+    const messageData: UploadWorkerOutgoingMessageParameters = {
+      step: 'error',
+      data: message
     };
     postMessage(messageData);
   }
