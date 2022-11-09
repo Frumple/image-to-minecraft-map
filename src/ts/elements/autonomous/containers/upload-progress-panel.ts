@@ -62,25 +62,25 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
     context?.transferFromImageBitmap(bitmap);
   }
 
-  completeUpload(downloadUrl: string) {
-    this.downloadUrl = downloadUrl;
-    this.progressPercentage = 100;
-  }
-
-  private set downloadUrl(url: string) {
+  completeUpload(downloadUrl: string, mapFileSizeInBytes: number) {
     const mapFilename = getMapFilename(this.startingMapId);
+    const fileSizeText = getFileSizeTextInReadableUnits(mapFileSizeInBytes);
 
-    this.downloadFileLink.href = url;
+    this.mapFilenameHeading.textContent = `${mapFilename} (${fileSizeText})`;
+
+    this.downloadFileLink.href = downloadUrl;
     this.downloadFileLink.download = mapFilename;
     this.downloadFileLink.textContent = 'task';
     this.downloadFileLink.style.color = 'black';
 
-    this.downloadFileTextLink.href = url;
+    this.downloadFileTextLink.href = downloadUrl;
     this.downloadFileTextLink.download = mapFilename;
 
     if (this.autoDownload) {
       this.downloadFileTextLink.click();
     }
+
+    this.progressPercentage = 100;
   }
 
   set progressPercentage(percent: number) {

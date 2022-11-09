@@ -135,8 +135,10 @@ export default class UploadsPanel extends AutonomousCustomElement {
         } else if (parameters.step === 'progress') {
           uploadProgressPanel.progressPercentage = parameters.data as number;
         } else if (parameters.step === 'download') {
-          const downloadUrl = createDownloadUrlFromData(parameters.data, 'application/octet-stream');
-          uploadProgressPanel.completeUpload(downloadUrl);
+          const data = parameters.data as ArrayBuffer;
+          const downloadUrl = createDownloadUrlFromData(data, 'application/octet-stream');
+          const mapFileSizeInBytes = data.byteLength;
+          uploadProgressPanel.completeUpload(downloadUrl, mapFileSizeInBytes);
         } else {
           uploadProgressPanel.renderCanvas(parameters.step, parameters.data as ImageBitmap);
         }
