@@ -1,4 +1,4 @@
-import { ScaleType, ScaleQualityType } from '@models/settings';
+import { ResizeType, ResizeQualityType } from '@models/settings';
 
 import Color from 'colorjs.io';
 
@@ -7,8 +7,8 @@ export const MAP_SIZE = 128;
 export async function drawImageToCanvas(
   source: ImageBitmapSource,
   canvas: HTMLCanvasElement | OffscreenCanvas,
-  scaleType: ScaleType,
-  scaleQualityType: ScaleQualityType) {
+  resizeType: ResizeType,
+  resizeQualityType: ResizeQualityType) {
 
   const bitmap = await createImageBitmap(source);
 
@@ -17,39 +17,39 @@ export async function drawImageToCanvas(
   let width: number;
   let height: number;
 
-  if (scaleType === 'stretch') {
+  if (resizeType === 'stretch') {
     x = 0;
     y = 0;
     width = canvas.width;
     height = canvas.height;
   } else {
-    const widthScaleFactor = canvas.width / bitmap.width;
-    const heightScaleFactor = canvas.height / bitmap.height;
+    const widthResizeFactor = canvas.width / bitmap.width;
+    const heightResizeFactor = canvas.height / bitmap.height;
 
-    let scaleFactor: number;
-    if (scaleType === 'fit') {
-      scaleFactor = Math.min(widthScaleFactor, heightScaleFactor);
-    } else if (scaleType === 'fill') {
-      scaleFactor = Math.max(widthScaleFactor, heightScaleFactor);
+    let resizeFactor: number;
+    if (resizeType === 'fit') {
+      resizeFactor = Math.min(widthResizeFactor, heightResizeFactor);
+    } else if (resizeType === 'fill') {
+      resizeFactor = Math.max(widthResizeFactor, heightResizeFactor);
     } else {
-      throw new Error(`Unknown scale type: ${scaleType}`);
+      throw new Error(`Unknown resize type: ${resizeType}`);
     }
 
-    x = (canvas.width / 2) - (bitmap.width / 2) * scaleFactor;
-    y = (canvas.height / 2) - (bitmap.height / 2) * scaleFactor;
-    width = bitmap.width * scaleFactor;
-    height = bitmap.height * scaleFactor;
+    x = (canvas.width / 2) - (bitmap.width / 2) * resizeFactor;
+    y = (canvas.height / 2) - (bitmap.height / 2) * resizeFactor;
+    width = bitmap.width * resizeFactor;
+    height = bitmap.height * resizeFactor;
   }
 
   const context = canvas.getContext('2d');
   if (context === null) {
     throw new Error('Canvas context is null.');
   }
-  if (scaleQualityType === 'pixelated') {
+  if (resizeQualityType === 'pixelated') {
     context.imageSmoothingEnabled = false;
   } else {
     context.imageSmoothingEnabled = true;
-    context.imageSmoothingQuality = scaleQualityType;
+    context.imageSmoothingQuality = resizeQualityType;
   }
   context.drawImage(bitmap, x, y, width, height);
 }

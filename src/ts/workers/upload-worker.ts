@@ -94,12 +94,12 @@ class UploadWorker {
       workCanvasContext.fillRect(0, 0, workCanvas.width, workCanvas.height);
     }
 
-    // Draw scaled image to the work canvas for use in future "Reduce Colors" step
+    // Draw resized image to the work canvas for use in future "Reduce Colors" step
     await drawImageToCanvas(
       this.file,
       workCanvas,
-      this.settings.scale,
-      this.settings.scaleQuality);
+      this.settings.resize,
+      this.settings.resizeQuality);
 
     // Copy work canvas to temporary canvas
     const canvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);

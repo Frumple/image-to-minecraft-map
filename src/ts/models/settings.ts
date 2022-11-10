@@ -1,5 +1,5 @@
-export type ScaleType = 'fit' | 'fill' | 'stretch';
-export type ScaleQualityType = 'pixelated' | 'low' | 'medium' | 'high';
+export type ResizeType = 'fit' | 'fill' | 'stretch';
+export type ResizeQualityType = 'pixelated' | 'low' | 'medium' | 'high';
 export type BackgroundType = 'transparent' | 'black' | 'white';
 export type ColorDifferenceType = 'euclidean' | 'metric' | 'deltae-1976' | 'cmc-1984' | 'deltae-2000';
 export type DitheringType = 'none' | 'floyd-steinberg';
@@ -12,8 +12,8 @@ export class Settings {
   autoDownload: boolean = true;
 
   // Image Settings
-  scale: ScaleType = 'fit';
-  scaleQuality: ScaleQualityType = 'high';
+  resize: ResizeType = 'fit';
+  resizeQuality: ResizeQualityType = 'high';
   background: BackgroundType = 'transparent';
   colorDifference: ColorDifferenceType = 'metric';
   dithering: DitheringType = 'none';

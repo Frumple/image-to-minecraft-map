@@ -80,8 +80,8 @@
 .settings-panel__image-settings-container {
   display: grid;
   grid-template:
-    "scale-label              scale-select            " auto
-    "scale-quality-label      scale-quality-select    " auto
+    "resize-label              resize-select            " auto
+    "resize-quality-label      resize-quality-select    " auto
     "background-label         background-select       " auto
     "color-difference-label   color-difference-select " auto
     "dithering-label          dithering-select        " auto
@@ -92,20 +92,20 @@
   align-items: center;
 }
 
-.settings-panelb__scale-label {
-  grid-area: scale-label;
+.settings-panelb__resize-label {
+  grid-area: resize-label;
 }
 
-.settings-panel__scale-select {
-  grid-area: scale-select;
+.settings-panel__resize-select {
+  grid-area: resize-select;
 }
 
-.settings-panel__scale-quality-label {
-  grid-area: scale-quality-label;
+.settings-panel__resize-quality-label {
+  grid-area: resize-quality-label;
 }
 
-.settings-panel__scale-quality-select {
-  grid-area: scale-quality-select;
+.settings-panel__resize-quality-select {
+  grid-area: resize-quality-select;
 }
 
 .settings-panel__background-label {

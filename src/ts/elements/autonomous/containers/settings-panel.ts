@@ -14,8 +14,8 @@ export default class SettingsPanel extends AutonomousCustomElement {
   versionSelect: HTMLSelectElement;
   autoDownloadInput: HTMLInputElement;
 
-  scaleSelect: HTMLSelectElement;
-  scaleQualitySelect: HTMLSelectElement;
+  resizeSelect: HTMLSelectElement;
+  resizeQualitySelect: HTMLSelectElement;
   backgroundSelect: HTMLSelectElement;
   colorDifferenceSelect: HTMLSelectElement;
   ditheringSelect: HTMLSelectElement;
@@ -30,8 +30,8 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.versionSelect = this.getShadowElement('version-select') as HTMLSelectElement;
     this.autoDownloadInput = this.getShadowElement('auto-download-input') as HTMLInputElement;
 
-    this.scaleSelect = this.getShadowElement('scale-select') as HTMLSelectElement;
-    this.scaleQualitySelect = this.getShadowElement('scale-quality-select') as HTMLSelectElement;
+    this.resizeSelect = this.getShadowElement('resize-select') as HTMLSelectElement;
+    this.resizeQualitySelect = this.getShadowElement('resize-quality-select') as HTMLSelectElement;
     this.backgroundSelect = this.getShadowElement('background-select') as HTMLSelectElement;
     this.colorDifferenceSelect = this.getShadowElement('color-difference-select') as HTMLSelectElement;
     this.ditheringSelect = this.getShadowElement('dithering-select') as HTMLSelectElement;
@@ -58,8 +58,8 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.versionSelect.addEventListener('input', this.onChangeSettings);
     this.autoDownloadInput.addEventListener('input', this.onChangeSettings);
 
-    this.scaleSelect.addEventListener('input', this.onChangeSettings);
-    this.scaleQualitySelect.addEventListener('input', this.onChangeSettings);
+    this.resizeSelect.addEventListener('input', this.onChangeSettings);
+    this.resizeQualitySelect.addEventListener('input', this.onChangeSettings);
     this.backgroundSelect.addEventListener('input', this.onChangeSettings);
     this.colorDifferenceSelect.addEventListener('input', this.onChangeSettings);
     this.ditheringSelect.addEventListener('input', this.onChangeSettings);
@@ -73,8 +73,8 @@ export default class SettingsPanel extends AutonomousCustomElement {
     CurrentContext.settings.version = this.versionSelect.value;
     CurrentContext.settings.autoDownload = this.autoDownloadInput.checked;
 
-    CurrentContext.settings.scale = this.scaleSelect.value as Settings.ScaleType;
-    CurrentContext.settings.scaleQuality = this.scaleQualitySelect.value as Settings.ScaleQualityType;
+    CurrentContext.settings.resize = this.resizeSelect.value as Settings.ResizeType;
+    CurrentContext.settings.resizeQuality = this.resizeQualitySelect.value as Settings.ResizeQualityType;
     CurrentContext.settings.background = this.backgroundSelect.value as Settings.BackgroundType;
     CurrentContext.settings.colorDifference = this.colorDifferenceSelect.value as Settings.ColorDifferenceType;
     CurrentContext.settings.dithering = this.ditheringSelect.value as Settings.DitheringType;
