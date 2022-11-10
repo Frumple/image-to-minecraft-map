@@ -113,6 +113,8 @@ export default class UploadsPanel extends AutonomousCustomElement {
     const uploadProgressPanel = new UploadProgressPanel(file.name, file.size, settings.mapId, settings.autoDownload);
     this.uploadsContainer.appendChild(uploadProgressPanel);
 
+    await uploadProgressPanel.drawItemFrameToCanvasses();
+
     try {
       // Premptively fail the upload if the file is an invalid type
       const validFileTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/webp'];
@@ -127,7 +129,7 @@ export default class UploadsPanel extends AutonomousCustomElement {
       );
 
       // Listen for messages from the worker to render images and update the UI panel
-      worker.addEventListener('message', (event: MessageEvent) => {
+      worker.addEventListener('message', async (event: MessageEvent) => {
         const parameters: UploadWorkerOutgoingMessageParameters = event.data;
 
         if (parameters.step == 'error' ) {
@@ -140,7 +142,7 @@ export default class UploadsPanel extends AutonomousCustomElement {
           const mapFileSizeInBytes = data.byteLength;
           uploadProgressPanel.completeUpload(downloadUrl, mapFileSizeInBytes);
         } else {
-          uploadProgressPanel.renderCanvas(parameters.step, parameters.data as ImageBitmap);
+          await uploadProgressPanel.renderCanvas(parameters.step, parameters.data as ImageBitmap);
         }
       });
 

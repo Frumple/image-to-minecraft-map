@@ -1,7 +1,11 @@
 import pako from 'pako';
 
-export async function fetchFromFile(path: string): Promise<string> {
+export async function fetchText(path: string | URL): Promise<string> {
   return await fetch(path).then(stream => stream.text());
+}
+
+export async function fetchBlob(path: string | URL): Promise<Blob> {
+  return await fetch(path).then(stream => stream.blob());
 }
 
 export function createDownloadUrlFromData(data: any, contentType: string) {

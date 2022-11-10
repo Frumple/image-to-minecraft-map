@@ -1,7 +1,7 @@
 import { calculateColorDifference } from '@helpers/color-difference-helpers';
 import { applyDitheringToImageData } from '@helpers/dithering-helpers';
 import { gzipData } from '@helpers/file-helpers';
-import { MAP_SIZE, drawImageFileToCanvas, getPixelColorFromImageData, setPixelColorToImageData } from '@helpers/image-helpers';
+import { MAP_SIZE, drawImageToCanvas, getPixelColorFromImageData, setPixelColorToImageData } from '@helpers/image-helpers';
 import { encodeNbtMap } from '@helpers/nbt-helpers';
 
 import VersionLoader from '@loaders/version-loader';
@@ -71,7 +71,8 @@ class UploadWorker {
 
   async drawSourceImage() {
     const canvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);
-    await drawImageFileToCanvas(
+
+    await drawImageToCanvas(
       this.file,
       canvas,
       'fit',
@@ -82,9 +83,19 @@ class UploadWorker {
 
   async processImage() {
     const workCanvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);
+    const workCanvasContext = workCanvas.getContext('2d');
+
+    if (workCanvasContext === null) {
+      throw new Error('Work canvas context is null.');
+    }
+
+    if (this.settings.background !== 'transparent') {
+      workCanvasContext.fillStyle = this.settings.background;
+      workCanvasContext.fillRect(0, 0, workCanvas.width, workCanvas.height);
+    }
 
     // Draw scaled image to the work canvas for use in future "Reduce Colors" step
-    await drawImageFileToCanvas(
+    await drawImageToCanvas(
       this.file,
       workCanvas,
       this.settings.scale,
@@ -92,8 +103,8 @@ class UploadWorker {
 
     // Copy work canvas to temporary canvas
     const canvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);
-    const context = canvas.getContext('2d');
-    context?.drawImage(workCanvas, 0, 0);
+    const canvasContext = canvas.getContext('2d');
+    canvasContext?.drawImage(workCanvas, 0, 0);
 
     this.sendCanvasBitmapToMainThread(canvas, 'intermediate');
 

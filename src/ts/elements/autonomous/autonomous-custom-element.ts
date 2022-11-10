@@ -1,4 +1,4 @@
-import { fetchFromFile } from '@helpers/file-helpers';
+import { fetchText } from '@helpers/file-helpers';
 import { toKebabCase } from '@helpers/string-helpers';
 
 export default class AutonomousCustomElement extends HTMLElement {
@@ -12,7 +12,7 @@ export default class AutonomousCustomElement extends HTMLElement {
 
   static async define() {
     if (customElements.get(this.elementName) === undefined) {
-      AutonomousCustomElement.htmlContent = await fetchFromFile(this.htmlPath);
+      AutonomousCustomElement.htmlContent = await fetchText(this.htmlPath);
       customElements.define(this.elementName, this);
     }
   }

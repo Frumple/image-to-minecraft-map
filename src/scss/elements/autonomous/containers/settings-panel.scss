@@ -82,6 +82,7 @@
   grid-template:
     "scale-label              scale-select            " auto
     "scale-quality-label      scale-quality-select    " auto
+    "background-label         background-select       " auto
     "color-difference-label   color-difference-select " auto
     "dithering-label          dithering-select        " auto
     "transparency-label       transparency-input-text " auto
@@ -105,6 +106,14 @@
 
 .settings-panel__scale-quality-select {
   grid-area: scale-quality-select;
+}
+
+.settings-panel__background-label {
+  grid-area: background-label;
+}
+
+.settings-panel__background-select {
+  grid-area: background-select;
 }
 
 .settings-panel__color-difference-label {

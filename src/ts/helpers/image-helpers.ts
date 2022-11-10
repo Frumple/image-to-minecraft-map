@@ -4,13 +4,13 @@ import Color from 'colorjs.io';
 
 export const MAP_SIZE = 128;
 
-export async function drawImageFileToCanvas(
-  file: File,
+export async function drawImageToCanvas(
+  source: ImageBitmapSource,
   canvas: HTMLCanvasElement | OffscreenCanvas,
   scaleType: ScaleType,
   scaleQualityType: ScaleQualityType) {
 
-  const bitmap = await createImageBitmap(file);
+  const bitmap = await createImageBitmap(source);
 
   let x: number;
   let y: number;

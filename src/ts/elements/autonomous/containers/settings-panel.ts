@@ -16,6 +16,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
 
   scaleSelect: HTMLSelectElement;
   scaleQualitySelect: HTMLSelectElement;
+  backgroundSelect: HTMLSelectElement;
   colorDifferenceSelect: HTMLSelectElement;
   ditheringSelect: HTMLSelectElement;
   transparencyInputText: HTMLInputElement;
@@ -31,6 +32,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
 
     this.scaleSelect = this.getShadowElement('scale-select') as HTMLSelectElement;
     this.scaleQualitySelect = this.getShadowElement('scale-quality-select') as HTMLSelectElement;
+    this.backgroundSelect = this.getShadowElement('background-select') as HTMLSelectElement;
     this.colorDifferenceSelect = this.getShadowElement('color-difference-select') as HTMLSelectElement;
     this.ditheringSelect = this.getShadowElement('dithering-select') as HTMLSelectElement;
     this.transparencyInputText = this.getShadowElement('transparency-input-text') as HTMLInputElement;
@@ -58,6 +60,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
 
     this.scaleSelect.addEventListener('input', this.onChangeSettings);
     this.scaleQualitySelect.addEventListener('input', this.onChangeSettings);
+    this.backgroundSelect.addEventListener('input', this.onChangeSettings);
     this.colorDifferenceSelect.addEventListener('input', this.onChangeSettings);
     this.ditheringSelect.addEventListener('input', this.onChangeSettings);
     this.transparencyInputText.addEventListener('input', this.onChangeSettings);
@@ -72,8 +75,9 @@ export default class SettingsPanel extends AutonomousCustomElement {
 
     CurrentContext.settings.scale = this.scaleSelect.value as Settings.ScaleType;
     CurrentContext.settings.scaleQuality = this.scaleQualitySelect.value as Settings.ScaleQualityType;
-    CurrentContext.settings.dithering = this.ditheringSelect.value as Settings.DitheringType;
+    CurrentContext.settings.background = this.backgroundSelect.value as Settings.BackgroundType;
     CurrentContext.settings.colorDifference = this.colorDifferenceSelect.value as Settings.ColorDifferenceType;
+    CurrentContext.settings.dithering = this.ditheringSelect.value as Settings.DitheringType;
 
     if (event.target === this.transparencyInputText) {
       this.transparencyInputRange.value = this.transparencyInputText.value;

@@ -1,6 +1,7 @@
 import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
 
-import { getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
+import { fetchBlob, getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
+import { drawImageToCanvas } from '@helpers/image-helpers';
 
 import { UploadStep } from '@workers/upload-worker';
 
@@ -52,14 +53,36 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
 
   }
 
-  renderCanvas(uploadStep: UploadStep, bitmap: ImageBitmap) {
+  async drawItemFrameToCanvasses() {
+    // Create a Parcel URL dependency to the item frame image
+    const imageUrl = new URL(
+      '/images/item_frame.png',
+      import.meta.url
+    );
+
+    const imageBlob = await fetchBlob(imageUrl);
+
+    for (const canvas of this.canvasMap.values()) {
+      await drawImageToCanvas(
+        imageBlob,
+        canvas,
+        'fit',
+        'pixelated');
+    }
+  }
+
+  async renderCanvas(uploadStep: UploadStep, bitmap: ImageBitmap) {
     const canvas = this.canvasMap.get(uploadStep);
 
     if (canvas === undefined) {
       throw new Error(`Upload step has no canvas: ${uploadStep}`);
     }
-    const context = canvas.getContext('bitmaprenderer');
-    context?.transferFromImageBitmap(bitmap);
+
+    await drawImageToCanvas(
+      bitmap,
+      canvas,
+      'fit',
+      'high');
   }
 
   completeUpload(downloadUrl: string, mapFileSizeInBytes: number) {
