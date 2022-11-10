@@ -17,6 +17,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
   resizeSelect: HTMLSelectElement;
   resizeQualitySelect: HTMLSelectElement;
   backgroundSelect: HTMLSelectElement;
+
   colorDifferenceSelect: HTMLSelectElement;
   ditheringSelect: HTMLSelectElement;
   transparencyInputText: HTMLInputElement;
@@ -33,6 +34,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.resizeSelect = this.getShadowElement('resize-select') as HTMLSelectElement;
     this.resizeQualitySelect = this.getShadowElement('resize-quality-select') as HTMLSelectElement;
     this.backgroundSelect = this.getShadowElement('background-select') as HTMLSelectElement;
+
     this.colorDifferenceSelect = this.getShadowElement('color-difference-select') as HTMLSelectElement;
     this.ditheringSelect = this.getShadowElement('dithering-select') as HTMLSelectElement;
     this.transparencyInputText = this.getShadowElement('transparency-input-text') as HTMLInputElement;
@@ -61,6 +63,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.resizeSelect.addEventListener('input', this.onChangeSettings);
     this.resizeQualitySelect.addEventListener('input', this.onChangeSettings);
     this.backgroundSelect.addEventListener('input', this.onChangeSettings);
+
     this.colorDifferenceSelect.addEventListener('input', this.onChangeSettings);
     this.ditheringSelect.addEventListener('input', this.onChangeSettings);
     this.transparencyInputText.addEventListener('input', this.onChangeSettings);
@@ -76,6 +79,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
     CurrentContext.settings.resize = this.resizeSelect.value as Settings.ResizeType;
     CurrentContext.settings.resizeQuality = this.resizeQualitySelect.value as Settings.ResizeQualityType;
     CurrentContext.settings.background = this.backgroundSelect.value as Settings.BackgroundType;
+
     CurrentContext.settings.colorDifference = this.colorDifferenceSelect.value as Settings.ColorDifferenceType;
     CurrentContext.settings.dithering = this.ditheringSelect.value as Settings.DitheringType;
 

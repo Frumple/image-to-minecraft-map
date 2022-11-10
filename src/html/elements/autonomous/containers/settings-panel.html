@@ -12,7 +12,9 @@
 
   <hr />
 
-  <h2 class="settings-panel__settings-title">General Settings</h2>
+  <h2 class="settings-panel__settings-main-header">Settings</h2>
+
+  <h3 class="settings-panel__settings-container-header">General</h3>
   <div class="settings-panel__general-settings-container">
     <label class="settings-panel__version-label" for="version-select">Minecraft Version:</label>
     <select id="version-select" class="settings-panel__version-select">
@@ -23,8 +25,8 @@
 
   <hr />
 
-  <h2 class="settings-panel__settings-title">Image Settings</h2>
-  <div class="settings-panel__image-settings-container">
+  <h3 class="settings-panel__settings-container-header">Resize</h3>
+  <div class="settings-panel__resize-settings-container">
     <label class="settings-panel__resize-label" for="resize-select">Resize to:</label>
     <select id="resize-select" class="settings-panel__resize-select">
       <option value="fit">Fit</option>
@@ -47,6 +49,12 @@
       <option value="white">White</option>
     </select>
 
+  </div>
+
+  <hr />
+
+  <h3 class="settings-panel__settings-container-header">Reduce Colors</h3>
+  <div class="settings-panel__reduce-colors-settings-container">
     <label class="settings-panel__color-difference-label" for="color-difference-select">Color Difference:</label>
     <select id="color-difference-select" class="settings-panel__color-difference-select">
       <option value="euclidean">Euclidean</option>

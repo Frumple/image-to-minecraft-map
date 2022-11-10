@@ -11,10 +11,12 @@ export class Settings {
   version: string = '21w16a';
   autoDownload: boolean = true;
 
-  // Image Settings
+  // Resize Settings
   resize: ResizeType = 'fit';
   resizeQuality: ResizeQualityType = 'high';
   background: BackgroundType = 'transparent';
+
+  // Reduce Colors Settings
   colorDifference: ColorDifferenceType = 'metric';
   dithering: DitheringType = 'none';
   transparency: number = 128;

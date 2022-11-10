@@ -44,8 +44,15 @@
   width: 6em;
 }
 
-.settings-panel__settings-title {
+.settings-panel__settings-main-header {
   font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+}
+
+.settings-panel__settings-container-header {
+  font-size: 1.17em;
   font-weight: bold;
   text-align: center;
   margin: 0;
@@ -77,22 +84,18 @@
   grid-area: auto-download-input;
 }
 
-.settings-panel__image-settings-container {
+.settings-panel__resize-settings-container {
   display: grid;
   grid-template:
-    "resize-label              resize-select            " auto
-    "resize-quality-label      resize-quality-select    " auto
+    "resize-label             resize-select           " auto
+    "resize-quality-label     resize-quality-select   " auto
     "background-label         background-select       " auto
-    "color-difference-label   color-difference-select " auto
-    "dithering-label          dithering-select        " auto
-    "transparency-label       transparency-input-text " auto
-    "transparency-input-range transparency-input-range" auto
     / 1fr 1fr;
   gap: 5px;
   align-items: center;
 }
 
-.settings-panelb__resize-label {
+.settings-panel__resize-label {
   grid-area: resize-label;
 }
 
@@ -114,6 +117,18 @@
 
 .settings-panel__background-select {
   grid-area: background-select;
+}
+
+.settings-panel__reduce-colors-settings-container {
+  display: grid;
+  grid-template:
+    "color-difference-label   color-difference-select " auto
+    "dithering-label          dithering-select        " auto
+    "transparency-label       transparency-input-text " auto
+    "transparency-input-range transparency-input-range" auto
+    / 1fr 1fr;
+  gap: 5px;
+  align-items: center;
 }
 
 .settings-panel__color-difference-label {
