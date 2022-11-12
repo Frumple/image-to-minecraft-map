@@ -66,6 +66,8 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
     addStringToListElement(this.reduceColorSettingsList, `Color Diff: ${settings.colorDifferenceDisplayText}`);
     addStringToListElement(this.reduceColorSettingsList, `Dither: ${settings.ditheringDisplayText}`);
     addStringToListElement(this.reduceColorSettingsList, `Transparency: ${settings.transparency}`);
+
+    addStringToListElement(this.createFileSettingsList, `Auto-download: ${settings.autoDownload ? 'Yes' : 'No'}`);
   }
 
   initialize() {

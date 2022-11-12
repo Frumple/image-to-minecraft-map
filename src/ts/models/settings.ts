@@ -47,7 +47,6 @@ export class Settings {
 
   // General Settings
   version: string = '21w16a';
-  autoDownload: boolean = true;
 
   // Resize Settings
   resize: ResizeType = 'fit';
@@ -58,6 +57,9 @@ export class Settings {
   colorDifference: ColorDifferenceType = 'metric';
   dithering: DitheringType = 'none';
   transparency: number = 128;
+
+  // Create Map File Settings
+  autoDownload: boolean = true;
 
   constructor() {
 

@@ -12,7 +12,6 @@ export default class SettingsPanel extends AutonomousCustomElement {
   mapIdInput: HTMLInputElement;
 
   versionSelect: HTMLSelectElement;
-  autoDownloadInput: HTMLInputElement;
 
   resizeSelect: HTMLSelectElement;
   resizeQualitySelect: HTMLSelectElement;
@@ -23,13 +22,14 @@ export default class SettingsPanel extends AutonomousCustomElement {
   transparencyInputText: HTMLInputElement;
   transparencyInputRange: HTMLInputElement;
 
+  autoDownloadInput: HTMLInputElement;
+
   constructor() {
     super();
 
     this.mapIdInput = this.getShadowElement('map-id-input') as HTMLInputElement;
 
     this.versionSelect = this.getShadowElement('version-select') as HTMLSelectElement;
-    this.autoDownloadInput = this.getShadowElement('auto-download-input') as HTMLInputElement;
 
     this.resizeSelect = this.getShadowElement('resize-select') as HTMLSelectElement;
     this.resizeQualitySelect = this.getShadowElement('resize-quality-select') as HTMLSelectElement;
@@ -39,6 +39,8 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.ditheringSelect = this.getShadowElement('dithering-select') as HTMLSelectElement;
     this.transparencyInputText = this.getShadowElement('transparency-input-text') as HTMLInputElement;
     this.transparencyInputRange = this.getShadowElement('transparency-input-range') as HTMLInputElement;
+
+    this.autoDownloadInput = this.getShadowElement('auto-download-input') as HTMLInputElement;
   }
 
   initialize() {
@@ -54,7 +56,6 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.mapIdInput.addEventListener('input', this.onChangeSettings);
 
     this.versionSelect.addEventListener('input', this.onChangeSettings);
-    this.autoDownloadInput.addEventListener('input', this.onChangeSettings);
 
     this.resizeSelect.addEventListener('input', this.onChangeSettings);
     this.resizeQualitySelect.addEventListener('input', this.onChangeSettings);
@@ -64,6 +65,8 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.ditheringSelect.addEventListener('input', this.onChangeSettings);
     this.transparencyInputText.addEventListener('input', this.onChangeSettings);
     this.transparencyInputRange.addEventListener('input', this.onChangeSettings);
+
+    this.autoDownloadInput.addEventListener('input', this.onChangeSettings);
   }
 
   private populateVersions() {
@@ -97,7 +100,6 @@ export default class SettingsPanel extends AutonomousCustomElement {
     CurrentContext.settings.mapId = parseInt(this.mapIdInput.value);
 
     CurrentContext.settings.version = this.versionSelect.value;
-    CurrentContext.settings.autoDownload = this.autoDownloadInput.checked;
 
     CurrentContext.settings.resize = this.resizeSelect.value as Settings.ResizeType;
     CurrentContext.settings.resizeQuality = this.resizeQualitySelect.value as Settings.ResizeQualityType;
@@ -117,6 +119,8 @@ export default class SettingsPanel extends AutonomousCustomElement {
       throw new Error('Transparency is null.');
     }
     CurrentContext.settings.transparency = transparency;
+
+    CurrentContext.settings.autoDownload = this.autoDownloadInput.checked;
   }
 
   set mapId(mapId: number) {

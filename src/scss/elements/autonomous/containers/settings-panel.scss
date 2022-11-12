@@ -58,14 +58,18 @@
   margin: 0;
 }
 
-.settings-panel__general-settings-container {
+.settings-panel__settings-container {
   display: grid;
+  align-items: center;
+  gap: 5px;
+}
+
+.settings-panel__general-settings-container {
+  @extend .settings-panel__settings-container;
   grid-template:
     "version-label       version-select     " auto
     "auto-download-label auto-download-input" auto
     / 1fr 1fr;
-  gap: 5px;
-  align-items: center;
 }
 
 .settings-panel__version-label {
@@ -76,23 +80,13 @@
   grid-area: version-select;
 }
 
-.settings-panel__auto-download-label {
-  grid-area: auto-download-label;
-}
-
-.settings-panel__auto-download-input {
-  grid-area: auto-download-input;
-}
-
 .settings-panel__resize-settings-container {
-  display: grid;
+  @extend .settings-panel__settings-container;
   grid-template:
     "resize-label             resize-select           " auto
     "resize-quality-label     resize-quality-select   " auto
     "background-label         background-select       " auto
     / 1fr 1fr;
-  gap: 5px;
-  align-items: center;
 }
 
 .settings-panel__resize-label {
@@ -120,15 +114,13 @@
 }
 
 .settings-panel__reduce-colors-settings-container {
-  display: grid;
+  @extend .settings-panel__settings-container;
   grid-template:
     "color-difference-label   color-difference-select " auto
     "dithering-label          dithering-select        " auto
     "transparency-label       transparency-input-text " auto
     "transparency-input-range transparency-input-range" auto
     / 1fr 1fr;
-  gap: 5px;
-  align-items: center;
 }
 
 .settings-panel__color-difference-label {
@@ -157,4 +149,19 @@
 
 .settings-panel__transparency-input-range {
   grid-area: transparency-input-range;
+}
+
+.settings-panel__create-file-settings-container {
+  @extend .settings-panel__settings-container;
+  grid-template:
+    "auto-download-label auto-download-input" auto
+    / 1fr 1fr;
+}
+
+.settings-panel__auto-download-label {
+  grid-area: auto-download-label;
+}
+
+.settings-panel__auto-download-input {
+  grid-area: auto-download-input;
 }

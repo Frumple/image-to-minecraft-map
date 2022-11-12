@@ -170,15 +170,17 @@ $arrow-point-left-offset: 28px;
   grid-area: create-file;
 }
 
-$settings-padding-left: 5px;
+$settings-padding: 2px;
 
 .upload-progress-panel__settings {
   position: absolute;
+  background: white;
+  border: 1px solid gray;
   bottom: 0px;
   left: 0px;
-  width: $arrow-bounds-width - $settings-padding-left;
+  width: $arrow-bounds-width - ($settings-padding * 2);
   margin: 0;
-  padding-left: $settings-padding-left;
+  padding: $settings-padding;
   list-style-type: none;
   font-size: x-small;
 }
