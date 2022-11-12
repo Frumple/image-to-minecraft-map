@@ -1,7 +1,10 @@
 import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
+import { addStringToListElement } from '@helpers/element-helpers';
 
 import { fetchBlob, getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
 import { drawImageToCanvas } from '@helpers/image-helpers';
+
+import * as Settings from '@models/settings';
 
 import { UploadStep } from '@workers/upload-worker';
 
@@ -19,10 +22,14 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
   downloadFileLink: HTMLAnchorElement;
   downloadFileTextLink: HTMLAnchorElement;
 
+  resizeSettingsList: HTMLUListElement;
+  reduceColorSettingsList: HTMLUListElement;
+  createFileSettingsList: HTMLUListElement;
+
   startingMapId: number;
   autoDownload: boolean;
 
-  constructor(imageFilename: string, imageFileSizeInBytes: number, startingMapId: number, autoDownload: boolean) {
+  constructor(settings: Settings.Settings, imageFilename: string, imageFileSizeInBytes: number) {
     super();
 
     this.uploadProgressPanel = this.getShadowElement('upload-progress-panel') as HTMLDivElement;
@@ -39,14 +46,26 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
     this.downloadFileLink = this.getShadowElement('download-file-link') as HTMLAnchorElement;
     this.downloadFileTextLink = this.getShadowElement('download-file-text-link') as HTMLAnchorElement;
 
+    this.resizeSettingsList = this.getShadowElement('resize-settings-list') as HTMLUListElement;
+    this.reduceColorSettingsList = this.getShadowElement('reduce-colors-settings-list') as HTMLUListElement;
+    this.createFileSettingsList = this.getShadowElement('create-file-settings-list') as HTMLUListElement;
+
     const fileSizeText = getFileSizeTextInReadableUnits(imageFileSizeInBytes);
     this.imageFilenameHeading.textContent = `${imageFilename} (${fileSizeText})`;
 
-    // TODO: Multiple map files
-    this.mapFilenameHeading.textContent = getMapFilename(startingMapId);
+    this.startingMapId = settings.mapId;
+    this.autoDownload = settings.autoDownload;
 
-    this.startingMapId = startingMapId;
-    this.autoDownload = autoDownload;
+    // TODO: Multiple map files
+    this.mapFilenameHeading.textContent = getMapFilename(this.startingMapId);
+
+    addStringToListElement(this.resizeSettingsList, `Resize to: ${settings.resizeDisplayText}`);
+    addStringToListElement(this.resizeSettingsList, `Quality: ${settings.resizeQualityDisplayText}`);
+    addStringToListElement(this.resizeSettingsList, `Background: ${settings.backgroundDisplayText}`);
+
+    addStringToListElement(this.reduceColorSettingsList, `Color Diff: ${settings.colorDifferenceDisplayText}`);
+    addStringToListElement(this.reduceColorSettingsList, `Dither: ${settings.ditheringDisplayText}`);
+    addStringToListElement(this.reduceColorSettingsList, `Transparency: ${settings.transparency}`);
   }
 
   initialize() {
@@ -94,7 +113,6 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
     this.downloadFileLink.href = downloadUrl;
     this.downloadFileLink.download = mapFilename;
     this.downloadFileLink.textContent = 'task';
-    this.downloadFileLink.style.color = 'black';
 
     this.downloadFileTextLink.href = downloadUrl;
     this.downloadFileTextLink.download = mapFilename;

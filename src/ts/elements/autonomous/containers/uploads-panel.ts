@@ -110,7 +110,7 @@ export default class UploadsPanel extends AutonomousCustomElement {
 
   async uploadFile(settings: Settings.Settings, file: File) {
     // Create and show the UI panel
-    const uploadProgressPanel = new UploadProgressPanel(file.name, file.size, settings.mapId, settings.autoDownload);
+    const uploadProgressPanel = new UploadProgressPanel(settings, file.name, file.size);
     this.uploadsContainer.appendChild(uploadProgressPanel);
 
     await uploadProgressPanel.drawItemFrameToCanvasses();

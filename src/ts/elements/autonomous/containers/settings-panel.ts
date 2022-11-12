@@ -42,18 +42,14 @@ export default class SettingsPanel extends AutonomousCustomElement {
   }
 
   initialize() {
-    for (const version of VersionLoader.javaVersions.values()) {
-      // Only add "major" versions with the name attribute, snapshots without the name attribute are intentionally excluded
-      if (version.name !== null) {
-        const optionElement = new Option(version.name, version.id);
-        this.versionSelect.add(optionElement);
-      }
-    }
+    this.populateVersions();
 
-    // Select the last (latest) version by default
-    const lastOptionElement = this.versionSelect.options[this.versionSelect.options.length - 1];
-    lastOptionElement.selected = true;
-    lastOptionElement.defaultSelected = true;
+    this.populateSettings(this.resizeSelect, Settings.resizeAttributes);
+    this.populateSettings(this.resizeQualitySelect, Settings.resizeQualityAttributes);
+    this.populateSettings(this.backgroundSelect, Settings.backgroundAttributes);
+
+    this.populateSettings(this.colorDifferenceSelect, Settings.colorDifferenceAttributes);
+    this.populateSettings(this.ditheringSelect, Settings.ditheringAttributes);
 
     this.mapIdInput.addEventListener('input', this.onChangeSettings);
 
@@ -68,6 +64,33 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.ditheringSelect.addEventListener('input', this.onChangeSettings);
     this.transparencyInputText.addEventListener('input', this.onChangeSettings);
     this.transparencyInputRange.addEventListener('input', this.onChangeSettings);
+  }
+
+  private populateVersions() {
+    for (const version of VersionLoader.javaVersions.values()) {
+      // Only add "major" versions with the name attribute, snapshots without the name attribute are intentionally excluded
+      if (version.name !== null) {
+        const optionElement = new Option(version.name, version.id);
+        this.versionSelect.add(optionElement);
+      }
+    }
+
+    // Select the last (latest) version by default
+    const lastOptionElement = this.versionSelect.options[this.versionSelect.options.length - 1];
+    lastOptionElement.selected = true;
+    lastOptionElement.defaultSelected = true;
+  }
+
+  private populateSettings(selectElement: HTMLSelectElement, displayTextMap: Map<string, Settings.SettingAttributes>) {
+    for (const [key, value] of displayTextMap) {
+      const optionElement = new Option(value.displayText, key);
+      selectElement.add(optionElement);
+
+      if (value.defaultSelected) {
+        optionElement.selected = true;
+        optionElement.defaultSelected = true;
+      }
+    }
   }
 
   onChangeSettings = (event: Event) => {
