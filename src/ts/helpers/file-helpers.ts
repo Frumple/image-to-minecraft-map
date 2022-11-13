@@ -1,3 +1,5 @@
+import { roundToDecimalPlaces } from '@helpers/number-helpers';
+
 import pako from 'pako';
 
 export async function fetchText(path: string | URL): Promise<string> {
@@ -34,19 +36,14 @@ export function getFileSizeTextInReadableUnits(sizeInBytes: number): string {
    if (sizeInBytes < 1024) {
      return `${sizeInBytes} bytes`;
    } else if (sizeInBytes < 1048576) {
-    const sizeInKilobytes = roundToTwoDecimals(sizeInBytes / 1024);
+    const sizeInKilobytes = roundToDecimalPlaces(sizeInBytes / 1024, 2);
     return `${sizeInKilobytes} kB`
    } else {
-    const sizeInMegabytes = roundToTwoDecimals(sizeInBytes / 1048576);
+    const sizeInMegabytes = roundToDecimalPlaces(sizeInBytes / 1048576, 2);
     return `${sizeInMegabytes} MB`
    }
 }
 
 export function getMapFilename(mapId: number) {
   return `map_${mapId}.dat`;
-}
-
-// TODO: Move this to a number helpers module
-function roundToTwoDecimals(num: number) {
-  return Math.round((num + Number.EPSILON) * 100) / 100;
 }

@@ -21,6 +21,7 @@ export interface UploadWorkerIncomingMessageParameters {
 export interface UploadWorkerOutgoingMessageParameters {
   step: UploadStep;
   data: ImageBitmap | ArrayBuffer | number | string;
+  timeElapsed?: number;
 }
 
 class UploadWorker {
@@ -28,6 +29,8 @@ class UploadWorker {
   file!: File;
 
   version!: JavaVersion;
+
+  startTime!: number;
 
   constructor() {
     self.addEventListener('message', this.onMessageReceived);
@@ -49,6 +52,8 @@ class UploadWorker {
 
   async run() {
     try {
+
+      this.startTime = performance.now();
 
       await this.drawSourceImage();
       const workCanvas = await this.processImage();
@@ -208,18 +213,22 @@ class UploadWorker {
 
   sendCanvasBitmapToMainThread(canvas: OffscreenCanvas, uploadStep: UploadStep) {
     const bitmap = canvas.transferToImageBitmap();
+    const timeElapsed = performance.now() - this.startTime;
     const messageData: UploadWorkerOutgoingMessageParameters = {
       step: uploadStep,
-      data: bitmap
+      data: bitmap,
+      timeElapsed: timeElapsed
     };
     postMessage(messageData, [bitmap]);
   }
 
   sendMapFileDataToMainThread(data: Uint8Array) {
     const buffer = data.buffer;
+    const timeElapsed = performance.now() - this.startTime;
     const messageData: UploadWorkerOutgoingMessageParameters = {
       step: 'download',
-      data: buffer
+      data: buffer,
+      timeElapsed: timeElapsed
     };
     postMessage(messageData, [buffer]);
   }

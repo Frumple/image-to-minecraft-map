@@ -132,17 +132,32 @@ export default class UploadsPanel extends AutonomousCustomElement {
       worker.addEventListener('message', async (event: MessageEvent) => {
         const parameters: UploadWorkerOutgoingMessageParameters = event.data;
 
-        if (parameters.step == 'error' ) {
-          uploadProgressPanel.failUpload(parameters.data as string);
-        } else if (parameters.step === 'progress') {
-          uploadProgressPanel.progressPercentage = parameters.data as number;
-        } else if (parameters.step === 'download') {
-          const data = parameters.data as ArrayBuffer;
-          const downloadUrl = createDownloadUrlFromData(data, 'application/octet-stream');
-          const mapFileSizeInBytes = data.byteLength;
-          uploadProgressPanel.completeUpload(downloadUrl, mapFileSizeInBytes);
-        } else {
-          await uploadProgressPanel.renderCanvas(parameters.step, parameters.data as ImageBitmap);
+        switch (parameters.step) {
+          case 'error':
+            uploadProgressPanel.failUpload(parameters.data as string);
+            break;
+
+          case 'progress':
+            uploadProgressPanel.progressPercentage = parameters.data as number;
+            break;
+
+          case 'download':
+            const data = parameters.data as ArrayBuffer;
+            const downloadUrl = createDownloadUrlFromData(data, 'application/octet-stream');
+            const mapFileSizeInBytes = data.byteLength;
+            const timeElapsed = parameters.timeElapsed as number;
+
+            uploadProgressPanel.completeUpload(downloadUrl, mapFileSizeInBytes, timeElapsed);
+            break;
+
+          case 'source':
+          case 'intermediate':
+          case 'final':
+            await uploadProgressPanel.renderCanvas(parameters.step, parameters.data as ImageBitmap);
+            break;
+
+          default:
+            throw new Error(`Invalid upload step: ${parameters.step}`);
         }
       });
 

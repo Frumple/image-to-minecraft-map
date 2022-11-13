@@ -28,13 +28,15 @@
   flex-basis: 0;
 }
 
-.upload-progress-panel__error-heading {
+.upload-progress-panel__status-heading {
   @extend .upload-progress-panel__heading;
-  display: none;
-  background: yellow;
-  color: red;
   padding-left: 5px;
   padding-right: 5px;
+}
+
+.upload-progress-panel__status-heading_error {
+  background: yellow;
+  color: red;
 }
 
 .upload-progress-panel__map-filename-heading {

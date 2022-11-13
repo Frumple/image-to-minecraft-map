@@ -3,6 +3,7 @@ import { addStringToListElement } from '@helpers/element-helpers';
 
 import { fetchBlob, getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
 import { drawImageToCanvas } from '@helpers/image-helpers';
+import { roundToDecimalPlaces } from '@helpers/number-helpers';
 
 import * as Settings from '@models/settings';
 
@@ -14,7 +15,7 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
   uploadProgressPanel: HTMLDivElement;
 
   imageFilenameHeading: HTMLHeadingElement;
-  errorHeading: HTMLHeadingElement;
+  statusHeading: HTMLHeadingElement;
   mapFilenameHeading: HTMLHeadElement;
 
   canvasMap: Map<UploadStep, HTMLCanvasElement>;
@@ -35,7 +36,7 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
     this.uploadProgressPanel = this.getShadowElement('upload-progress-panel') as HTMLDivElement;
 
     this.imageFilenameHeading = this.getShadowElement('image-filename-heading') as HTMLHeadingElement;
-    this.errorHeading = this.getShadowElement('error-heading') as HTMLHeadingElement;
+    this.statusHeading = this.getShadowElement('status-heading') as HTMLHeadingElement;
     this.mapFilenameHeading = this.getShadowElement('map-filename-heading') as HTMLHeadingElement;
 
     this.canvasMap = new Map();
@@ -50,11 +51,14 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
     this.reduceColorSettingsList = this.getShadowElement('reduce-colors-settings-list') as HTMLUListElement;
     this.createFileSettingsList = this.getShadowElement('create-file-settings-list') as HTMLUListElement;
 
+    this.startingMapId = settings.mapId;
+    this.autoDownload = settings.autoDownload;
+
     const fileSizeText = getFileSizeTextInReadableUnits(imageFileSizeInBytes);
     this.imageFilenameHeading.textContent = `${imageFilename} (${fileSizeText})`;
 
-    this.startingMapId = settings.mapId;
-    this.autoDownload = settings.autoDownload;
+    this.statusHeading.textContent = 'Processing... (0%)';
+
 
     // TODO: Multiple map files
     this.mapFilenameHeading.textContent = getMapFilename(this.startingMapId);
@@ -106,7 +110,7 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
       'high');
   }
 
-  completeUpload(downloadUrl: string, mapFileSizeInBytes: number) {
+  completeUpload(downloadUrl: string, mapFileSizeInBytes: number, timeElapsed: number) {
     const mapFilename = getMapFilename(this.startingMapId);
     const fileSizeText = getFileSizeTextInReadableUnits(mapFileSizeInBytes);
 
@@ -124,6 +128,9 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
     }
 
     this.progressPercentage = 100;
+
+    const roundTimeElapsedInSeconds = roundToDecimalPlaces(timeElapsed / 1000, 3);
+    this.statusHeading.textContent = `Processing completed in ${roundTimeElapsedInSeconds} seconds.`;
   }
 
   set progressPercentage(percent: number) {
@@ -139,12 +146,15 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
       ${backgroundColor} ${percent}% 100%)`;
 
     this.uploadProgressPanel.style.background = linearGradient;
+
+    this.statusHeading.textContent = `Processing... (${percent}%)`;
   }
 
   failUpload(message: string) {
     this.uploadProgressPanel.style.background = 'lightpink';
     this.downloadFileLink.textContent = 'close';
-    this.errorHeading.style.display = 'block';
-    this.errorHeading.textContent = `Error - ${message}`;
+
+    this.statusHeading.classList.add('upload-progress-panel__status-heading_error');
+    this.statusHeading.textContent = `Error - ${message}`;
   }
 }
