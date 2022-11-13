@@ -151,7 +151,7 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
   }
 
   failUpload(message: string) {
-    this.uploadProgressPanel.style.background = 'lightpink';
+    this.uploadProgressPanel.classList.add('upload-progress-panel_error');
     this.downloadFileLink.textContent = 'close';
 
     this.statusHeading.classList.add('upload-progress-panel__status-heading_error');
