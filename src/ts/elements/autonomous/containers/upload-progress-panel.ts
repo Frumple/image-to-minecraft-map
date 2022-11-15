@@ -110,7 +110,7 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
       'high');
   }
 
-  completeUpload(downloadUrl: string, mapFileSizeInBytes: number, timeElapsed: number) {
+  completeUpload(downloadUrl: string, mapFileSizeInBytes: number, timeElapsed: number, colorsProcessed: number) {
     const mapFilename = getMapFilename(this.startingMapId);
     const fileSizeText = getFileSizeTextInReadableUnits(mapFileSizeInBytes);
 
@@ -130,7 +130,7 @@ export default class UploadProgressPanel extends AutonomousCustomElement {
     this.progressPercentage = 100;
 
     const roundTimeElapsedInSeconds = roundToDecimalPlaces(timeElapsed / 1000, 3);
-    this.statusHeading.textContent = `Processing completed in ${roundTimeElapsedInSeconds} seconds.`;
+    this.statusHeading.textContent = `Processed ${colorsProcessed} colors in ${roundTimeElapsedInSeconds} seconds.`;
   }
 
   set progressPercentage(percent: number) {

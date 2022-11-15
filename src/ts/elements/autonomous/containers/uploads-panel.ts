@@ -146,8 +146,9 @@ export default class UploadsPanel extends AutonomousCustomElement {
             const downloadUrl = createDownloadUrlFromData(data, 'application/octet-stream');
             const mapFileSizeInBytes = data.byteLength;
             const timeElapsed = parameters.timeElapsed as number;
+            const colorsProcessed = parameters.colorsProcessed as number;
 
-            uploadProgressPanel.completeUpload(downloadUrl, mapFileSizeInBytes, timeElapsed);
+            uploadProgressPanel.completeUpload(downloadUrl, mapFileSizeInBytes, timeElapsed, colorsProcessed);
             break;
 
           case 'source':

@@ -1,7 +1,7 @@
 import { calculateColorDifference } from '@helpers/color-difference-helpers';
 import { applyDitheringToImageData } from '@helpers/dithering-helpers';
 import { gzipData } from '@helpers/file-helpers';
-import { MAP_SIZE, drawImageToCanvas, getPixelColorFromImageData, setPixelColorToImageData } from '@helpers/image-helpers';
+import { MAP_SIZE, drawImageToCanvas, getPixelFromImageData, setPixelToImageData } from '@helpers/image-helpers';
 import { encodeNbtMap } from '@helpers/nbt-helpers';
 
 import VersionLoader from '@loaders/version-loader';
@@ -22,6 +22,7 @@ export interface UploadWorkerOutgoingMessageParameters {
   step: UploadStep;
   data: ImageBitmap | ArrayBuffer | number | string;
   timeElapsed?: number;
+  colorsProcessed?: number;
 }
 
 class UploadWorker {
@@ -30,7 +31,9 @@ class UploadWorker {
 
   version!: JavaVersion;
 
-  startTime!: number;
+  startTime: number = 0;
+
+  colorCache: Map<string, number> = new Map();
 
   constructor() {
     self.addEventListener('message', this.onMessageReceived);
@@ -153,15 +156,21 @@ class UploadWorker {
     imageData: ImageData,
     pixelStartIndex: number) {
 
-    const originalColor = getPixelColorFromImageData(imageData, pixelStartIndex);
+    const originalPixel = getPixelFromImageData(imageData, pixelStartIndex);
 
-    const nearestMapColorId = this.getNearestMapColorId(originalColor, mapColors);
+    if (this.colorCache.has(originalPixel.key)) {
+      return this.colorCache.get(originalPixel.key) as number;
+    }
+
+    const nearestMapColorId = this.getNearestMapColorId(originalPixel.color, mapColors);
+    this.colorCache.set(originalPixel.key, nearestMapColorId);
+
     const nearestMapColor = mapColors[nearestMapColorId];
 
-    setPixelColorToImageData(imageData, pixelStartIndex, nearestMapColor);
+    setPixelToImageData(imageData, pixelStartIndex, nearestMapColor);
 
     if (this.settings.dithering === 'floyd-steinberg') {
-      applyDitheringToImageData(imageData, pixelStartIndex, originalColor, nearestMapColor);
+      applyDitheringToImageData(imageData, pixelStartIndex, originalPixel.color, nearestMapColor);
     }
 
     return nearestMapColorId;
@@ -225,10 +234,12 @@ class UploadWorker {
   sendMapFileDataToMainThread(data: Uint8Array) {
     const buffer = data.buffer;
     const timeElapsed = performance.now() - this.startTime;
+    const colorsProcessed = this.colorCache.size;
     const messageData: UploadWorkerOutgoingMessageParameters = {
       step: 'download',
       data: buffer,
-      timeElapsed: timeElapsed
+      timeElapsed: timeElapsed,
+      colorsProcessed: colorsProcessed
     };
     postMessage(messageData, [buffer]);
   }
