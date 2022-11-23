@@ -22,6 +22,9 @@
     "url": "https://github.com/Frumple/image-to-minecraft-map/issues"
   },
   "homepage": "https://github.com/Frumple/image-to-minecraft-map#readme",
+  "alias": {
+    "colorjs.io/fn": "./node_modules/colorjs.io/src/index-fn.js"
+  },
   "devDependencies": {
     "@parcel/core": "^2.7.0",
     "@parcel/plugin": "^2.7.0",
