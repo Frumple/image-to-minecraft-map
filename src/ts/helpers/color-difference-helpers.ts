@@ -23,10 +23,10 @@ export function calculateColorDifference(color1: ColorObject, color2: ColorObjec
   const c2 = {space: sRGB, coords: color2.coords, alpha: color2.alpha};
 
   switch (algorithm) {
+    case 'compuphase':
+      return compuPhase(c1, c2);
     case 'euclidean':
       return distance(c1, c2, sRGB);
-    case 'metric':
-      return colorMetric(c1, c2);
     case 'deltae-1976':
       return deltaE76(c1, c2);
     case 'cmc-1984':
@@ -40,7 +40,7 @@ export function calculateColorDifference(color1: ColorObject, color2: ColorObjec
 
 // A "low-cost approximation" color difference algorithm
 // https://www.compuphase.com/cmetric.htm
-function colorMetric(color1: ColorObject, color2: ColorObject) {
+function compuPhase(color1: ColorObject, color2: ColorObject) {
   const r1 = color1.coords[0] * 255;
   const r2 = color2.coords[0] * 255;
   const g1 = color1.coords[1] * 255;

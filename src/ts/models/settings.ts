@@ -1,7 +1,7 @@
 export type ResizeType = 'fit' | 'fill' | 'stretch';
 export type ResizeQualityType = 'pixelated' | 'low' | 'medium' | 'high';
 export type BackgroundType = 'transparent' | 'black' | 'white';
-export type ColorDifferenceType = 'euclidean' | 'metric' | 'deltae-1976' | 'cmc-1984' | 'deltae-2000';
+export type ColorDifferenceType = 'compuphase' | 'euclidean' | 'deltae-1976' | 'cmc-1984' | 'deltae-2000';
 export type DitheringType = 'none' | 'floyd-steinberg';
 
 export interface SettingAttributes {
@@ -30,8 +30,8 @@ export const backgroundAttributes = new Map<BackgroundType, SettingAttributes>([
 ]);
 
 export const colorDifferenceAttributes = new Map<ColorDifferenceType, SettingAttributes>([
+  ['compuphase', { displayText: 'CompuPhase', defaultSelected: true }],
   ['euclidean', { displayText: 'Euclidean' }],
-  ['metric', { displayText: 'Color Metric', defaultSelected: true }],
   ['deltae-1976', { displayText: 'DeltaE 1976' }],
   ['cmc-1984', { displayText: 'CMC 1984' }],
   ['deltae-2000', { displayText: 'DeltaE 2000' }],
@@ -54,7 +54,7 @@ export class Settings {
   background: BackgroundType = 'transparent';
 
   // Reduce Colors Settings
-  colorDifference: ColorDifferenceType = 'metric';
+  colorDifference: ColorDifferenceType = 'compuphase';
   dithering: DitheringType = 'none';
   transparency: number = 128;
 
