@@ -5,17 +5,20 @@ import { ColorObject } from 'colorjs.io/types/src/color';
 export class JavaVersion extends Version {
 
   baseColors: ColorObject[];
-  mapColors: ColorObject[];
+  mapColorsRGB: ColorObject[];
+  mapColorsLab: ColorObject[];
 
   constructor(
     id: string,
     name: string | null,
     baseColors: ColorObject[],
-    mapColors: ColorObject[]) {
+    mapColorsRGB: ColorObject[],
+    mapColorsLab: ColorObject[]) {
 
     super(id, name);
 
     this.baseColors = baseColors;
-    this.mapColors = mapColors;
+    this.mapColorsRGB = mapColorsRGB;
+    this.mapColorsLab = mapColorsLab;
   }
 }

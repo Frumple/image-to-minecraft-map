@@ -17,12 +17,12 @@ import {
 ColorSpace.register(sRGB);
 ColorSpace.register(Lab);
 
-export function calculateColorDifference(color1: ColorObject, color2: ColorObject, algorithm: ColorDifferenceType) {
+export function calculateColorDifference(color1: ColorObject, color2: ColorObject, colorDifference: ColorDifferenceType) {
   // For some reason, we also have to recreate the color object after registering the color space
-  const c1 = {space: sRGB, coords: color1.coords, alpha: color1.alpha};
-  const c2 = {space: sRGB, coords: color2.coords, alpha: color2.alpha};
+  const c1 = {space: color1.space, coords: color1.coords, alpha: color1.alpha};
+  const c2 = {space: color2.space, coords: color2.coords, alpha: color2.alpha};
 
-  switch (algorithm) {
+  switch (colorDifference) {
     case 'compuphase':
       return compuPhase(c1, c2);
     case 'euclidean':
@@ -34,7 +34,7 @@ export function calculateColorDifference(color1: ColorObject, color2: ColorObjec
     case 'deltae-2000':
       return deltaE2000(c1, c2);
     default:
-      throw new Error(`Invalid color difference algorithm: ${algorithm}`);
+      throw new Error(`Invalid color difference algorithm: ${colorDifference}`);
   }
 }
 

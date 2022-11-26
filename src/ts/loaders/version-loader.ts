@@ -2,7 +2,7 @@ import { JavaVersion } from '@models/versions/java-version';
 import versionsJson from '@json/versions.json';
 
 import { ColorObject } from 'colorjs.io/types/src/color';
-import { ColorSpace, sRGB, parse } from 'colorjs.io/fn';
+import { ColorSpace, sRGB, Lab, parse, to } from 'colorjs.io/fn';
 
 // Due to a bug in colorjs.io, we have to register colorspaces beforehand
 // TODO: Remove this registration when the bug in colorjs.io is fixed
@@ -17,7 +17,8 @@ class VersionLoader {
 
     // For each version, add all the base and map colors from the previous versions
     const accumulatedBaseColors: ColorObject[] = [];
-    const accumulatedMapColors: ColorObject[] = [];
+    const accumulatedMapColorsRGB: ColorObject[] = [];
+    const accumulatedMapColorsLab: ColorObject[] = [];
 
     for (const javaVersionJson of versionsJson.java) {
       const baseColors = javaVersionJson.base_colors.map(str => {
@@ -31,11 +32,14 @@ class VersionLoader {
       for (const baseColor of baseColors) {
         for (const multiplier of mapColorMultipliers) {
           // Deep copy the coordinates so that changes to the map color do not affect the base color
-          const mapColor = { space: sRGB, coords: structuredClone(baseColor.coords), alpha: baseColor.alpha };
+          const mapColorRGB = { space: sRGB, coords: structuredClone(baseColor.coords), alpha: baseColor.alpha };
           for (let i = 0; i <= 2; i++) {
-            mapColor.coords[i] = Math.floor(mapColor.coords[i] * multiplier) / 255;
+            mapColorRGB.coords[i] = Math.floor(mapColorRGB.coords[i] * multiplier) / 255;
           }
-          accumulatedMapColors.push(mapColor);
+          const mapColorLab = to(mapColorRGB, Lab);
+
+          accumulatedMapColorsRGB.push(mapColorRGB);
+          accumulatedMapColorsLab.push(mapColorLab);
         }
       }
 
@@ -45,7 +49,8 @@ class VersionLoader {
         javaVersionJson.id,
         javaVersionJson.name,
         Array.from(accumulatedBaseColors),
-        Array.from(accumulatedMapColors)
+        Array.from(accumulatedMapColorsRGB),
+        Array.from(accumulatedMapColorsLab)
       );
 
       this.javaVersions.set(javaVersionJson.id, javaVersion);

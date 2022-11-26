@@ -128,13 +128,13 @@ class UploadWorker {
       throw new Error('Image data is undefined.');
     }
 
-    const mapColors = this.version.mapColors;
+    const mapColors = this.mapColors;
 
     // TODO: Iterate over x and y to make dithering calculations easier
     const dataLength = imageData.data.length / 4;
     let lastProgressPercentage = 0;
     for (let index = 0; index < dataLength; index++) {
-      nbtColorArray[index] = this.reducePixelColor(mapColors, imageData, index * 4);
+      nbtColorArray[index] = this.reducePixelColor(imageData, mapColors, index * 4);
 
       const progressPercentage = Math.floor(index / dataLength * 100);
       if (progressPercentage >= lastProgressPercentage + 1) {
@@ -150,9 +150,26 @@ class UploadWorker {
     return nbtColorArray;
   }
 
+  get mapColors() {
+    const colorDifference = this.settings.colorDifference
+
+    // For faster performance, use the appropriate color space for map colors to avoid converting between color spaces on the fly.
+    switch(colorDifference) {
+      case 'compuphase':
+      case 'euclidean':
+        return this.version.mapColorsRGB;
+      case 'deltae-1976':
+      case 'cmc-1984':
+      case 'deltae-2000':
+        return this.version.mapColorsLab;
+      default:
+        throw new Error(`Invalid color difference algorithm: ${colorDifference}`);
+    }
+  }
+
   reducePixelColor(
-    mapColors: ColorObject[],
     imageData: ImageData,
+    mapColors: ColorObject[],
     pixelStartIndex: number) {
 
     const originalPixel = getPixelFromImageData(imageData, pixelStartIndex);
@@ -164,7 +181,7 @@ class UploadWorker {
     const nearestMapColorId = this.getNearestMapColorId(originalPixel.color, mapColors);
     this.colorCache.set(originalPixel.key, nearestMapColorId);
 
-    const nearestMapColor = mapColors[nearestMapColorId];
+    const nearestMapColor = this.version.mapColorsRGB[nearestMapColorId];
 
     setPixelToImageData(imageData, pixelStartIndex, nearestMapColor);
 
