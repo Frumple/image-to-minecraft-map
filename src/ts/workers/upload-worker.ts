@@ -9,7 +9,7 @@ import VersionLoader from '@loaders/version-loader';
 import * as Settings from '@models/settings';
 import { JavaVersion } from '@models/versions/java-version';
 
-import Color from 'colorjs.io';
+import { ColorObject } from 'colorjs.io/types/src/color';
 
 export type UploadStep = 'source' | 'intermediate' | 'final' | 'download' | 'progress' | 'error';
 
@@ -55,7 +55,6 @@ class UploadWorker {
 
   async run() {
     try {
-
       this.startTime = performance.now();
 
       await this.drawSourceImage();
@@ -152,7 +151,7 @@ class UploadWorker {
   }
 
   reducePixelColor(
-    mapColors: Color[],
+    mapColors: ColorObject[],
     imageData: ImageData,
     pixelStartIndex: number) {
 
@@ -176,9 +175,9 @@ class UploadWorker {
     return nearestMapColorId;
   }
 
-  getNearestMapColorId(originalColor: Color, mapColors: Color[]) {
+  getNearestMapColorId(originalColor: ColorObject, mapColors: ColorObject[]) {
     // Return the transparent map color if the original color doesn't meet the transparency threshold
-    if (originalColor.alpha * 255 < this.settings.transparency) {
+    if (originalColor.alpha !== undefined && originalColor.alpha * 255 < this.settings.transparency) {
       return 0;
     }
 

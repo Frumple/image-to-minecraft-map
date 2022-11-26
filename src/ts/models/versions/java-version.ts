@@ -1,17 +1,17 @@
 import { Version } from '@models/versions/version';
 
-import Color from 'colorjs.io';
+import { ColorObject } from 'colorjs.io/types/src/color';
 
 export class JavaVersion extends Version {
 
-  baseColors: Color[];
-  mapColors: Color[];
+  baseColors: ColorObject[];
+  mapColors: ColorObject[];
 
   constructor(
     id: string,
     name: string | null,
-    baseColors: Color[],
-    mapColors: Color[]) {
+    baseColors: ColorObject[],
+    mapColors: ColorObject[]) {
 
     super(id, name);
 

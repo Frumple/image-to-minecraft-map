@@ -1,6 +1,6 @@
 import { ColorDifferenceType } from '@models/settings';
 
-import Color from 'colorjs.io';
+import { ColorObject } from 'colorjs.io/types/src/color';
 
 import {
   ColorSpace,
@@ -17,26 +17,21 @@ import {
 ColorSpace.register(sRGB);
 ColorSpace.register(Lab);
 
-export function calculateColorDifference(color1: Color, color2: Color, algorithm: ColorDifferenceType) {
-
-  // Convert color to plain object for use in the more-performant color.js procedural API
-  const c1 = {space: sRGB, coords: color1.coords};
-  const c2 = {space: sRGB, coords: color2.coords};
+export function calculateColorDifference(color1: ColorObject, color2: ColorObject, algorithm: ColorDifferenceType) {
+  // For some reason, we also have to recreate the color object after registering the color space
+  const c1 = {space: sRGB, coords: color1.coords, alpha: color1.alpha};
+  const c2 = {space: sRGB, coords: color2.coords, alpha: color2.alpha};
 
   switch (algorithm) {
     case 'euclidean':
-      // @ts-ignore
       return distance(c1, c2, sRGB);
     case 'metric':
-      return colorMetric(color1, color2);
+      return colorMetric(c1, c2);
     case 'deltae-1976':
-      // @ts-ignore
       return deltaE76(c1, c2);
     case 'cmc-1984':
-      // @ts-ignore
       return deltaECMC(c1, c2);
     case 'deltae-2000':
-      // @ts-ignore
       return deltaE2000(c1, c2);
     default:
       throw new Error(`Invalid color difference algorithm: ${algorithm}`);
@@ -45,13 +40,13 @@ export function calculateColorDifference(color1: Color, color2: Color, algorithm
 
 // A "low-cost approximation" color difference algorithm
 // https://www.compuphase.com/cmetric.htm
-function colorMetric(color1: Color, color2: Color) {
-  const r1 = color1.srgb.r * 255;
-  const r2 = color2.srgb.r * 255;
-  const g1 = color1.srgb.g * 255;
-  const g2 = color2.srgb.g * 255;
-  const b1 = color1.srgb.b * 255;
-  const b2 = color2.srgb.b * 255;
+function colorMetric(color1: ColorObject, color2: ColorObject) {
+  const r1 = color1.coords[0] * 255;
+  const r2 = color2.coords[0] * 255;
+  const g1 = color1.coords[1] * 255;
+  const g2 = color2.coords[1] * 255;
+  const b1 = color1.coords[2] * 255;
+  const b2 = color2.coords[2] * 255;
 
   const rmean = (r1 + r2) / 2;
   const r = r1 - r2;

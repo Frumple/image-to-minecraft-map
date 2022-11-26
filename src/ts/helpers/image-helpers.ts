@@ -1,8 +1,13 @@
 import { ResizeType, ResizeQualityType } from '@models/settings';
-
-import Color from 'colorjs.io';
+import { sRGB } from 'colorjs.io/fn';
+import { ColorObject } from 'colorjs.io/types/src/color';
 
 export const MAP_SIZE = 128;
+
+export interface ImageDataPixel {
+  key: string,
+  color: ColorObject
+}
 
 export async function drawImageToCanvas(
   source: ImageBitmapSource,
@@ -54,7 +59,7 @@ export async function drawImageToCanvas(
   context.drawImage(bitmap, x, y, width, height);
 }
 
-export function getPixelFromImageData(imageData: ImageData, pixelStartIndex: number) {
+export function getPixelFromImageData(imageData: ImageData, pixelStartIndex: number): ImageDataPixel {
   const imageDataArray = imageData.data;
 
   const r = imageDataArray[pixelStartIndex];
@@ -64,15 +69,19 @@ export function getPixelFromImageData(imageData: ImageData, pixelStartIndex: num
 
   return {
     key: `${r},${g},${b}`,
-    color: new Color('srgb', [r / 255, g / 255, b / 255], a / 255)
+    color: {
+      space: sRGB,
+      coords: [r / 255, g / 255, b / 255],
+      alpha: a / 255
+    }
   }
 }
 
-export function setPixelToImageData(imageData: ImageData,  pixelStartIndex: number, color: Color) {
+export function setPixelToImageData(imageData: ImageData,  pixelStartIndex: number, color: ColorObject) {
   const imageDataArray = imageData.data;
 
-  imageDataArray[pixelStartIndex] = color.srgb.r * 255;
-  imageDataArray[pixelStartIndex + 1] = color.srgb.g * 255;
-  imageDataArray[pixelStartIndex + 2] = color.srgb.b * 255;
-  imageDataArray[pixelStartIndex + 3] = color.alpha * 255;
+  imageDataArray[pixelStartIndex] = color.coords[0] * 255;
+  imageDataArray[pixelStartIndex + 1] = color.coords[1] * 255;
+  imageDataArray[pixelStartIndex + 2] = color.coords[2] * 255;
+  imageDataArray[pixelStartIndex + 3] = (color.alpha !== undefined) ? color.alpha * 255 : 255;
 }
