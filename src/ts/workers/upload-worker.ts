@@ -202,7 +202,7 @@ class UploadWorker {
     let nearestDistance = Number.MAX_VALUE;
     let nearestMapColorId = 0;
 
-    // Don't include the transparency map colors in the search
+    // Don't include the transparent map colors (id = 0, 1, 2, and 3) in the search
     for (let mapColorId = 4; mapColorId < mapColors.length; mapColorId++) {
       const mapColor = mapColors[mapColorId];
       const distance = calculateColorDifference(originalColor, mapColor, this.settings.colorDifference);
