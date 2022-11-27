@@ -9,6 +9,7 @@ import VersionLoader from '@loaders/version-loader';
 import * as Settings from '@models/settings';
 import { JavaVersion } from '@models/versions/java-version';
 
+import { Lab, to } from 'colorjs.io/fn';
 import { ColorObject } from 'colorjs.io/types/src/color';
 
 export type UploadStep = 'source' | 'intermediate' | 'final' | 'download' | 'progress' | 'error';
@@ -41,7 +42,7 @@ class UploadWorker {
 
   onMessageReceived = (event: MessageEvent) => {
     const parameters: UploadWorkerIncomingMessageParameters = event.data;
-    this.settings = parameters.settings;
+    this.settings = new Settings.Settings(parameters.settings);
     this.file = parameters.file;
 
     const version = VersionLoader.javaVersions.get(this.settings.version);
@@ -128,7 +129,8 @@ class UploadWorker {
       throw new Error('Image data is undefined.');
     }
 
-    const mapColors = this.mapColors;
+    // For faster performance, use the appropriate color space for map colors to avoid converting between color spaces on the fly.
+    const mapColors = this.settings.useLabColorSpace ? this.version.mapColorsLab : this.version.mapColorsRGB;
 
     // TODO: Iterate over x and y to make dithering calculations easier
     const dataLength = imageData.data.length / 4;
@@ -150,23 +152,6 @@ class UploadWorker {
     return nbtColorArray;
   }
 
-  get mapColors() {
-    const colorDifference = this.settings.colorDifference
-
-    // For faster performance, use the appropriate color space for map colors to avoid converting between color spaces on the fly.
-    switch(colorDifference) {
-      case 'compuphase':
-      case 'euclidean':
-        return this.version.mapColorsRGB;
-      case 'deltae-1976':
-      case 'cmc-1984':
-      case 'deltae-2000':
-        return this.version.mapColorsLab;
-      default:
-        throw new Error(`Invalid color difference algorithm: ${colorDifference}`);
-    }
-  }
-
   reducePixelColor(
     imageData: ImageData,
     mapColors: ColorObject[],
@@ -178,7 +163,10 @@ class UploadWorker {
       return this.colorCache.get(originalPixel.key) as number;
     }
 
-    const nearestMapColorId = this.getNearestMapColorId(originalPixel.color, mapColors);
+    // For faster performance, convert the original color to the appropriate color space before calculating its difference with the map colors
+    const originalColor = this.settings.useLabColorSpace ? to(originalPixel.color, Lab) : originalPixel.color
+
+    const nearestMapColorId = this.getNearestMapColorId(originalColor, mapColors);
     this.colorCache.set(originalPixel.key, nearestMapColorId);
 
     const nearestMapColor = this.version.mapColorsRGB[nearestMapColorId];

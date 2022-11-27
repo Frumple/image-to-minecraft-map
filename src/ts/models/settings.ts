@@ -61,8 +61,10 @@ export class Settings {
   // Create Map File Settings
   autoDownload: boolean = true;
 
-  constructor() {
-
+  constructor(obj?: Object) {
+    if (obj) {
+      Object.assign(this, obj);
+    }
   }
 
   get resizeDisplayText() {
@@ -83,5 +85,19 @@ export class Settings {
 
   get ditheringDisplayText() {
     return ditheringAttributes.get(this.dithering)?.displayText as string;
+  }
+
+  get useLabColorSpace() {
+    switch (this.colorDifference) {
+      case 'compuphase':
+      case 'euclidean':
+        return false;
+      case 'deltae-1976':
+      case 'cmc-1984':
+      case 'deltae-2000':
+        return true;
+      default:
+        throw new Error(`Invalid color difference algorithm: ${this.colorDifference}`);
+    }
   }
 }
