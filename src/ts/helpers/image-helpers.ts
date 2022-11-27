@@ -46,7 +46,7 @@ export async function drawImageToCanvas(
     height = bitmap.height * resizeFactor;
   }
 
-  const context = canvas.getContext('2d');
+  const context = canvas.getContext('2d') as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
   if (context === null) {
     throw new Error('Canvas context is null.');
   }
