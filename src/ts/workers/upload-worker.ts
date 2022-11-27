@@ -202,23 +202,19 @@ class UploadWorker {
     let nearestDistance = Number.MAX_VALUE;
     let nearestMapColorId = 0;
 
-    for (const [id, mapColor] of mapColors.entries()) {
-      // Don't include the transparency map colors in the search
-      // TODO: Does removing this check and just iterating a subset of opaque map colors save time?
-      if (mapColor.alpha === 0) {
-        continue;
-      }
-
+    // Don't include the transparency map colors in the search
+    for (let mapColorId = 1; mapColorId < mapColors.length; mapColorId++) {
+      const mapColor = mapColors[mapColorId];
       const distance = calculateColorDifference(originalColor, mapColor, this.settings.colorDifference);
 
       // Return immediately if there is an exact match with a map color
       if (distance === 0) {
-        return id;
+        return mapColorId;
       }
 
       if (distance < nearestDistance) {
         nearestDistance = distance
-        nearestMapColorId = id;
+        nearestMapColorId = mapColorId;
       }
     }
 
