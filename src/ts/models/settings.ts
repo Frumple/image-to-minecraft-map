@@ -55,7 +55,7 @@ export class Settings {
 
   // Reduce Colors Settings
   colorDifference: ColorDifferenceType = 'compuphase';
-  dithering: DitheringType = 'none';
+  dithering: DitheringType = 'floyd-steinberg';
   transparency: number = 128;
 
   // Create Map File Settings
