@@ -1021,9 +1021,9 @@ color-name@~1.1.4:
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
 colorjs.io@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/colorjs.io/-/colorjs.io-0.4.1.tgz#5618a28fa3b50054d78641ef264317c741c41d83"
-  integrity sha512-TdVvUn9DqTkuT+zU6duDf7zNEYf4f0YhXkh/OJn5heC2k9iLZzwmNs9DfBKiysIqVxdQasPg9J7HqMl+Cb7cPw==
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/colorjs.io/-/colorjs.io-0.4.2.tgz#5338fc185a8be3b46674420cd2be88389a18145b"
+  integrity sha512-vtpiH+BTzZtzs4Yno0GyoC05Z20fTeLwNJ7lQzjxi8GJJb1SZO2o5yUBAUXzgvrO2JNuyIqur4gb1Z6HBjpd9A==
 
 commander@^2.18.0, commander@^2.20.0:
   version "2.20.3"
