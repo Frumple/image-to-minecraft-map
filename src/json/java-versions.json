@@ -1,5 +1,5 @@
 {
-  "java": [
+  "versions": [
     {
       "id": "1.8.1-pre1",
       "name": "Java 1.8.1 to 1.11",

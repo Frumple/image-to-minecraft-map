@@ -6,7 +6,10 @@ import UploadProgressPanel from '@elements/autonomous/containers/upload-progress
 
 import IntegerInput from '@elements/builtin/integer-input';
 
+import CurrentContext from '@models/current-context';
+
 async function init() {
+  CurrentContext.init();
   await defineElements();
 }
 

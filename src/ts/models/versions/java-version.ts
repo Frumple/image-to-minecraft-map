@@ -1,8 +1,8 @@
-import { Version } from '@models/versions/version';
+import { MinecraftVersion } from '@models/versions/minecraft-version';
 
 import { ColorObject } from 'colorjs.io/types/src/color';
 
-export class JavaVersion extends Version {
+export class JavaVersion extends MinecraftVersion {
 
   baseColors: ColorObject[];
   mapColorsRGB: ColorObject[];

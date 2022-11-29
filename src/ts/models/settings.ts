@@ -43,10 +43,12 @@ export const ditheringAttributes = new Map<DitheringType, SettingAttributes>([
 ]);
 
 export class Settings {
+  appVersion!: string;
+
   mapId: number = 0;
 
   // General Settings
-  version: string = '21w16a';
+  minecraftVersion: string = '21w16a';
 
   // Resize Settings
   resize: ResizeType = 'fit';
@@ -61,10 +63,8 @@ export class Settings {
   // Create Map File Settings
   autoDownload: boolean = true;
 
-  constructor(obj?: Object) {
-    if (obj) {
-      Object.assign(this, obj);
-    }
+  constructor(obj: Object) {
+    Object.assign(this, obj);
   }
 
   get resizeDisplayText() {

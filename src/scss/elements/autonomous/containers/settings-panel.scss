@@ -67,17 +67,16 @@
 .settings-panel__general-settings-container {
   @extend .settings-panel__settings-container;
   grid-template:
-    "version-label       version-select     " auto
-    "auto-download-label auto-download-input" auto
+    "minecraft-version-label minecraft-version-select" auto
     / 1fr 1fr;
 }
 
-.settings-panel__version-label {
-  grid-area: version-label;
+.settings-panel__minecraft-version-label {
+  grid-area: minecraft-version-label;
 }
 
-.settings-panel__version-select {
-  grid-area: version-select;
+.settings-panel__minecraft-version-select {
+  grid-area: minecraft-version-select;
 }
 
 .settings-panel__resize-settings-container {

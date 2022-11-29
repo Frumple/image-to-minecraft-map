@@ -1,10 +1,15 @@
-import * as Settings from '@models/settings';
+import LocalStorageProxy from '@helpers/local-storage-proxy';
+import { Settings } from '@models/settings';
 
 class CurrentContext {
-  settings: Settings.Settings;
+  settings!: Settings;
 
   constructor() {
-    this.settings = new Settings.Settings();
+  }
+
+  async init() {
+    const settings = await LocalStorageProxy.loadSettings();
+    this.settings = settings;
   }
 }
 

@@ -1,5 +1,5 @@
 import { JavaVersion } from '@models/versions/java-version';
-import versionsJson from '@json/versions.json';
+import javaVersionsJson from '@json/java-versions.json';
 
 import { ColorObject } from 'colorjs.io/types/src/color';
 import { ColorSpace, sRGB, Lab, parse, to } from 'colorjs.io/fn';
@@ -20,7 +20,7 @@ class VersionLoader {
     const accumulatedMapColorsRGB: ColorObject[] = [];
     const accumulatedMapColorsLab: ColorObject[] = [];
 
-    for (const javaVersionJson of versionsJson.java) {
+    for (const javaVersionJson of javaVersionsJson.versions) {
       const baseColors = javaVersionJson.base_colors.map(str => {
         const parsedColor = parse(str);
         return { space: sRGB, coords: parsedColor.coords, alpha: parsedColor.alpha };

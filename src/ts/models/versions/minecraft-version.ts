@@ -1,4 +1,4 @@
-export class Version {
+export class MinecraftVersion {
 
   id: string;
   name: string | null;

@@ -30,7 +30,7 @@ class UploadWorker {
   settings!: Settings.Settings;
   file!: File;
 
-  version!: JavaVersion;
+  minecraftVersion!: JavaVersion;
 
   startTime: number = 0;
 
@@ -45,11 +45,11 @@ class UploadWorker {
     this.settings = new Settings.Settings(parameters.settings);
     this.file = parameters.file;
 
-    const version = VersionLoader.javaVersions.get(this.settings.version);
-    if (!version) {
-      throw new Error('Version is undefined.');
+    const minecraftVersion = VersionLoader.javaVersions.get(this.settings.minecraftVersion);
+    if (!minecraftVersion) {
+      throw new Error('Minecraft version is undefined.');
     }
-    this.version = version;
+    this.minecraftVersion = minecraftVersion;
 
     this.run();
   }
@@ -130,7 +130,7 @@ class UploadWorker {
     }
 
     // For faster performance, use the appropriate color space for map colors to avoid converting between color spaces on the fly.
-    const mapColors = this.settings.useLabColorSpace ? this.version.mapColorsLab : this.version.mapColorsRGB;
+    const mapColors = this.settings.useLabColorSpace ? this.minecraftVersion.mapColorsLab : this.minecraftVersion.mapColorsRGB;
 
     // TODO: Iterate over x and y to make dithering calculations easier
     const dataLength = imageData.data.length / 4;
@@ -169,7 +169,7 @@ class UploadWorker {
     const nearestMapColorId = this.getNearestMapColorId(originalColor, mapColors);
     this.colorCache.set(originalPixel.key, nearestMapColorId);
 
-    const nearestMapColor = this.version.mapColorsRGB[nearestMapColorId];
+    const nearestMapColor = this.minecraftVersion.mapColorsRGB[nearestMapColorId];
 
     setPixelToImageData(imageData, pixelStartIndex, nearestMapColor);
 

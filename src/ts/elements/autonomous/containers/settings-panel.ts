@@ -5,13 +5,14 @@ import * as Settings from '@models/settings';
 
 import { convertToInteger } from '@helpers/number-helpers';
 import VersionLoader from '@loaders/version-loader';
+import LocalStorageProxy from '@helpers/local-storage-proxy';
 
 export default class SettingsPanel extends AutonomousCustomElement {
   static get elementName() { return 'settings-panel'; }
 
   mapIdInput: HTMLInputElement;
 
-  versionSelect: HTMLSelectElement;
+  minecraftVersionSelect: HTMLSelectElement;
 
   resizeSelect: HTMLSelectElement;
   resizeQualitySelect: HTMLSelectElement;
@@ -29,7 +30,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
 
     this.mapIdInput = this.getShadowElement('map-id-input') as HTMLInputElement;
 
-    this.versionSelect = this.getShadowElement('version-select') as HTMLSelectElement;
+    this.minecraftVersionSelect = this.getShadowElement('minecraft-version-select') as HTMLSelectElement;
 
     this.resizeSelect = this.getShadowElement('resize-select') as HTMLSelectElement;
     this.resizeQualitySelect = this.getShadowElement('resize-quality-select') as HTMLSelectElement;
@@ -44,18 +45,20 @@ export default class SettingsPanel extends AutonomousCustomElement {
   }
 
   initialize() {
-    this.populateVersions();
+    this.populateMinecraftVersions();
 
-    this.populateSettings(this.resizeSelect, Settings.resizeAttributes);
-    this.populateSettings(this.resizeQualitySelect, Settings.resizeQualityAttributes);
-    this.populateSettings(this.backgroundSelect, Settings.backgroundAttributes);
+    this.populateOptions(this.resizeSelect, Settings.resizeAttributes);
+    this.populateOptions(this.resizeQualitySelect, Settings.resizeQualityAttributes);
+    this.populateOptions(this.backgroundSelect, Settings.backgroundAttributes);
 
-    this.populateSettings(this.colorDifferenceSelect, Settings.colorDifferenceAttributes);
-    this.populateSettings(this.ditheringSelect, Settings.ditheringAttributes);
+    this.populateOptions(this.colorDifferenceSelect, Settings.colorDifferenceAttributes);
+    this.populateOptions(this.ditheringSelect, Settings.ditheringAttributes);
+
+    this.populateSettings();
 
     this.mapIdInput.addEventListener('input', this.onChangeSettings);
 
-    this.versionSelect.addEventListener('input', this.onChangeSettings);
+    this.minecraftVersionSelect.addEventListener('input', this.onChangeSettings);
 
     this.resizeSelect.addEventListener('input', this.onChangeSettings);
     this.resizeQualitySelect.addEventListener('input', this.onChangeSettings);
@@ -69,22 +72,22 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.autoDownloadInput.addEventListener('input', this.onChangeSettings);
   }
 
-  private populateVersions() {
-    for (const version of VersionLoader.javaVersions.values()) {
+  private populateMinecraftVersions() {
+    for (const minecraftVersion of VersionLoader.javaVersions.values()) {
       // Only add "major" versions with the name attribute, snapshots without the name attribute are intentionally excluded
-      if (version.name !== null) {
-        const optionElement = new Option(version.name, version.id);
-        this.versionSelect.add(optionElement);
+      if (minecraftVersion.name !== null) {
+        const optionElement = new Option(minecraftVersion.name, minecraftVersion.id);
+        this.minecraftVersionSelect.add(optionElement);
       }
     }
 
     // Select the last (latest) version by default
-    const lastOptionElement = this.versionSelect.options[this.versionSelect.options.length - 1];
+    const lastOptionElement = this.minecraftVersionSelect.options[this.minecraftVersionSelect.options.length - 1];
     lastOptionElement.selected = true;
     lastOptionElement.defaultSelected = true;
   }
 
-  private populateSettings(selectElement: HTMLSelectElement, displayTextMap: Map<string, Settings.SettingAttributes>) {
+  private populateOptions(selectElement: HTMLSelectElement, displayTextMap: Map<string, Settings.SettingAttributes>) {
     for (const [key, value] of displayTextMap) {
       const optionElement = new Option(value.displayText, key);
       selectElement.add(optionElement);
@@ -96,17 +99,38 @@ export default class SettingsPanel extends AutonomousCustomElement {
     }
   }
 
+  private populateSettings() {
+    const settings = CurrentContext.settings;
+
+    this.mapIdInput.value = settings.mapId.toString();
+
+    this.minecraftVersionSelect.value = settings.minecraftVersion;
+
+    this.resizeSelect.value = settings.resize;
+    this.resizeQualitySelect.value = settings.resizeQuality;
+    this.backgroundSelect.value = settings.background;
+
+    this.colorDifferenceSelect.value = settings.colorDifference;
+    this.ditheringSelect.value = settings.dithering;
+    this.transparencyInputText.value = settings.transparency.toString();
+    this.transparencyInputRange.value = settings.transparency.toString();
+
+    this.autoDownloadInput.checked = settings.autoDownload;
+  }
+
   onChangeSettings = (event: Event) => {
-    CurrentContext.settings.mapId = parseInt(this.mapIdInput.value);
+    const settings = CurrentContext.settings;
 
-    CurrentContext.settings.version = this.versionSelect.value;
+    settings.mapId = parseInt(this.mapIdInput.value);
 
-    CurrentContext.settings.resize = this.resizeSelect.value as Settings.ResizeType;
-    CurrentContext.settings.resizeQuality = this.resizeQualitySelect.value as Settings.ResizeQualityType;
-    CurrentContext.settings.background = this.backgroundSelect.value as Settings.BackgroundType;
+    settings.minecraftVersion = this.minecraftVersionSelect.value;
 
-    CurrentContext.settings.colorDifference = this.colorDifferenceSelect.value as Settings.ColorDifferenceType;
-    CurrentContext.settings.dithering = this.ditheringSelect.value as Settings.DitheringType;
+    settings.resize = this.resizeSelect.value as Settings.ResizeType;
+    settings.resizeQuality = this.resizeQualitySelect.value as Settings.ResizeQualityType;
+    settings.background = this.backgroundSelect.value as Settings.BackgroundType;
+
+    settings.colorDifference = this.colorDifferenceSelect.value as Settings.ColorDifferenceType;
+    settings.dithering = this.ditheringSelect.value as Settings.DitheringType;
 
     if (event.target === this.transparencyInputText) {
       this.transparencyInputRange.value = this.transparencyInputText.value;
@@ -118,9 +142,11 @@ export default class SettingsPanel extends AutonomousCustomElement {
     if (transparency === null) {
       throw new Error('Transparency is null.');
     }
-    CurrentContext.settings.transparency = transparency;
+    settings.transparency = transparency;
 
-    CurrentContext.settings.autoDownload = this.autoDownloadInput.checked;
+    settings.autoDownload = this.autoDownloadInput.checked;
+
+    LocalStorageProxy.saveSettings(settings);
   }
 
   set mapId(mapId: number) {
