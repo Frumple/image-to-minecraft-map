@@ -1,3 +1,4 @@
+import { convertRGBColorToHex } from '@helpers/number-helpers';
 import { ResizeType, ResizeQualityType } from '@models/settings';
 import { sRGB } from 'colorjs.io/fn';
 import { ColorObject } from 'colorjs.io/types/src/color';
@@ -67,8 +68,10 @@ export function getPixelFromImageData(imageData: ImageData, pixelStartIndex: num
   const b = imageDataArray[pixelStartIndex + 2];
   const a = imageDataArray[pixelStartIndex + 3];
 
+  const key = convertRGBColorToHex(r, g, b);
+
   return {
-    key: `${r},${g},${b}`,
+    key: key,
     color: {
       space: sRGB,
       coords: [r / 255, g / 255, b / 255],

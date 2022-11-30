@@ -3,7 +3,7 @@ import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-elem
 import CurrentContext from '@models/current-context';
 import * as Settings from '@models/settings';
 
-import { convertToInteger } from '@helpers/number-helpers';
+import { convertStringToInteger } from '@helpers/number-helpers';
 import VersionLoader from '@loaders/version-loader';
 import LocalStorageProxy from '@helpers/local-storage-proxy';
 
@@ -138,7 +138,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
       this.transparencyInputText.value = this.transparencyInputRange.value;
     }
 
-    const transparency = convertToInteger(this.transparencyInputText.value);
+    const transparency = convertStringToInteger(this.transparencyInputText.value);
     if (transparency === null) {
       throw new Error('Transparency is null.');
     }
@@ -155,7 +155,7 @@ export default class SettingsPanel extends AutonomousCustomElement {
 
   get mapId(): number {
     const value = this.mapIdInput.value;
-    const result = convertToInteger(value);
+    const result = convertStringToInteger(value);
     if (result === null) {
       throw new Error(`Could not convert map id value '${value}' to integer.`);
     }

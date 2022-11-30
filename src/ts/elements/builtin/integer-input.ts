@@ -1,4 +1,4 @@
-import { convertToInteger } from '@helpers/number-helpers';
+import { convertStringToInteger } from '@helpers/number-helpers';
 
 export default class IntegerInput extends HTMLInputElement {
   isInitialized: boolean = false;
@@ -43,14 +43,14 @@ export default class IntegerInput extends HTMLInputElement {
   }
 
   get valueAsInt() {
-    return convertToInteger(this.value);
+    return convertStringToInteger(this.value);
   }
 
   get minAsInt() {
-    return convertToInteger(this.min);
+    return convertStringToInteger(this.min);
   }
 
   get maxAsInt() {
-    return convertToInteger(this.max);
+    return convertStringToInteger(this.max);
   }
 }
