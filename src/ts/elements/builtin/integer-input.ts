@@ -37,7 +37,6 @@ export default class IntegerInput extends HTMLInputElement {
         this.value = value.toString();
       }
     } else {
-      // TODO: Use validation instead of setting value automatically to minimum
       this.value = this.min;
     }
   }
