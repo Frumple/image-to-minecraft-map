@@ -2,6 +2,7 @@ import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-elem
 import UploadProgressPanel from '@elements/autonomous/containers/upload-progress-panel';
 
 import { createDownloadUrlFromData } from '@helpers/file-helpers';
+import LocalStorageProxy from '@helpers/local-storage-proxy';
 
 import CurrentContext from '@models/current-context';
 import * as Settings from '@models/settings';
@@ -96,6 +97,8 @@ export default class UploadsPanel extends AutonomousCustomElement {
       await this.uploadFile(settings, file);
       settings.mapId++;
     }
+
+    LocalStorageProxy.saveSettings(settings);
 
     // Fire event so that the settings panel can update the next map id
     const mapIdUpdatedEvent = new CustomEvent('mapIdUpdated', {
