@@ -3,6 +3,8 @@ import TopPanel from '@elements/autonomous/containers/top-panel';
 import SettingsPanel from '@elements/autonomous/containers/settings-panel';
 import UploadsPanel from '@elements/autonomous/containers/uploads-panel';
 
+import { isCustomEvent } from '@helpers/event-helpers';
+
 export default class ApplicationContainer extends AutonomousCustomElement {
   static get elementName() { return 'application-container'; }
 
@@ -25,9 +27,13 @@ export default class ApplicationContainer extends AutonomousCustomElement {
   }
 
   onMapIdUpdated = (event: Event) => {
-    // TODO: Weirdly, using a CustomEvent as a parameter doesn't fit the parameter definitions for addEventListener
-    const customEvent = event as CustomEvent;
-    this.settingsPanel.mapId = customEvent.detail.mapId;
+    // Because of how "--strictFunctionTypes" works in TypeScript, custom events cannot be used as a parameter in an event listener.
+    // Check that the Event is a CustomEvent before continuing.
+    // See: https://stackoverflow.com/questions/47166369/argument-of-type-e-customevent-void-is-not-assignable-to-parameter-of-ty
+    if (!isCustomEvent(event)) {
+      throw new Error('Event is not a custom event.');
+    }
+    this.settingsPanel.mapId = event.detail.mapId;
   }
 
   // Prevent the browser's default behaviour of opening a file when dragging and dropping it over any area outside of the drop zone.
