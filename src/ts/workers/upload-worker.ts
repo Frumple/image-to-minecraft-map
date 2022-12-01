@@ -214,7 +214,7 @@ class UploadWorker {
     // i.e. Values 0 to 127 remain the same
     //      Values 128 to 255 wraparound to -128 to -1.
     const signedNbtColorArray = new Int8Array(unsignedNbtColorArray.buffer);
-    const encodedArray = encodeNbtMap(signedNbtColorArray);
+    const encodedArray = encodeNbtMap(signedNbtColorArray, this.settings.minecraftVersion);
     const gzippedArray = gzipData(encodedArray);
 
     return gzippedArray;

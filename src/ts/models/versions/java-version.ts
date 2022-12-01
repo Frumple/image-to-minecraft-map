@@ -11,11 +11,12 @@ export class JavaVersion extends MinecraftVersion {
   constructor(
     id: string,
     name: string | null,
+    date: Date,
     baseColors: ColorObject[],
     mapColorsRGB: ColorObject[],
     mapColorsLab: ColorObject[]) {
 
-    super(id, name);
+    super(id, name, date);
 
     this.baseColors = baseColors;
     this.mapColorsRGB = mapColorsRGB;
