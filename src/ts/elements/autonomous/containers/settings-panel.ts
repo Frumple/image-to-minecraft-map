@@ -55,21 +55,6 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.populateOptions(this.ditheringSelect, Settings.ditheringAttributes);
 
     this.populateSettings();
-
-    this.mapIdInput.addEventListener('input', this.onChangeSettings);
-
-    this.minecraftVersionSelect.addEventListener('input', this.onChangeSettings);
-
-    this.resizeSelect.addEventListener('input', this.onChangeSettings);
-    this.resizeQualitySelect.addEventListener('input', this.onChangeSettings);
-    this.backgroundSelect.addEventListener('input', this.onChangeSettings);
-
-    this.colorDifferenceSelect.addEventListener('input', this.onChangeSettings);
-    this.ditheringSelect.addEventListener('input', this.onChangeSettings);
-    this.transparencyInputText.addEventListener('input', this.onChangeSettings);
-    this.transparencyInputRange.addEventListener('input', this.onChangeSettings);
-
-    this.autoDownloadInput.addEventListener('input', this.onChangeSettings);
   }
 
   private populateMinecraftVersions() {
@@ -118,10 +103,34 @@ export default class SettingsPanel extends AutonomousCustomElement {
     this.autoDownloadInput.checked = settings.autoDownload;
   }
 
+  // These event listeners are explicitly registered after the IntegerInput event listeners.
+  // This ensures that IntegerInput can correct any invalid values ("null" or values outside minimum/maximum)
+  // before the IntegerInput values are stored into the settings in local storage.
+  registerEventListeners() {
+    this.mapIdInput.addEventListener('input', this.onChangeSettings);
+
+    this.minecraftVersionSelect.addEventListener('input', this.onChangeSettings);
+
+    this.resizeSelect.addEventListener('input', this.onChangeSettings);
+    this.resizeQualitySelect.addEventListener('input', this.onChangeSettings);
+    this.backgroundSelect.addEventListener('input', this.onChangeSettings);
+
+    this.colorDifferenceSelect.addEventListener('input', this.onChangeSettings);
+    this.ditheringSelect.addEventListener('input', this.onChangeSettings);
+    this.transparencyInputText.addEventListener('input', this.onChangeSettings);
+    this.transparencyInputRange.addEventListener('input', this.onChangeSettings);
+
+    this.autoDownloadInput.addEventListener('input', this.onChangeSettings);
+  }
+
   onChangeSettings = (event: Event) => {
     const settings = CurrentContext.settings;
 
-    settings.mapId = parseInt(this.mapIdInput.value);
+    const mapId = convertStringToInteger(this.mapIdInput.value);
+    if (mapId === null) {
+      throw new Error('Map id is null.');
+    }
+    settings.mapId = mapId;
 
     settings.minecraftVersion = this.minecraftVersionSelect.value;
 

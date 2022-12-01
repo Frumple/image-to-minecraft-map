@@ -43,4 +43,8 @@ export default class ApplicationContainer extends AutonomousCustomElement {
   onFileDropped = (event: DragEvent) => {
     event.preventDefault();
   }
+
+  registerSettingsPanelEventListeners() {
+    this.settingsPanel.registerEventListeners();
+  }
 }

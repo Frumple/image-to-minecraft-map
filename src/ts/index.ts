@@ -11,6 +11,7 @@ import CurrentContext from '@models/current-context';
 async function init() {
   CurrentContext.init();
   await defineElements();
+  registerSettingsPanelEventListeners();
 }
 
 async function defineElements() {
@@ -27,6 +28,11 @@ async function defineElements() {
   for (const elementClass of elementClasses) {
     await elementClass.define();
   }
+}
+
+function registerSettingsPanelEventListeners() {
+  const applicationContainer = document.getElementById('application-container') as ApplicationContainer;
+  applicationContainer.registerSettingsPanelEventListeners();
 }
 
 init();
