@@ -23,7 +23,7 @@ export function downloadDataAsFile(data: any, contentType: string, fileName: str
 }
 
 export function gzipData(data: Uint8Array) {
-  // TODO: Replace pako with the Compressed Streams API when it becomes more widely supported (and is just asz performant)
+  // TODO: Replace pako with the Compressed Streams API when it becomes more widely supported (and is just as performant)
 
   // At the time of this writing, the Compressed Streams API is supported by Chrome, but not Firefox or Safari.
   // Firefox: Currently in the "worth prototyping" stage (https://github.com/mozilla/standards-positions/issues/207)
