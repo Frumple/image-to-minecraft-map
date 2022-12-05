@@ -1,4 +1,4 @@
-import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
+import BaseContainer from '@elements/autonomous/containers/base-container';
 
 import CurrentContext from '@models/current-context';
 import * as Settings from '@models/settings';
@@ -7,7 +7,7 @@ import { convertStringToInteger } from '@helpers/number-helpers';
 import VersionLoader from '@loaders/version-loader';
 import LocalStorageProxy from '@helpers/local-storage-proxy';
 
-export default class SettingsPanel extends AutonomousCustomElement {
+export default class SettingsPanel extends BaseContainer {
   static get elementName() { return 'settings-panel'; }
 
   mapIdInput: HTMLInputElement;

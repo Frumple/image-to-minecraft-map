@@ -3,11 +3,25 @@ import { roundToDecimalPlaces } from '@helpers/number-helpers';
 import pako from 'pako';
 
 export async function fetchText(path: string | URL): Promise<string> {
-  return await fetch(path).then(stream => stream.text());
+  return await fetch(path)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Fetch response was not OK: ${response.status}`);
+      }
+      return response.text();
+    })
+    .catch(error => { throw error; });
 }
 
 export async function fetchBlob(path: string | URL): Promise<Blob> {
-  return await fetch(path).then(stream => stream.blob());
+  return await fetch(path)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Fetch response was not OK: ${response.status}`);
+      }
+      return response.blob();
+    })
+    .catch(error => { throw error; });
 }
 
 export function createDownloadUrlFromData(data: any, contentType: string) {

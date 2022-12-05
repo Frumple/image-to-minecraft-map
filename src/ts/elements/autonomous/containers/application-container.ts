@@ -1,11 +1,11 @@
-import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
+import BaseContainer from '@elements/autonomous/containers/base-container';
 import TopPanel from '@elements/autonomous/containers/top-panel';
 import SettingsPanel from '@elements/autonomous/containers/settings-panel';
 import UploadsPanel from '@elements/autonomous/containers/uploads-panel';
 
 import { isCustomEvent } from '@helpers/event-helpers';
 
-export default class ApplicationContainer extends AutonomousCustomElement {
+export default class ApplicationContainer extends BaseContainer {
   static get elementName() { return 'application-container'; }
 
   topPanel: TopPanel;

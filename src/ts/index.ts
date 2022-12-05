@@ -4,6 +4,8 @@ import SettingsPanel from '@elements/autonomous/containers/settings-panel';
 import UploadsPanel from '@elements/autonomous/containers/uploads-panel';
 import UploadProgressPanel from '@elements/autonomous/containers/upload-progress-panel';
 
+import ImagePreview from '@elements/autonomous/hover/image-preview';
+
 import IntegerInput from '@elements/builtin/integer-input';
 
 import CurrentContext from '@models/current-context';
@@ -21,6 +23,8 @@ async function defineElements() {
     SettingsPanel,
     UploadsPanel,
     UploadProgressPanel,
+
+    ImagePreview,
 
     IntegerInput
   ];

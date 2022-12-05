@@ -1,32 +1,34 @@
 import { fetchText } from '@helpers/file-helpers';
-import { toKebabCase } from '@helpers/string-helpers';
 
 export default class AutonomousCustomElement extends HTMLElement {
   private static htmlContent = '';
-
   private isInitialized = false;
 
   static get elementName(): string {
-    throw new Error(`The class '${this.name}' must implement the elementName() getter.`);
+    throw new Error(`The class '${this.name}' must implement the elementName getter.`);
+  }
+
+  static get subdirectory(): string {
+    throw new Error(`The class '${this.name}' must implement the subdirectory getter.`);
+  }
+
+  private static get htmlPath(): string {
+    return `/elements/autonomous/${this.subdirectory}/${this.elementName}.html`;
   }
 
   static async define() {
     if (customElements.get(this.elementName) === undefined) {
-      AutonomousCustomElement.htmlContent = await fetchText(this.htmlPath);
+      this.htmlContent = await fetchText(this.htmlPath);
       customElements.define(this.elementName, this);
     }
-  }
-
-  static get htmlPath(): string {
-    const kebab = toKebabCase(this.name);
-    return `/elements/autonomous/containers/${kebab}.html`;
   }
 
   constructor() {
     super();
 
     this.attachShadow({mode: 'open'});
-    const fragment = document.createRange().createContextualFragment(AutonomousCustomElement.htmlContent);
+    const classConstructor = <typeof AutonomousCustomElement> this.constructor;
+    const fragment = document.createRange().createContextualFragment(classConstructor.htmlContent);
     this.shadowRoot?.appendChild(fragment.cloneNode(true));
   }
 

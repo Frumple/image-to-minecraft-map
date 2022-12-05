@@ -1,4 +1,4 @@
-import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
+import BaseContainer from '@elements/autonomous/containers/base-container';
 import UploadProgressPanel from '@elements/autonomous/containers/upload-progress-panel';
 
 import { createDownloadUrlFromData } from '@helpers/file-helpers';
@@ -11,7 +11,7 @@ import { UploadWorkerIncomingMessageParameters, UploadWorkerOutgoingMessageParam
 
 const dragEnterClass = 'uploads-panel__file-upload-drop-zone_drag-enter';
 
-export default class UploadsPanel extends AutonomousCustomElement {
+export default class UploadsPanel extends BaseContainer {
   static get elementName() { return 'uploads-panel'; }
 
   fileInput: HTMLInputElement;

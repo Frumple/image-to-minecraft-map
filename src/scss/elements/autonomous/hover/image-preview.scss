@@ -1,0 +1,8 @@
+.image-preview__hover {
+  display: none;
+  position: absolute;
+}
+
+.image-preview:hover .image_preview__text {
+  display: block;
+}

@@ -1,4 +1,4 @@
-import AutonomousCustomElement from '@elements/autonomous/autonomous-custom-element';
+import BaseContainer from '@elements/autonomous/containers/base-container';
 import { addStringToListElement } from '@helpers/element-helpers';
 
 import { fetchBlob, getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
@@ -9,14 +9,14 @@ import * as Settings from '@models/settings';
 
 import { UploadStep } from '@workers/upload-worker';
 
-export default class UploadProgressPanel extends AutonomousCustomElement {
+export default class UploadProgressPanel extends BaseContainer {
   static get elementName() { return 'upload-progress-panel'; }
 
   uploadProgressPanel: HTMLDivElement;
 
   imageFilenameHeading: HTMLHeadingElement;
   statusHeading: HTMLHeadingElement;
-  mapFilenameHeading: HTMLHeadElement;
+  mapFilenameHeading: HTMLHeadingElement;
 
   canvasMap: Map<UploadStep, HTMLCanvasElement>;
 
