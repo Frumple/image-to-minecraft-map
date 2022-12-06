@@ -157,7 +157,7 @@ export default class UploadsPanel extends BaseContainer {
           case 'source':
           case 'intermediate':
           case 'final':
-            await uploadProgressPanel.renderCanvas(parameters.step, parameters.data as ImageBitmap);
+            await uploadProgressPanel.renderImagePreview(parameters.step, parameters.data as ImageBitmap);
             break;
 
           default:

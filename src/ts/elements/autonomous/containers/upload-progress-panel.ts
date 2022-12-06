@@ -1,8 +1,8 @@
 import BaseContainer from '@elements/autonomous/containers/base-container';
-import { addStringToListElement } from '@helpers/element-helpers';
+import ImagePreview from '@elements/autonomous/hover/image-preview';
 
+import { addStringToListElement } from '@helpers/element-helpers';
 import { fetchBlob, getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
-import { drawImageToCanvas } from '@helpers/image-helpers';
 import { roundToDecimalPlaces } from '@helpers/number-helpers';
 
 import * as Settings from '@models/settings';
@@ -18,7 +18,7 @@ export default class UploadProgressPanel extends BaseContainer {
   statusHeading: HTMLHeadingElement;
   mapFilenameHeading: HTMLHeadingElement;
 
-  canvasMap: Map<UploadStep, HTMLCanvasElement>;
+  imagePreviewMap: Map<UploadStep, ImagePreview>;
 
   downloadFileLink: HTMLAnchorElement;
   downloadFileTextLink: HTMLAnchorElement;
@@ -39,10 +39,10 @@ export default class UploadProgressPanel extends BaseContainer {
     this.statusHeading = this.getShadowElement('status-heading') as HTMLHeadingElement;
     this.mapFilenameHeading = this.getShadowElement('map-filename-heading') as HTMLHeadingElement;
 
-    this.canvasMap = new Map();
-    this.canvasMap.set('source', this.getShadowElement('source-canvas') as HTMLCanvasElement);
-    this.canvasMap.set('intermediate', this.getShadowElement('intermediate-canvas') as HTMLCanvasElement);
-    this.canvasMap.set('final', this.getShadowElement('final-canvas') as HTMLCanvasElement);
+    this.imagePreviewMap = new Map();
+    this.imagePreviewMap.set('source', this.getShadowElement('source-image-preview') as ImagePreview);
+    this.imagePreviewMap.set('intermediate', this.getShadowElement('intermediate-image-preview') as ImagePreview);
+    this.imagePreviewMap.set('final', this.getShadowElement('final-image-preview') as ImagePreview);
 
     this.downloadFileLink = this.getShadowElement('download-file-link') as HTMLAnchorElement;
     this.downloadFileTextLink = this.getShadowElement('download-file-text-link') as HTMLAnchorElement;
@@ -78,6 +78,7 @@ export default class UploadProgressPanel extends BaseContainer {
 
   }
 
+  // TODO: Move this to ImagePreview with static initialization
   async drawItemFrameToCanvasses() {
     // Create a Parcel URL dependency to the item frame image
     const imageUrl = new URL(
@@ -87,27 +88,19 @@ export default class UploadProgressPanel extends BaseContainer {
 
     const imageBlob = await fetchBlob(imageUrl);
 
-    for (const canvas of this.canvasMap.values()) {
-      await drawImageToCanvas(
-        imageBlob,
-        canvas,
-        'fit',
-        'pixelated');
+    for (const imagePreview of this.imagePreviewMap.values()) {
+      imagePreview.drawItemFrame(imageBlob);
     }
   }
 
-  async renderCanvas(uploadStep: UploadStep, bitmap: ImageBitmap) {
-    const canvas = this.canvasMap.get(uploadStep);
+  async renderImagePreview(uploadStep: UploadStep, bitmap: ImageBitmap) {
+    const imagePreview = this.imagePreviewMap.get(uploadStep);
 
-    if (canvas === undefined) {
+    if (imagePreview === undefined) {
       throw new Error(`Upload step has no canvas: ${uploadStep}`);
     }
 
-    await drawImageToCanvas(
-      bitmap,
-      canvas,
-      'fit',
-      'high');
+    imagePreview.render(bitmap);
   }
 
   completeUpload(downloadUrl: string, mapFileSizeInBytes: number, timeElapsed: number, colorsProcessed: number) {

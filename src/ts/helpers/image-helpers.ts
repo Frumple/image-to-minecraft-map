@@ -13,8 +13,8 @@ export interface ImageDataPixel {
 export async function drawImageToCanvas(
   source: ImageBitmapSource,
   canvas: HTMLCanvasElement | OffscreenCanvas,
-  resizeType: ResizeType,
-  resizeQualityType: ResizeQualityType) {
+  resizeType: ResizeType = 'fit',
+  resizeQualityType: ResizeQualityType = 'high') {
 
   const bitmap = await createImageBitmap(source);
 

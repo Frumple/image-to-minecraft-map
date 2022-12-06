@@ -8,8 +8,8 @@
     <h3 id="map-filename-heading" class="upload-progress-panel__map-filename-heading"></h3>
   </div>
   <div class="upload-progress-panel__main-panel">
-    <canvas id="source-canvas" class="upload-progress-panel__source-canvas" width="128" height="128"></canvas>
-    <span class="upload-progress-panel__source-canvas-text">Source Image</span>
+    <image-preview id="source-image-preview" class="upload-progress-panel__source-image-preview"></image-preview>
+    <span class="upload-progress-panel__source-image-preview-text">Source Image</span>
 
     <div class="upload-progress-panel__resize">
       <ul id="resize-settings-list" class="upload-progress-panel__resize-settings">
@@ -17,8 +17,8 @@
     </div>
     <span class="upload-progress-panel__resize-text">Resize</span>
 
-    <canvas id="intermediate-canvas" class="upload-progress-panel__intermediate_canvas" width="128" height="128"></canvas>
-    <span class="upload-progress-panel__intermediate-canvas-text">Intermediate Image</span>
+    <image-preview id="intermediate-image-preview" class="upload-progress-panel__intermediate-image-preview"></image-preview>
+    <span class="upload-progress-panel__intermediate-image-preview-text">Intermediate Image</span>
 
     <div class="upload-progress-panel__reduce-colors">
       <ul id="reduce-colors-settings-list" class="upload-progress-panel__reduce-colors-settings">
@@ -26,8 +26,8 @@
     </div>
     <span class="upload-progress-panel__reduce-colors-text">Reduce Colors</span>
 
-    <canvas id="final-canvas" class="upload-progress-panel__final_canvas" width="128" height="128"></canvas>
-    <span class="upload-progress-panel__final-canvas-text">Final Image</span>
+    <image-preview id="final-image-preview" class="upload-progress-panel__final-image-preview"></image-preview>
+    <span class="upload-progress-panel__final-image-preview-text">Final Image</span>
 
     <div class="upload-progress-panel__create-file">
       <ul id="create-file-settings-list" class="upload-progress-panel__create-file-settings">

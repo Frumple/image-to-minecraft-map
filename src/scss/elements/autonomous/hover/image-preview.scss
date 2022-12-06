@@ -1,8 +1,28 @@
+.image-preview {
+  position: relative;
+}
+
 .image-preview__hover {
   display: none;
   position: absolute;
+  top: 64px;
+  left: 64px;
+  transform: scale(2);
+  z-index: 1;
 }
 
-.image-preview:hover .image_preview__text {
+.image-preview:hover .image-preview__hover {
   display: block;
+}
+
+.image-preview__canvas {
+  border: 1px solid black;
+}
+
+.image-preview__main-canvas {
+  @extend .image-preview__canvas;
+}
+
+.image-preview__large-canvas {
+  @extend .image-preview__canvas;
 }

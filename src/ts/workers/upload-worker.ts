@@ -82,9 +82,7 @@ class UploadWorker {
 
     await drawImageToCanvas(
       this.file,
-      canvas,
-      'fit',
-      'high');
+      canvas);
 
     this.sendCanvasBitmapToMainThread(canvas, 'source');
   }
