@@ -16,6 +16,10 @@
 }
 
 .image-preview__canvas {
+  background-image: url("/images/item_frame.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
   border: 1px solid black;
 }
 

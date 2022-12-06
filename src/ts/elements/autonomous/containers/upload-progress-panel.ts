@@ -2,7 +2,7 @@ import BaseContainer from '@elements/autonomous/containers/base-container';
 import ImagePreview from '@elements/autonomous/hover/image-preview';
 
 import { addStringToListElement } from '@helpers/element-helpers';
-import { fetchBlob, getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
+import { getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
 import { roundToDecimalPlaces } from '@helpers/number-helpers';
 
 import * as Settings from '@models/settings';
@@ -76,21 +76,6 @@ export default class UploadProgressPanel extends BaseContainer {
 
   initialize() {
 
-  }
-
-  // TODO: Move this to ImagePreview with static initialization
-  async drawItemFrameToCanvasses() {
-    // Create a Parcel URL dependency to the item frame image
-    const imageUrl = new URL(
-      '/images/item_frame.png',
-      import.meta.url
-    );
-
-    const imageBlob = await fetchBlob(imageUrl);
-
-    for (const imagePreview of this.imagePreviewMap.values()) {
-      imagePreview.drawItemFrame(imageBlob);
-    }
   }
 
   async renderImagePreview(uploadStep: UploadStep, bitmap: ImageBitmap) {

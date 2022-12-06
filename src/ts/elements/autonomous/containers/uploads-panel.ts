@@ -116,8 +116,6 @@ export default class UploadsPanel extends BaseContainer {
     const uploadProgressPanel = new UploadProgressPanel(settings, file.name, file.size);
     this.uploadsContainer.appendChild(uploadProgressPanel);
 
-    await uploadProgressPanel.drawItemFrameToCanvasses();
-
     try {
       // Premptively fail the upload if the file is an invalid type
       const validFileTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/webp'];
