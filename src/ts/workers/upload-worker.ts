@@ -1,7 +1,7 @@
 import { calculateColorDifference } from '@helpers/color-difference-helpers';
 import { applyDitheringToImageData } from '@helpers/dithering-helpers';
 import { gzipData } from '@helpers/file-helpers';
-import { MAP_SIZE, drawImageToCanvas, getPixelFromImageData, setPixelToImageData } from '@helpers/image-helpers';
+import { MAP_SIZE, ImageDataPixel, drawImageToCanvas, getPixelFromImageData, setPixelToImageData } from '@helpers/image-helpers';
 import { encodeNbtMap } from '@helpers/nbt-helpers';
 
 import VersionLoader from '@loaders/version-loader';
@@ -118,23 +118,29 @@ class UploadWorker {
   }
 
   async reduceColors(workCanvas: OffscreenCanvas) {
-    const context = workCanvas.getContext('2d');
-    const imageData = context?.getImageData(0, 0, workCanvas.width, workCanvas.height);
-
     const nbtColorArray = new Uint8ClampedArray(MAP_SIZE * MAP_SIZE); // 16384 entries
 
-    if (!imageData) {
-      throw new Error('Image data is undefined.');
+    const context = workCanvas.getContext('2d');
+    const inputImageData = context?.getImageData(0, 0, workCanvas.width, workCanvas.height);
+
+    if (!inputImageData) {
+      throw new Error('Input image data is undefined.');
+    }
+
+    const outputImageData = context?.createImageData(inputImageData);
+
+    if (!outputImageData) {
+      throw new Error('Output image data is undefined.');
     }
 
     // For faster performance, use the appropriate color space for map colors to avoid converting between color spaces on the fly.
     const mapColors = this.settings.useLabColorSpace ? this.minecraftVersion.mapColorsLab : this.minecraftVersion.mapColorsRGB;
 
     // TODO: Iterate over x and y to make dithering calculations easier
-    const dataLength = imageData.data.length / 4;
+    const dataLength = inputImageData.data.length / 4;
     let lastProgressPercentage = 0;
     for (let index = 0; index < dataLength; index++) {
-      nbtColorArray[index] = this.reducePixelColor(imageData, mapColors, index * 4);
+      nbtColorArray[index] = this.reducePixelColor(inputImageData, outputImageData, mapColors, index * 4);
 
       const progressPercentage = Math.floor(index / dataLength * 100);
       if (progressPercentage >= lastProgressPercentage + 1) {
@@ -143,7 +149,7 @@ class UploadWorker {
       }
     }
 
-    context?.putImageData(imageData, 0, 0);
+    context?.putImageData(outputImageData, 0, 0);
 
     this.sendCanvasBitmapToMainThread(workCanvas, 'final');
 
@@ -151,40 +157,48 @@ class UploadWorker {
   }
 
   reducePixelColor(
-    imageData: ImageData,
+    inputImageData: ImageData,
+    outputImageData: ImageData,
     mapColors: ColorObject[],
     pixelStartIndex: number) {
 
-    const originalPixel = getPixelFromImageData(imageData, pixelStartIndex);
+    const originalPixel = getPixelFromImageData(inputImageData, pixelStartIndex);
 
-    if (this.colorCache.has(originalPixel.key)) {
-      return this.colorCache.get(originalPixel.key) as number;
-    }
-
-    // For faster performance, convert the original color to the appropriate color space before calculating its difference with the map colors
-    const originalColor = this.settings.useLabColorSpace ? to(originalPixel.color, Lab) : originalPixel.color
-
-    const nearestMapColorId = this.getNearestMapColorId(originalColor, mapColors);
-    this.colorCache.set(originalPixel.key, nearestMapColorId);
-
+    const nearestMapColorId = this.getNearestMapColorId(originalPixel, mapColors);
     const nearestMapColor = this.minecraftVersion.mapColorsRGB[nearestMapColorId];
 
-    setPixelToImageData(imageData, pixelStartIndex, nearestMapColor);
+    setPixelToImageData(outputImageData, pixelStartIndex, nearestMapColor);
 
     if (this.settings.dithering === 'floyd-steinberg') {
-      applyDitheringToImageData(imageData, pixelStartIndex, originalPixel.color, nearestMapColor);
+      applyDitheringToImageData(inputImageData, pixelStartIndex, originalPixel.color, nearestMapColor);
     }
 
     return nearestMapColorId;
   }
 
-  getNearestMapColorId(originalColor: ColorObject, mapColors: ColorObject[]) {
+  getNearestMapColorId(originalPixel: ImageDataPixel, mapColors: ColorObject[]) {
+    const originalColor = originalPixel.color;
+
     // Return the transparent map color if the original color doesn't meet the transparency threshold
     if (originalColor.alpha !== undefined && originalColor.alpha * 255 < this.settings.transparency) {
       return 0;
     }
 
-    // Otherwise, search for the map color nearest to the original color
+    // Return the color if it was already encountered before and stored in the cache
+    if (this.colorCache.has(originalPixel.key)) {
+      return this.colorCache.get(originalPixel.key) as number;
+    }
+
+    // For faster performance, convert the original color to the appropriate color space before calculating its difference with the map colors
+    const convertedOriginalColor = this.settings.useLabColorSpace ? to(originalColor, Lab) : originalColor;
+
+    const nearestMapColorId = this.searchForNearestMapColorId(convertedOriginalColor, mapColors);
+    this.colorCache.set(originalPixel.key, nearestMapColorId);
+
+    return nearestMapColorId;
+  }
+
+  searchForNearestMapColorId(originalColor: ColorObject, mapColors: ColorObject[]) {
     let nearestDistance = Number.MAX_VALUE;
     let nearestMapColorId = 0;
 
