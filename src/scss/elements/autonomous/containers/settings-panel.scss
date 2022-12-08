@@ -8,7 +8,7 @@
 .settings-panel {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  row-gap: 5px;
   position: sticky;
   top: variables.$top-panel-height + (2 * variables.$top-panel-padding);
   left: 0;
@@ -61,14 +61,14 @@
 .settings-panel__settings-container {
   display: grid;
   align-items: center;
-  gap: 5px;
+  row-gap: 5px;
 }
 
 .settings-panel__general-settings-container {
   @extend .settings-panel__settings-container;
   grid-template:
     "minecraft-version-label minecraft-version-select" auto
-    / 1fr 1fr;
+    / 50% 50%;
 }
 
 .settings-panel__minecraft-version-label {
@@ -85,7 +85,7 @@
     "resize-label             resize-select           " auto
     "resize-quality-label     resize-quality-select   " auto
     "background-label         background-select       " auto
-    / 1fr 1fr;
+    / 50% 50%;
 }
 
 .settings-panel__resize-label {
@@ -115,11 +115,11 @@
 .settings-panel__reduce-colors-settings-container {
   @extend .settings-panel__settings-container;
   grid-template:
-    "color-difference-label   color-difference-select " auto
-    "dithering-label          dithering-select        " auto
-    "transparency-label       transparency-input-text " auto
-    "transparency-input-range transparency-input-range" auto
-    / 1fr 1fr;
+    "color-difference-label   color-difference-select  color-difference-select " auto
+    "dithering-label          dithering-select         dithering-select        " auto
+    "transparency-label       transparency-label       transparency-input-text " auto
+    "transparency-input-range transparency-input-range transparency-input-range" auto
+    / 50% 25% 25%;
 }
 
 .settings-panel__color-difference-label {
