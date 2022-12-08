@@ -118,7 +118,7 @@ export default class UploadsPanel extends BaseContainer {
 
     try {
       // Premptively fail the upload if the file is an invalid type
-      const validFileTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/webp'];
+      const validFileTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
       if (!validFileTypes.includes(file.type)) {
         throw new Error(`Invalid file type: ${file.type}`);
       }

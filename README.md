@@ -13,6 +13,7 @@ A web application that converts images to Minecraft NBT map .dat files, allowing
 ## Future Improvements
 
 - Upload image to multiple maps.
+- Support SVG files.
 - Support Bedrock Edition.
 - Support additional dithering algorithms.
 
