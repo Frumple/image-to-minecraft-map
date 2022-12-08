@@ -23,7 +23,7 @@ export default class UploadProgressPanel extends BaseContainer {
   downloadFileLink: HTMLAnchorElement;
   downloadFileTextLink: HTMLAnchorElement;
 
-  resizeSettingsList: HTMLUListElement;
+  preprocessSettingsList: HTMLUListElement;
   reduceColorSettingsList: HTMLUListElement;
   createFileSettingsList: HTMLUListElement;
 
@@ -47,7 +47,7 @@ export default class UploadProgressPanel extends BaseContainer {
     this.downloadFileLink = this.getShadowElement('download-file-link') as HTMLAnchorElement;
     this.downloadFileTextLink = this.getShadowElement('download-file-text-link') as HTMLAnchorElement;
 
-    this.resizeSettingsList = this.getShadowElement('resize-settings-list') as HTMLUListElement;
+    this.preprocessSettingsList = this.getShadowElement('preprocess-settings-list') as HTMLUListElement;
     this.reduceColorSettingsList = this.getShadowElement('reduce-colors-settings-list') as HTMLUListElement;
     this.createFileSettingsList = this.getShadowElement('create-file-settings-list') as HTMLUListElement;
 
@@ -63,9 +63,9 @@ export default class UploadProgressPanel extends BaseContainer {
     // TODO: Multiple map files
     this.mapFilenameHeading.textContent = getMapFilename(this.startingMapId);
 
-    addStringToListElement(this.resizeSettingsList, `Resize to: ${settings.resizeDisplayText}`);
-    addStringToListElement(this.resizeSettingsList, `Quality: ${settings.resizeQualityDisplayText}`);
-    addStringToListElement(this.resizeSettingsList, `Background: ${settings.backgroundDisplayText}`);
+    addStringToListElement(this.preprocessSettingsList, `Resize to: ${settings.resizeDisplayText}`);
+    addStringToListElement(this.preprocessSettingsList, `Quality: ${settings.resizeQualityDisplayText}`);
+    addStringToListElement(this.preprocessSettingsList, `Background: ${settings.backgroundDisplayText}`);
 
     addStringToListElement(this.reduceColorSettingsList, `Color Diff: ${settings.colorDifferenceDisplayText}`);
     addStringToListElement(this.reduceColorSettingsList, `Dither: ${settings.ditheringDisplayText}`);

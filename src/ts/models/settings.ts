@@ -50,7 +50,7 @@ export class Settings {
   // General Settings
   minecraftVersion: string = '21w16a';
 
-  // Resize Settings
+  // Preprocess Settings
   resize: ResizeType = 'fit';
   resizeQuality: ResizeQualityType = 'high';
   background: BackgroundType = 'transparent';

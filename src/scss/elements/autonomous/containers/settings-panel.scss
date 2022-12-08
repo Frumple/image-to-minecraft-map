@@ -79,7 +79,7 @@
   grid-area: minecraft-version-select;
 }
 
-.settings-panel__resize-settings-container {
+.settings-panel__preprocess-settings-container {
   @extend .settings-panel__settings-container;
   grid-template:
     "resize-label             resize-select           " auto
