@@ -16,7 +16,12 @@
 
   <h3 class="settings-panel__settings-container-header">General</h3>
   <div class="settings-panel__general-settings-container">
-    <label class="settings-panel__minecraft-version-label" for="minecraft-version-select">Minecraft Version:</label>
+    <label class="settings-panel__minecraft-version-label" for="minecraft-version-select">
+      <settings-tooltip>
+        <span slot="name">Minecraft Version</span>
+        <span slot="description"><a href="" target="_blank">Minecraft Version</a>: Select the version that you want to upload your map file to.</span>
+      </settings-tooltip>
+    </label>
     <select id="minecraft-version-select" class="settings-panel__minecraft-version-select">
     </select>
   </div>
@@ -25,15 +30,39 @@
 
   <h3 class="settings-panel__settings-container-header">Step 1: Preprocess</h3>
   <div class="settings-panel__preprocess-settings-container">
-    <label class="settings-panel__resize-label" for="resize-select">Resize to:</label>
+    <label class="settings-panel__resize-label" for="resize-select">
+      <settings-tooltip>
+        <span slot="name">Resize to</span>
+        <span slot="description"><a href="" target="_blank">Resize to</a>: Determines how to resize the image into the 128 by 128 dimensions of a Minecraft map item.</span>
+        <ul slot="tips">
+          <li><strong>Fit</strong> - Fit image within map item dimensions, retain image aspect ratio.</li>
+          <li><strong>Fill (Crop)</strong> - Fill entirety of map item dimensions, retain image aspect ratio, parts of image may be cropped.</li>
+          <li><strong>Stretch</strong> - Fill entirety of map item dimensions, image may be stretched.</li>
+        </ul>
+      </settings-tooltip>
+    </label>
     <select id="resize-select" class="settings-panel__resize-select">
     </select>
 
-    <label class="settings-panel__resize-quality-label" for="resize-quality-select">Resize Quality:</label>
+    <label class="settings-panel__resize-quality-label" for="resize-quality-select">
+      <settings-tooltip>
+        <span slot="name">Resize Quality</span>
+        <span slot="description"><a href="" target="_blank">Resize Quality</a>: Sets the amount of image smoothing when resizing the source image.</span>
+        <ul slot="tips">
+          <li>Use <strong>None (Pixelated)</strong> for pixel art.</li>
+          <li>Use <strong>High</strong> for most other images.</li>
+        </ul>
+      </settings-tooltip>
+    </label>
     <select id="resize-quality-select" class="settings-panel__resize-quality-select">
     </select>
 
-    <label class="settings-panel__background-label" for="background-select">Background:</label>
+    <label class="settings-panel__background-label" for="background-select">
+      <settings-tooltip>
+        <span slot="name">Background</span>
+        <span slot="description"><a href="" target="_blank">Background</a>: Sets the background color of the intermediate image.</span>
+      </settings-tooltip>
+    </label>
     <select id="background-select" class="settings-panel__background-select">
     </select>
 
@@ -43,15 +72,38 @@
 
   <h3 class="settings-panel__settings-container-header">Step 2: Reduce Colors</h3>
   <div class="settings-panel__reduce-colors-settings-container">
-    <label class="settings-panel__color-difference-label" for="color-difference-select">Color Difference:</label>
+    <label class="settings-panel__color-difference-label" for="color-difference-select">
+      <settings-tooltip>
+        <span slot="name">Color Difference</span>
+        <span slot="description"><a href="" target="_blank">Color Difference</a>: Sets the algorithm used to find the nearest color in a Minecraft map item.</span>
+        <ul slot="tips">
+          <li>Use <strong>CompuPhase</strong> as it is "good enough" for most images.</li>
+          <li>Use <strong>DeltaE 2000</strong> for the best possible color accuracy.</li>
+        </ul>
+      </settings-tooltip>
+    </label>
     <select id="color-difference-select" class="settings-panel__color-difference-select">
     </select>
 
-    <label class="settings-panel__dithering-label" for="dithering-select">Dithering:</label>
+    <label class="settings-panel__dithering-label" for="dithering-select">
+      <settings-tooltip>
+        <span slot="name">Dithering</span>
+        <span slot="description"><a href="" target="_blank">Dithering</a>: Adds noise to make the image appear smoother.</span>
+        <ul slot="tips">
+          <li>Use <strong>None</strong> for images with flat, solid colors.</li>
+          <li>Use <strong>Floyd-Steinberg</strong> for most other images.</li>
+        </ul>
+      </settings-tooltip>
+    </label>
     <select id="dithering-select" class="settings-panel__dithering-select">
     </select>
 
-    <label class="settings-panel__transparency-label" for="transparency-input">Transparency Threshold:</label>
+    <label class="settings-panel__transparency-label" for="transparency-input-text">
+      <settings-tooltip>
+        <span slot="name">Transparency Threshold</span>
+        <span slot="description"><a href="" target="_blank">Transparency Threshold</a>: Pixels that have an alpha value less than this threshold will be fully transparent in the map file.</span>
+      </settings-tooltip>
+    </label>
     <input id="transparency-input-text" class="settings-panel__transparency-input-text" is="integer-input" type="number" value="128" min="0" max="255" step="1" />
     <input id="transparency-input-range" class="settings-panel__transparency-input-range" type="range" value="128" min="0" max="255" step="1" />
   </div>
@@ -60,7 +112,12 @@
 
   <h3 class="settings-panel__settings-container-header">Step 3: Create Map File</h3>
   <div class="settings-panel__create-file-settings-container">
-    <label class="settings-panel__auto-download-label" for="auto-download-input">Auto-download?</label>
+    <label class="settings-panel__auto-download-label" for="auto-download-input">
+      <settings-tooltip>
+        <span slot="name">Auto-download</span>
+        <span slot="description"><a href="" target="_blank">Auto-download</a>: If checked, the map file will be automatically downloaded after processing is complete.</span>
+      </settings-tooltip>
+    </label>
     <input id="auto-download-input" class="settings-panel__auto-download-input" type="checkbox" checked />
   </div>
 </div>

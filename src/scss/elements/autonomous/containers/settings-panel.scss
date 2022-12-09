@@ -14,6 +14,7 @@
   left: 0;
   width: variables.$settings-panel-width;
   padding: 5px;
+  z-index: 1;
 }
 
 .settings-panel__map-id-container {
@@ -163,4 +164,12 @@
 
 .settings-panel__auto-download-input {
   grid-area: auto-download-input;
+}
+
+settings-tooltip a {
+  font-weight: bold;
+}
+
+settings-tooltip ul {
+  margin-bottom: 0;
 }
