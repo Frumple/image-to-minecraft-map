@@ -154,8 +154,8 @@
 .settings-panel__create-file-settings-container {
   @extend .settings-panel__settings-container;
   grid-template:
-    "auto-download-label auto-download-input" auto
-    / 1fr 1fr;
+    "auto-download-label auto-download-label auto-download-input" auto
+    / 50% 25% 25%;
 }
 
 .settings-panel__auto-download-label {

@@ -2,6 +2,11 @@
   position: relative;
 }
 
+.settings-tooltip__name {
+  text-decoration: underline dotted gray;
+  text-underline-position: under;
+}
+
 .settings-tooltip__hover {
   display: none;
   position: absolute;
