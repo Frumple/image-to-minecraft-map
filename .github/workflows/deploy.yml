@@ -23,3 +23,7 @@ jobs:
       uses: borales/actions-yarn@v4
       with:
         cmd: build
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: dist
