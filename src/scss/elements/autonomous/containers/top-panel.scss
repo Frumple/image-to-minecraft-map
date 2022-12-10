@@ -6,6 +6,7 @@
 
 .top-panel {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   position: fixed;
   top: 0;
@@ -23,4 +24,14 @@
   font-weight: bold;
   vertical-align: middle;
   margin: 0;
+}
+
+.top-panel__links {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.top-panel__help-link {
+  margin-right: 10px;
 }
