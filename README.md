@@ -2,17 +2,19 @@
 
 ### Live Demo: [https://frumple.github.io/image-to-minecraft-map][app]
 
+### Quick Start Instructions: [https://github.com/Frumple/image-to-minecraft-map/wiki][wiki]
+
 A web application that converts images to Minecraft NBT map .dat files, allowing such images to be displayed in Minecraft.
 
 ## Features
 
-- Drag-and-drop multiple image files.
+- Drag-and-drop multiple image files and process them simultaneously.
 - Supports various color difference algorithms: CompuPhase, Euclidean, DeltaE 1976 and 2000, and CMC 1986.
 - Supports Floyd-Steinberg dithering.
 
 ## Future Improvements
 
-- Upload image to multiple maps.
+- Upload image over multiple maps (2x1, 2x2, 3x3, etc.).
 - Support SVG files.
 - Support Bedrock Edition.
 - Support additional dithering algorithms.
@@ -35,7 +37,7 @@ Start the development server:
 
 ## Credits
 
-This application implements the ["CompuPhase" color difference algorithm][compuphase], provided under a [Creative Commons License][creativecommons].
+This application implements the ["CompuPhase" color difference algorithm][compuphase], provided under the [Creative Commons BY-SA 3.0 License][cc-by-sa-3].
 
 ## License
 
@@ -46,7 +48,8 @@ Image to Minecraft Map is not affiliated in any way with Mojang or Microsoft.
 [app]: https://frumple.github.io/image-to-minecraft-map
 [color.js]: https://colorjs.io/
 [compuphase]: https://www.compuphase.com/cmetric.htm
-[creativecommons]: https://creativecommons.org/licenses/by-sa/3.0/
+[cc-by-sa-3]: https://creativecommons.org/licenses/by-sa/3.0/
 [mit]: https://choosealicense.com/licenses/mit/
 [nbt-ts]: https://github.com/janispritzkau/nbt-ts
 [pako]: https://github.com/nodeca/pako
+[wiki]: https://github.com/Frumple/image-to-minecraft-map/wiki
