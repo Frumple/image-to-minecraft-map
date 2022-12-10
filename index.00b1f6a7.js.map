@@ -1,1 +1,0 @@
-{"mappings":"AAAAA,OAAOC,OAAS,KACIC,SAASC,eAAe,QAC9BC,YAAc,cAAc","sources":["src/ts/index.ts"],"sourcesContent":["window.onload = () => {\r\n  var textElement = document.getElementById('text') as HTMLSpanElement;\r\n  textElement.textContent = 'Hello World!';\r\n}"],"names":["window","onload","document","getElementById","textContent"],"version":3,"file":"index.00b1f6a7.js.map"}
