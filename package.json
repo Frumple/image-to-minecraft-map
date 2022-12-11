@@ -8,7 +8,7 @@
   "scripts": {
     "tsc": "tsc",
     "start": "parcel serve src/html/**/**.html",
-    "build": "parcel build src/html/**/**.html --public-url ./",
+    "build": "parcel build src/html/**/**.html --public-url /image-to-minecraft-map/",
     "deploy": "gh-pages -d dist"
   },
   "repository": {
