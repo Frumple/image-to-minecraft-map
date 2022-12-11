@@ -13,7 +13,7 @@ export default class AutonomousCustomElement extends HTMLElement {
   }
 
   private static get htmlPath(): string {
-    return `/elements/autonomous/${this.subdirectory}/${this.elementName}.html`;
+    return `elements/autonomous/${this.subdirectory}/${this.elementName}.html`;
   }
 
   static async define() {
