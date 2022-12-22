@@ -1,8 +1,15 @@
+import isRunningInJsdom from '@helpers/is-running-in-jsdom';
 import { roundToDecimalPlaces } from '@helpers/number-helpers';
 
 import pako from 'pako';
 
 export async function fetchText(path: string | URL): Promise<string> {
+  if (isRunningInJsdom) {
+    const fs = require('fs/promises');
+    // @ts-ignore
+    return await fs.readFile(path).then(buffer => buffer.toString());
+  }
+
   return await fetch(path)
     .then(response => {
       if (!response.ok) {

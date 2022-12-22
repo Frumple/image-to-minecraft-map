@@ -1,3 +1,4 @@
+import isRunningInJsdom from '@helpers/is-running-in-jsdom';
 import { fetchText } from '@helpers/file-helpers';
 
 export default class AutonomousCustomElement extends HTMLElement {
@@ -13,7 +14,13 @@ export default class AutonomousCustomElement extends HTMLElement {
   }
 
   private static get htmlPath(): string {
-    return `elements/autonomous/${this.subdirectory}/${this.elementName}.html`;
+    let path = `elements/autonomous/${this.subdirectory}/${this.elementName}.html`;
+
+    if (isRunningInJsdom) {
+      path = `src/html/${path}`;
+    }
+
+    return path;
   }
 
   static async define() {

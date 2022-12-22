@@ -26,7 +26,7 @@
 
     /* Modules */
     "module": "es2020",                                  /* Specify what module code is generated. */
-    "rootDir": "src",                                    /* Specify the root folder within your source files. */
+    "rootDir": ".",                                      /* Specify the root folder within your source files. */
     "moduleResolution": "node",                          /* Specify how TypeScript looks up a file from a given module specifier. */
     "baseUrl": "./src",                                  /* Specify the base directory to resolve non-relative module names. */
     "paths": {
@@ -36,12 +36,11 @@
       "@loaders/*": ["ts/loaders/*"],
       "@models/*": ["ts/models/*"],
       "@workers/*": ["ts/workers/*"],
-
       "@json/*": ["json/*"],
     },                                                   /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
-    "types": ["offscreencanvas"],                        /* Specify type package names to be included without being referenced in a source file. */
+    "types": ["offscreencanvas", "jest"],                /* Specify type package names to be included without being referenced in a source file. */
     // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
     // "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
     "resolveJsonModule": true,                           /* Enable importing .json files. */
@@ -110,7 +109,8 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "test/**/*"
   ],
   "exclude": [
     ".git",
