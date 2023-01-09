@@ -1,7 +1,7 @@
 import { JavaVersion } from '@models/versions/java-version';
 import javaVersionsJson from '@json/java-versions.json';
 
-import { ColorObject } from 'colorjs.io/types/src/color';
+import { ColorObject, Coords } from 'colorjs.io/types/src/color';
 import { ColorSpace, sRGB, Lab, parse, to } from 'colorjs.io/fn';
 
 // Due to a bug in colorjs.io, we have to register colorspaces beforehand
@@ -32,7 +32,7 @@ class VersionLoader {
       for (const baseColor of baseColors) {
         for (const multiplier of mapColorMultipliers) {
           // Deep copy the coordinates so that changes to the map color do not affect the base color
-          const mapColorRGB = { space: sRGB, coords: structuredClone(baseColor.coords), alpha: baseColor.alpha };
+          const mapColorRGB = { space: sRGB, coords: [...baseColor.coords] as Coords, alpha: baseColor.alpha };
           for (let i = 0; i <= 2; i++) {
             mapColorRGB.coords[i] = Math.floor(mapColorRGB.coords[i] * multiplier) / 255;
           }

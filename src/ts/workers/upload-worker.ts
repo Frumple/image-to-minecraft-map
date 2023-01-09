@@ -1,3 +1,4 @@
+import IntegerInput from '@elements/builtin/integer-input';
 import { calculateColorDifference } from '@helpers/color-difference-helpers';
 import { applyDitheringToImageData } from '@helpers/dithering-helpers';
 import { gzipData } from '@helpers/file-helpers';
@@ -26,7 +27,9 @@ export interface UploadWorkerOutgoingMessageParameters {
   colorsProcessed?: number;
 }
 
-class UploadWorker {
+export class UploadWorker {
+  workerGlobalScope!: DedicatedWorkerGlobalScope;
+
   settings!: Settings.Settings;
   file!: File;
 
@@ -37,10 +40,13 @@ class UploadWorker {
   colorCache: Map<string, number> = new Map();
 
   constructor() {
-    self.addEventListener('message', this.onMessageReceived);
+    console.log('inner constructor');
+    this.workerGlobalScope = self as DedicatedWorkerGlobalScope;
+    this.workerGlobalScope.addEventListener('message', this.onMessageReceived);
   }
 
   onMessageReceived = (event: MessageEvent) => {
+    console.log('inner onMessageReceived');
     const parameters: UploadWorkerIncomingMessageParameters = event.data;
     this.settings = new Settings.Settings(parameters.settings);
     this.file = parameters.file;
@@ -78,7 +84,9 @@ class UploadWorker {
   }
 
   async drawSourceImage() {
-    const canvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);
+    console.log('f');
+    const canvas: OffscreenCanvas = document.createElement('canvas') as unknown as OffscreenCanvas;
+    // const canvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);
 
     await drawImageToCanvas(
       this.file,
@@ -240,7 +248,7 @@ class UploadWorker {
       data: bitmap,
       timeElapsed: timeElapsed
     };
-    postMessage(messageData, [bitmap]);
+    this.workerGlobalScope.postMessage(messageData, [bitmap]);
   }
 
   sendMapFileDataToMainThread(data: Uint8Array) {
@@ -253,7 +261,7 @@ class UploadWorker {
       timeElapsed: timeElapsed,
       colorsProcessed: colorsProcessed
     };
-    postMessage(messageData, [buffer]);
+    this.workerGlobalScope.postMessage(messageData, [buffer]);
   }
 
   sendProgressUpdateToMainThread(percent: number) {
@@ -261,7 +269,7 @@ class UploadWorker {
       step: 'progress',
       data: percent
     };
-    postMessage(messageData);
+    this.workerGlobalScope.postMessage(messageData);
   }
 
   sendErrorToMainThread(message: string) {
@@ -269,8 +277,6 @@ class UploadWorker {
       step: 'error',
       data: message
     };
-    postMessage(messageData);
+    this.workerGlobalScope.postMessage(messageData);
   }
 }
-
-const worker = new UploadWorker();

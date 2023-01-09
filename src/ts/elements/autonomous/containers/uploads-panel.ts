@@ -3,6 +3,7 @@ import UploadProgressPanel from '@elements/autonomous/containers/upload-progress
 
 import { createDownloadUrlFromData } from '@helpers/file-helpers';
 import LocalStorageProxy from '@helpers/local-storage-proxy';
+import { createUploadWorker } from '@helpers/worker-helpers';
 
 import CurrentContext from '@models/current-context';
 import * as Settings from '@models/settings';
@@ -124,12 +125,10 @@ export default class UploadsPanel extends BaseContainer {
       }
 
       // Setup a web worker to process the image in the background
-      const worker = new Worker(
-        new URL('/src/ts/workers/upload-worker.ts', import.meta.url),
-        {type: 'module'}
-      );
+      const worker = createUploadWorker();
 
       // Listen for messages from the worker to render images and update the UI panel
+      // @ts-ignore
       worker.addEventListener('message', async (event: MessageEvent) => {
         const parameters: UploadWorkerOutgoingMessageParameters = event.data;
 

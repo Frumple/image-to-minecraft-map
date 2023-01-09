@@ -16,7 +16,8 @@ export async function drawImageToCanvas(
   resizeType: ResizeType = 'fit',
   resizeQualityType: ResizeQualityType = 'high') {
 
-  const bitmap = await createImageBitmap(source);
+  // const bitmap = await createImageBitmap(source);
+  const bitmap: HTMLImageElement = document.createElement('img') as unknown as HTMLImageElement;
 
   let x: number;
   let y: number;
