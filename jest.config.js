@@ -50,8 +50,6 @@ module.exports = {
   // Make calling deprecated APIs throw helpful error messages
   // errorOnDeprecated: false,
 
-  extensionsToTreatAsEsm: ['.ts'],
-
   // The default configuration for fake timers
   // fakeTimers: {
   //   "enableGlobally": false
@@ -93,7 +91,7 @@ module.exports = {
   moduleNameMapper: {
     "@elements/(.*)": "<rootDir>/src/ts/elements/$1",
     "@helpers/(.*)": "<rootDir>/src/ts/helpers/$1",
-    "@loaders/(.*)": "<rootDir>/src/ts/loaders/$1",
+    "@loaders/(.*)": "<rootDir>/src/ts/laoders/$1",
     "@models/(.*)": "<rootDir>/src/ts/models/$1",
     "@workers/(.*)": "<rootDir>/src/ts/workers/$1",
     "@json/(.*)": "<rootDir>/src/json/$1",
@@ -141,7 +139,7 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  setupFiles: ["jest-canvas-mock"],
+  // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: [],
@@ -182,16 +180,7 @@ module.exports = {
   // testRunner: "jest-circus/runner",
 
   // A map from regular expressions to paths to transformers
-  transform: {
-    // '^.+\\.[tj]sx?$' to process js/ts with `ts-jest`
-    // '^.+\\.m?[tj]sx?$' to process js/ts/mjs/mts with `ts-jest`
-    '^.+\\.tsx?$': [
-      'ts-jest',
-      {
-        useESM: true
-      },
-    ],
-  },
+  // transform: undefined,
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [

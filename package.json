@@ -10,7 +10,7 @@
     "start": "parcel serve src/html/**/**.html",
     "build": "parcel build src/html/**/**.html --public-url ./",
     "deploy": "gh-pages -d dist",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -39,10 +39,7 @@
     "buffer": "^6.0.3",
     "gh-pages": "^4.0.0",
     "jest": "^29.3.1",
-    "jest-canvas-mock": "^2.4.0",
     "jest-environment-jsdom": "^29.3.1",
-    "jsdom-add-files": "^1.0.2",
-    "mitt": "^3.0.0",
     "nodemon": "^2.0.20",
     "parcel": "^2.8.0",
     "parcel-resolver-tspaths": "^0.0.9",

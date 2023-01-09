@@ -1,12 +1,13 @@
 import isRunningInJsdom from '@helpers/is-running-in-jsdom';
 import { roundToDecimalPlaces } from '@helpers/number-helpers';
 
-import fs from 'fs/promises';
 import pako from 'pako';
 
 export async function fetchText(path: string | URL): Promise<string> {
   if (isRunningInJsdom) {
-    return await fs.readFile(path, { encoding: 'utf8' });
+    const fs = require('fs/promises');
+    // @ts-ignore
+    return await fs.readFile(path).then(buffer => buffer.toString());
   }
 
   return await fetch(path)
@@ -20,10 +21,6 @@ export async function fetchText(path: string | URL): Promise<string> {
 }
 
 export async function fetchBlob(path: string | URL): Promise<Blob> {
-  if (isRunningInJsdom) {
-    return await fs.readFile(path).then(buffer => new Blob([buffer]));
-  }
-
   return await fetch(path)
     .then(response => {
       if (!response.ok) {
