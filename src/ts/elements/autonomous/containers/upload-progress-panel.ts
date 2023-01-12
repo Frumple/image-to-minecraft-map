@@ -1,7 +1,7 @@
 import BaseContainer from '@elements/autonomous/containers/base-container';
 import ImagePreview from '@elements/autonomous/hover/image-preview';
+import StepArrow from '@elements/autonomous/hover/step-arrow';
 
-import { addStringToListElement } from '@helpers/element-helpers';
 import { getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
 import { roundToDecimalPlaces } from '@helpers/number-helpers';
 
@@ -23,9 +23,9 @@ export default class UploadProgressPanel extends BaseContainer {
   downloadFileLink: HTMLAnchorElement;
   downloadFileTextLink: HTMLAnchorElement;
 
-  preprocessSettingsList: HTMLUListElement;
-  reduceColorSettingsList: HTMLUListElement;
-  createFileSettingsList: HTMLUListElement;
+  preprocessStepArrow: StepArrow;
+  reduceColorsStepArrow: StepArrow;
+  createFileStepArrow: StepArrow;
 
   startingMapId: number;
   autoDownload: boolean;
@@ -47,9 +47,9 @@ export default class UploadProgressPanel extends BaseContainer {
     this.downloadFileLink = this.getShadowElement('download-file-link') as HTMLAnchorElement;
     this.downloadFileTextLink = this.getShadowElement('download-file-text-link') as HTMLAnchorElement;
 
-    this.preprocessSettingsList = this.getShadowElement('preprocess-settings-list') as HTMLUListElement;
-    this.reduceColorSettingsList = this.getShadowElement('reduce-colors-settings-list') as HTMLUListElement;
-    this.createFileSettingsList = this.getShadowElement('create-file-settings-list') as HTMLUListElement;
+    this.preprocessStepArrow = this.getShadowElement('preprocess-step-arrow') as StepArrow;
+    this.reduceColorsStepArrow = this.getShadowElement('reduce-colors-step-arrow') as StepArrow;
+    this.createFileStepArrow = this.getShadowElement('create-file-step-arrow') as StepArrow;
 
     this.startingMapId = settings.mapId;
     this.autoDownload = settings.autoDownload;
@@ -59,19 +59,18 @@ export default class UploadProgressPanel extends BaseContainer {
 
     this.statusHeading.textContent = 'Processing... (0%)';
 
-
     // TODO: Multiple map files
     this.mapFilenameHeading.textContent = getMapFilename(this.startingMapId);
 
-    addStringToListElement(this.preprocessSettingsList, `Resize to: ${settings.resizeDisplayText}`);
-    addStringToListElement(this.preprocessSettingsList, `Quality: ${settings.resizeQualityDisplayText}`);
-    addStringToListElement(this.preprocessSettingsList, `Background: ${settings.backgroundDisplayText}`);
+    this.preprocessStepArrow.addSetting(`Resize to`, settings.resizeDisplayText);
+    this.preprocessStepArrow.addSetting(`Resize Quality`, settings.resizeQualityDisplayText);
+    this.preprocessStepArrow.addSetting(`Background`, settings.backgroundDisplayText);
 
-    addStringToListElement(this.reduceColorSettingsList, `Color Diff: ${settings.colorDifferenceDisplayText}`);
-    addStringToListElement(this.reduceColorSettingsList, `Dither: ${settings.ditheringDisplayText}`);
-    addStringToListElement(this.reduceColorSettingsList, `Transparency: ${settings.transparency}`);
+    this.reduceColorsStepArrow.addSetting(`Color Difference`, settings.colorDifferenceDisplayText);
+    this.reduceColorsStepArrow.addSetting(`Dithering`, settings.ditheringDisplayText);
+    this.reduceColorsStepArrow.addSetting(`Transparency`, settings.transparency.toString());
 
-    addStringToListElement(this.createFileSettingsList, `Auto-download: ${settings.autoDownload ? 'Yes' : 'No'}`);
+    this.createFileStepArrow.addSetting(`Automatic Download`, settings.autoDownload ? 'Yes' : 'No');
   }
 
   initialize() {

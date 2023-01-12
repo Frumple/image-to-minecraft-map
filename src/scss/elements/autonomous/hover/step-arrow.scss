@@ -1,0 +1,31 @@
+.step-arrow {
+  position: relative;
+}
+
+.step-arrow__hover {
+  display: none;
+  position: absolute;
+  top: 64px;
+  left: 32px;
+  z-index: 1;
+}
+
+.step-arrow:hover .step-arrow__hover {
+  display: block;
+}
+
+.step-arrow__settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(auto-fill, 1fr);
+  column-gap: 5px;
+  background: white;
+  border: 1px solid gray;
+  margin: 0;
+  padding: 5px;
+  white-space: nowrap;
+}
+
+.step-arrow__setting-value {
+  font-weight: bold;
+}

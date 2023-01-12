@@ -6,6 +6,7 @@ import UploadProgressPanel from '@elements/autonomous/containers/upload-progress
 
 import ImagePreview from '@elements/autonomous/hover/image-preview';
 import SettingsTooltip from '@elements/autonomous/hover/settings-tooltip';
+import StepArrow from '@elements/autonomous/hover/step-arrow';
 
 import IntegerInput from '@elements/builtin/integer-input';
 
@@ -27,6 +28,7 @@ async function defineElements() {
 
     ImagePreview,
     SettingsTooltip,
+    StepArrow,
 
     IntegerInput
   ];
