@@ -49,6 +49,8 @@ export class Settings {
 
   // General Settings
   minecraftVersion: string = '21w16a';
+  numberOfMapsHorizontal: number = 1;
+  numberOfMapsVertical: number = 1;
 
   // Preprocess Settings
   resize: ResizeType = 'fit';

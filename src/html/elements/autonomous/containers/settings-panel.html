@@ -24,6 +24,20 @@
     </label>
     <select id="minecraft-version-select" class="settings-panel__minecraft-version-select">
     </select>
+
+    <label class="settings-panel__number-of-maps-label" for="number-of-maps-horizontal-input">
+      <settings-tooltip>
+        <span slot="name">Number of Maps</span>
+        <span slot="description"><a href="https://github.com/Frumple/image-to-minecraft-map/wiki/Settings#number-of-maps" target="settings">Number of Maps</a>: The number of horizontal and vertical maps to create from your image.</span>
+        <ul slot="tips">
+          <li>Set to <strong>1 x 1</strong> for a single map.</li>
+          <li>Note that processing will take longer with more maps.</li>
+        </ul>
+      </settings-tooltip>
+    </label>
+    <input id="number-of-maps-horizontal-input" class="settings-panel__number-of-maps-horizontal-input" is="integer-input" type="number" value="1" min="1" max="10" required />
+    <span class="settings-panel__number-of-maps-x ">x</span>
+    <input id="number-of-maps-vertical-input" class="settings-panel__number-of-maps-vertical-input" is="integer-input" type="number" value="1" min="1" max="10" required />
   </div>
 
   <hr />

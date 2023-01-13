@@ -68,8 +68,9 @@
 .settings-panel__general-settings-container {
   @extend .settings-panel__settings-container;
   grid-template:
-    "minecraft-version-label minecraft-version-select" auto
-    / 50% 50%;
+    "minecraft-version-label minecraft-version-select        minecraft-version-select minecraft-version-select     " auto
+    "number-of-maps-label    number-of-maps-horizontal-input number-of-maps-x         number-of-maps-vertical-input" auto
+    / 50% 20% 10% 20%;
 }
 
 .settings-panel__minecraft-version-label {
@@ -78,6 +79,23 @@
 
 .settings-panel__minecraft-version-select {
   grid-area: minecraft-version-select;
+}
+
+.settings-panel__number-of-maps-label {
+  grid-area: number-of-maps-label;
+}
+
+.settings-panel__number-of-maps-horizontal-input {
+  grid-area: number-of-maps-horizontal-input;
+}
+
+.settings-panel__number-of-maps-x {
+  grid-area: number-of-maps-x;
+  text-align: center;
+}
+
+.settings-panel__number-of-maps-vertical-input {
+  grid-area: number-of-maps-vertical-input;
 }
 
 .settings-panel__preprocess-settings-container {

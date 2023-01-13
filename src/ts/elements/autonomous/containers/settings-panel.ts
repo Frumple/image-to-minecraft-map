@@ -13,6 +13,8 @@ export default class SettingsPanel extends BaseContainer {
   mapIdInput: HTMLInputElement;
 
   minecraftVersionSelect: HTMLSelectElement;
+  numberOfMapsHorizontalInput: HTMLInputElement;
+  numberOfMapsVerticalInput: HTMLInputElement;
 
   resizeSelect: HTMLSelectElement;
   resizeQualitySelect: HTMLSelectElement;
@@ -31,6 +33,8 @@ export default class SettingsPanel extends BaseContainer {
     this.mapIdInput = this.getShadowElement('map-id-input') as HTMLInputElement;
 
     this.minecraftVersionSelect = this.getShadowElement('minecraft-version-select') as HTMLSelectElement;
+    this.numberOfMapsHorizontalInput = this.getShadowElement('number-of-maps-horizontal-input') as HTMLInputElement;
+    this.numberOfMapsVerticalInput = this.getShadowElement('number-of-maps-vertical-input') as HTMLInputElement;
 
     this.resizeSelect = this.getShadowElement('resize-select') as HTMLSelectElement;
     this.resizeQualitySelect = this.getShadowElement('resize-quality-select') as HTMLSelectElement;
@@ -90,6 +94,8 @@ export default class SettingsPanel extends BaseContainer {
     this.mapIdInput.value = settings.mapId.toString();
 
     this.minecraftVersionSelect.value = settings.minecraftVersion;
+    this.numberOfMapsHorizontalInput.value = settings.numberOfMapsHorizontal.toString();
+    this.numberOfMapsVerticalInput.value = settings.numberOfMapsVertical.toString();
 
     this.resizeSelect.value = settings.resize;
     this.resizeQualitySelect.value = settings.resizeQuality;
@@ -110,6 +116,8 @@ export default class SettingsPanel extends BaseContainer {
     this.mapIdInput.addEventListener('input', this.onChangeSettings);
 
     this.minecraftVersionSelect.addEventListener('input', this.onChangeSettings);
+    this.numberOfMapsHorizontalInput.addEventListener('input', this.onChangeSettings);
+    this.numberOfMapsVerticalInput.addEventListener('input', this.onChangeSettings);
 
     this.resizeSelect.addEventListener('input', this.onChangeSettings);
     this.resizeQualitySelect.addEventListener('input', this.onChangeSettings);
@@ -133,6 +141,17 @@ export default class SettingsPanel extends BaseContainer {
     settings.mapId = mapId;
 
     settings.minecraftVersion = this.minecraftVersionSelect.value;
+    const mapsHorizontal = convertStringToInteger(this.numberOfMapsHorizontalInput.value);
+    const mapsVertical = convertStringToInteger(this.numberOfMapsVerticalInput.value);
+
+    if (mapsHorizontal === null) {
+      throw new Error('Number of horizontal maps is null.');
+    } else if (mapsVertical === null) {
+      throw new Error('Number of vertical maps is null.');
+    }
+
+    settings.numberOfMapsHorizontal = mapsHorizontal;
+    settings.numberOfMapsVertical = mapsVertical;
 
     settings.resize = this.resizeSelect.value as Settings.ResizeType;
     settings.resizeQuality = this.resizeQualitySelect.value as Settings.ResizeQualityType;
