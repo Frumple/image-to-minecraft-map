@@ -116,22 +116,15 @@
   grid-area: download-file-text;
 }
 
-.upload-progress-panel__step-arrow {
-
-}
-
 .upload-progress-panel__preprocess-step-arrow {
-  @extend .upload-progress-panel__step-arrow;
   grid-area: preprocess;
 }
 
 .upload-progress-panel__reduce-colors-step-arrow {
-  @extend .upload-progress-panel__step-arrow;
   grid-area: reduce-colors;
 }
 
 .upload-progress-panel__create-file-step-arrow {
-  @extend .upload-progress-panel__step-arrow;
   grid-area: create-file;
 }
 
