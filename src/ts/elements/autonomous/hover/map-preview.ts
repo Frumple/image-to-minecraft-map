@@ -1,12 +1,12 @@
 import BaseHover from '@elements/autonomous/hover/base-hover';
 
-import { drawImageToCanvas } from '@helpers/image-helpers';
+import { drawAutoResizedImageToCanvas, drawImageToCanvas } from '@helpers/image-helpers';
 
-export default class ImagePreview extends BaseHover {
+export default class MapPreview extends BaseHover {
   mainCanvas: HTMLCanvasElement;
   largeCanvas: HTMLCanvasElement;
 
-  static get elementName() { return 'image-preview'; }
+  static get elementName() { return 'map-preview'; }
 
   constructor() {
     super();
@@ -20,25 +20,25 @@ export default class ImagePreview extends BaseHover {
   }
 
   async drawItemFrame(imageBlob: Blob) {
-    await drawImageToCanvas(
+    await drawAutoResizedImageToCanvas(
       imageBlob,
       this.mainCanvas,
       'fit',
       'pixelated');
 
-    await drawImageToCanvas(
+    await drawAutoResizedImageToCanvas(
       imageBlob,
       this.largeCanvas,
       'fit',
       'pixelated');
   }
 
-  async render(bitmap: ImageBitmap) {
-    await drawImageToCanvas(
+  render(bitmap: ImageBitmap) {
+    drawImageToCanvas(
       bitmap,
       this.mainCanvas);
 
-    await drawImageToCanvas(
+    drawImageToCanvas(
       bitmap,
       this.largeCanvas);
   }

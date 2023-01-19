@@ -1,0 +1,32 @@
+.map-preview {
+  position: relative;
+}
+
+.map-preview__hover {
+  display: none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  transform: scale(2);
+  z-index: 1;
+}
+
+.map-preview:hover .map-preview__hover {
+  display: block;
+}
+
+.map-preview__canvas {
+  background-image: url("/images/app/item-frame.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+
+.map-preview__main-canvas {
+  @extend .map-preview__canvas;
+}
+
+.map-preview__large-canvas {
+  @extend .map-preview__canvas;
+  border: 1px solid black;
+}

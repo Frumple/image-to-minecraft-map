@@ -10,7 +10,7 @@ export interface ImageDataPixel {
   color: ColorObject
 }
 
-export async function drawImageToCanvas(
+export async function drawAutoResizedImageToCanvas(
   source: ImageBitmapSource,
   canvas: HTMLCanvasElement | OffscreenCanvas,
   resizeType: ResizeType = 'fit',
@@ -47,7 +47,20 @@ export async function drawImageToCanvas(
     height = bitmap.height * resizeFactor;
   }
 
+  drawImageToCanvas(bitmap, canvas, x, y, width, height, resizeQualityType);
+}
+
+export function drawImageToCanvas(
+  source: CanvasImageSource,
+  canvas: HTMLCanvasElement | OffscreenCanvas,
+  x: number = 0,
+  y: number = 0,
+  width: number = MAP_SIZE,
+  height: number = MAP_SIZE,
+  resizeQualityType: ResizeQualityType = 'high') {
+
   const context = canvas.getContext('2d') as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+
   if (context === null) {
     throw new Error('Canvas context is null.');
   }
@@ -57,7 +70,8 @@ export async function drawImageToCanvas(
     context.imageSmoothingEnabled = true;
     context.imageSmoothingQuality = resizeQualityType;
   }
-  context.drawImage(bitmap, x, y, width, height);
+
+  context.drawImage(source, x, y, width, height);
 }
 
 export function getPixelFromImageData(imageData: ImageData, pixelStartIndex: number): ImageDataPixel {

@@ -56,7 +56,7 @@
     "source-image-preview      preprocess      intermediate-image-preview      reduce-colors      final-image-preview      create-file      download-file     " auto
     "source-image-preview-text preprocess-text intermediate-image-preview-text reduce-colors-text final-image-preview-text create-file-text download-file-text" auto
     / 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  gap: 5px;
+  gap: 10px;
   justify-items: center;
   align-items: center;
   margin-top: 5px;
@@ -129,6 +129,7 @@
 }
 
 .upload-progress-panel__step-text {
+  text-align: center;
   font-style: italic;
 }
 

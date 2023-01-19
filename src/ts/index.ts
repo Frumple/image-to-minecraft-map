@@ -3,9 +3,10 @@ import TopPanel from '@elements/autonomous/containers/top-panel';
 import SettingsPanel from '@elements/autonomous/containers/settings-panel';
 import UploadsPanel from '@elements/autonomous/containers/uploads-panel';
 import UploadProgressPanel from '@elements/autonomous/containers/upload-progress-panel';
+import ImagePreview from '@elements/autonomous/containers/image-preview';
 
-import ImagePreview from '@elements/autonomous/hover/image-preview';
 import SettingsTooltip from '@elements/autonomous/hover/settings-tooltip';
+import MapPreview from '@elements/autonomous/hover/map-preview';
 import StepArrow from '@elements/autonomous/hover/step-arrow';
 
 import IntegerInput from '@elements/builtin/integer-input';
@@ -25,9 +26,10 @@ async function defineElements() {
     SettingsPanel,
     UploadsPanel,
     UploadProgressPanel,
-
     ImagePreview,
+
     SettingsTooltip,
+    MapPreview,
     StepArrow,
 
     IntegerInput

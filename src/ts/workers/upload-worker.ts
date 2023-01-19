@@ -1,7 +1,7 @@
 import { calculateColorDifference } from '@helpers/color-difference-helpers';
 import { applyDitheringToImageData } from '@helpers/dithering-helpers';
 import { gzipData } from '@helpers/file-helpers';
-import { MAP_SIZE, ImageDataPixel, drawImageToCanvas, getPixelFromImageData, setPixelToImageData } from '@helpers/image-helpers';
+import { ImageDataPixel, drawAutoResizedImageToCanvas, getPixelFromImageData, setPixelToImageData } from '@helpers/image-helpers';
 import { encodeNbtMap } from '@helpers/nbt-helpers';
 
 import VersionLoader from '@loaders/version-loader';
@@ -78,9 +78,9 @@ class UploadWorker {
   }
 
   async drawSourceImage() {
-    const canvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);
+    const canvas = new OffscreenCanvas(this.settings.canvasWidth, this.settings.canvasHeight);
 
-    await drawImageToCanvas(
+    await drawAutoResizedImageToCanvas(
       this.file,
       canvas);
 
@@ -88,7 +88,7 @@ class UploadWorker {
   }
 
   async processImage() {
-    const workCanvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);
+    const workCanvas = new OffscreenCanvas(this.settings.canvasWidth, this.settings.canvasHeight);
     const workCanvasContext = workCanvas.getContext('2d');
 
     if (workCanvasContext === null) {
@@ -101,14 +101,14 @@ class UploadWorker {
     }
 
     // Draw resized image to the work canvas for use in future "Reduce Colors" step
-    await drawImageToCanvas(
+    await drawAutoResizedImageToCanvas(
       this.file,
       workCanvas,
       this.settings.resize,
       this.settings.resizeQuality);
 
     // Copy work canvas to temporary canvas
-    const canvas = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);
+    const canvas = new OffscreenCanvas(this.settings.canvasWidth, this.settings.canvasHeight);
     const canvasContext = canvas.getContext('2d');
     canvasContext?.drawImage(workCanvas, 0, 0);
 
@@ -118,7 +118,7 @@ class UploadWorker {
   }
 
   async reduceColors(workCanvas: OffscreenCanvas) {
-    const nbtColorArray = new Uint8ClampedArray(MAP_SIZE * MAP_SIZE); // 16384 entries
+    const nbtColorArray = new Uint8ClampedArray(this.settings.canvasWidth * this.settings.canvasHeight); // 16384 entries per map
 
     const context = workCanvas.getContext('2d');
     const inputImageData = context?.getImageData(0, 0, workCanvas.width, workCanvas.height);

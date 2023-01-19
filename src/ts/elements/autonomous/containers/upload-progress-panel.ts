@@ -1,5 +1,5 @@
 import BaseContainer from '@elements/autonomous/containers/base-container';
-import ImagePreview from '@elements/autonomous/hover/image-preview';
+import ImagePreview from '@elements/autonomous/containers/image-preview';
 import StepArrow from '@elements/autonomous/hover/step-arrow';
 
 import { getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
@@ -18,7 +18,9 @@ export default class UploadProgressPanel extends BaseContainer {
   statusHeading: HTMLHeadingElement;
   mapFilenameHeading: HTMLHeadingElement;
 
-  imagePreviewMap: Map<UploadStep, ImagePreview>;
+  sourceImagePreview: ImagePreview;
+  intermediateImagePreview: ImagePreview;
+  finalImagePreview: ImagePreview;
 
   downloadFileLink: HTMLAnchorElement;
   downloadFileTextLink: HTMLAnchorElement;
@@ -39,10 +41,9 @@ export default class UploadProgressPanel extends BaseContainer {
     this.statusHeading = this.getShadowElement('status-heading') as HTMLHeadingElement;
     this.mapFilenameHeading = this.getShadowElement('map-filename-heading') as HTMLHeadingElement;
 
-    this.imagePreviewMap = new Map();
-    this.imagePreviewMap.set('source', this.getShadowElement('source-image-preview') as ImagePreview);
-    this.imagePreviewMap.set('intermediate', this.getShadowElement('intermediate-image-preview') as ImagePreview);
-    this.imagePreviewMap.set('final', this.getShadowElement('final-image-preview') as ImagePreview);
+    this.sourceImagePreview = this.getShadowElement('source-image-preview') as ImagePreview;
+    this.intermediateImagePreview = this.getShadowElement('intermediate-image-preview') as ImagePreview;
+    this.finalImagePreview = this.getShadowElement('final-image-preview') as ImagePreview;
 
     this.downloadFileLink = this.getShadowElement('download-file-link') as HTMLAnchorElement;
     this.downloadFileTextLink = this.getShadowElement('download-file-text-link') as HTMLAnchorElement;
@@ -62,6 +63,10 @@ export default class UploadProgressPanel extends BaseContainer {
     // TODO: Multiple map files
     this.mapFilenameHeading.textContent = getMapFilename(this.startingMapId);
 
+    this.sourceImagePreview.createMapPreviews(settings.numberOfMapsHorizontal, settings.numberOfMapsVertical);
+    this.intermediateImagePreview.createMapPreviews(settings.numberOfMapsHorizontal, settings.numberOfMapsVertical);
+    this.finalImagePreview.createMapPreviews(settings.numberOfMapsHorizontal, settings.numberOfMapsVertical);
+
     this.preprocessStepArrow.addSetting(`Resize to`, settings.resizeDisplayText);
     this.preprocessStepArrow.addSetting(`Resize Quality`, settings.resizeQualityDisplayText);
     this.preprocessStepArrow.addSetting(`Background`, settings.backgroundDisplayText);
@@ -78,13 +83,22 @@ export default class UploadProgressPanel extends BaseContainer {
   }
 
   async renderImagePreview(uploadStep: UploadStep, bitmap: ImageBitmap) {
-    const imagePreview = this.imagePreviewMap.get(uploadStep);
+    const imagePreview = this.getImagePreview(uploadStep);
 
-    if (imagePreview === undefined) {
-      throw new Error(`Upload step has no canvas: ${uploadStep}`);
+    await imagePreview.render(bitmap);
+  }
+
+  private getImagePreview(uploadStep: UploadStep) {
+    switch (uploadStep) {
+      case 'source':
+        return this.sourceImagePreview;
+      case 'intermediate' :
+        return this.intermediateImagePreview;
+      case 'final':
+        return this.finalImagePreview;
+      default:
+        throw new Error(`Upload step has no canvas: ${uploadStep}`)
     }
-
-    imagePreview.render(bitmap);
   }
 
   completeUpload(downloadUrl: string, mapFileSizeInBytes: number, timeElapsed: number, colorsProcessed: number) {

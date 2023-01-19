@@ -1,3 +1,5 @@
+import { MAP_SIZE } from '@helpers/image-helpers';
+
 export type ResizeType = 'fit' | 'fill' | 'stretch';
 export type ResizeQualityType = 'pixelated' | 'low' | 'medium' | 'high';
 export type BackgroundType = 'transparent' | 'black' | 'white';
@@ -67,6 +69,14 @@ export class Settings {
 
   constructor(obj: Object) {
     Object.assign(this, obj);
+  }
+
+  get canvasWidth() {
+    return this.numberOfMapsHorizontal * MAP_SIZE;
+  }
+
+  get canvasHeight() {
+    return this.numberOfMapsVertical * MAP_SIZE;
   }
 
   get resizeDisplayText() {
