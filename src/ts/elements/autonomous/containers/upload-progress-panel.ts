@@ -1,22 +1,15 @@
 import BaseContainer from '@elements/autonomous/containers/base-container';
 import ImagePreview from '@elements/autonomous/containers/image-preview';
+import DownloadBox from '@elements/autonomous/containers/download-box';
 import StepArrow from '@elements/autonomous/hover/step-arrow';
 
-import { createDownloadUrlFromData, getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
+import { MapFileDownload, createMapFileDownloads } from '@helpers/download-helpers';
+import { getFileSizeTextInReadableUnits, getMapFilename } from '@helpers/file-helpers';
 import { roundToDecimalPlaces } from '@helpers/number-helpers';
 
 import { Settings } from '@models/settings';
 
 import { UploadStep } from '@workers/upload-worker';
-
-import JSZip from 'jszip';
-
-interface MapFileDownload {
-  buffer: ArrayBuffer,
-  url: string,
-  filename: string,
-  fileSizeInBytes: number
-}
 
 export default class UploadProgressPanel extends BaseContainer {
   static get elementName() { return 'upload-progress-panel'; }
@@ -32,13 +25,7 @@ export default class UploadProgressPanel extends BaseContainer {
   sourceImagePreview: ImagePreview;
   intermediateImagePreview: ImagePreview;
   finalImagePreview: ImagePreview;
-
-  downloadTitle: HTMLSpanElement;
-  downloadButtonContainer: HTMLDivElement;
-  downloadAsDatButton: HTMLButtonElement;
-  downloadAsZipButton: HTMLButtonElement;
-  downloadDatLinks: HTMLDivElement;
-  downloadZipLink: HTMLAnchorElement;
+  downloadBox: DownloadBox;
 
   preprocessStepArrow: StepArrow;
   reduceColorsStepArrow: StepArrow;
@@ -58,13 +45,7 @@ export default class UploadProgressPanel extends BaseContainer {
     this.sourceImagePreview = this.getShadowElement('source-image-preview') as ImagePreview;
     this.intermediateImagePreview = this.getShadowElement('intermediate-image-preview') as ImagePreview;
     this.finalImagePreview = this.getShadowElement('final-image-preview') as ImagePreview;
-
-    this.downloadTitle = this.getShadowElement('download-title') as HTMLSpanElement;
-    this.downloadButtonContainer = this.getShadowElement('download-button-container') as HTMLDivElement;
-    this.downloadAsDatButton = this.getShadowElement('download-as-dat-button') as HTMLButtonElement;
-    this.downloadAsZipButton = this.getShadowElement('download-as-zip-button') as HTMLButtonElement;
-    this.downloadDatLinks = this.getShadowElement('download-dat-links') as HTMLDivElement;
-    this.downloadZipLink = this.getShadowElement('download-zip-link') as HTMLAnchorElement;
+    this.downloadBox = this.getShadowElement('download-box') as DownloadBox;
 
     this.preprocessStepArrow = this.getShadowElement('preprocess-step-arrow') as StepArrow;
     this.reduceColorsStepArrow = this.getShadowElement('reduce-colors-step-arrow') as StepArrow;
@@ -115,59 +96,9 @@ export default class UploadProgressPanel extends BaseContainer {
   }
 
   async completeUpload(data: ArrayBuffer[][], colorsProcessed: number, timeElapsed: number) {
-    const mapFileDownloads = this.createMapFileDownloads(data);
+    const mapFileDownloads = createMapFileDownloads(data, this.uploadSettings);
 
-    // Create a hidden download link for each map .dat file, and
-    // create a zip file containing each map .dat file and set its hidden download link
-    const zipFile = new JSZip();
-
-    for (const download of mapFileDownloads) {
-      const downloadDatLink = document.createElement('a') as HTMLAnchorElement;
-      downloadDatLink.href = download.url;
-      downloadDatLink.download = download.filename;
-      this.downloadDatLinks.append(downloadDatLink);
-
-      zipFile.file(download.filename, download.buffer, { binary: true });
-    }
-
-    await zipFile.generateAsync({type: 'blob'}).then((blob) => {
-      const url = createDownloadUrlFromData(blob, 'application/octet-stream');
-      const startingMapId = this.uploadSettings.mapId;
-      const endingMapId = this.uploadSettings.endingMapId;
-      const zipFilename = `maps-${startingMapId}-to-${endingMapId}.zip`;
-
-      this.downloadZipLink.href = url;
-      this.downloadZipLink.download = zipFilename;
-    });
-
-    // Setup "Download as .dat" button to click all of the hidden links
-    this.downloadAsDatButton.addEventListener('click', () => {
-      for (const link of this.downloadDatLinks.children as HTMLCollectionOf<HTMLAnchorElement>) {
-        link.click();
-      }
-    });
-
-    // Setup "Download as .zip" button to click the zip hidden link
-    this.downloadAsZipButton.addEventListener('click', () => {
-      this.downloadZipLink.click();
-    });
-
-    // Show the download buttons
-    this.downloadTitle.textContent = 'Download as:';
-    if (this.uploadSettings.hasMultipleMaps) {
-      this.downloadAsDatButton.textContent = '.dat files';
-    }
-    this.downloadButtonContainer.classList.remove('upload-progress-panel__download-button-container_hidden');
-
-    // Start automatic download if enabled
-    switch (this.uploadSettings.autoDownload) {
-      case 'dat':
-        this.downloadAsDatButton.click();
-        break;
-      case 'zip':
-        this.downloadAsZipButton.click();
-        break;
-    }
+    await this.downloadBox.setupDownloadLinks(mapFileDownloads, this.uploadSettings);
 
     this.progressPercentage = 100;
 
@@ -178,28 +109,6 @@ export default class UploadProgressPanel extends BaseContainer {
     const mapFileSizeText = this.getMapFileSizeText(mapFileDownloads);
 
     this.mapFilenameHeading.textContent = `${mapFileNameText} (${mapFileSizeText})`;
-  }
-
-  private createMapFileDownloads(data: ArrayBuffer[][]): MapFileDownload[] {
-    const mapFileDownloads: MapFileDownload[] = [];
-    let mapId = this.uploadSettings.mapId;
-
-    for (let y = 0; y < this.uploadSettings.numberOfMapsVertical; y++) {
-      for (let x = 0; x < this.uploadSettings.numberOfMapsHorizontal; x++) {
-        const buffer = data[x][y];
-        const download = {
-          buffer: buffer,
-          url: createDownloadUrlFromData(buffer, 'application/octet-stream'),
-          filename: getMapFilename(mapId),
-          fileSizeInBytes: buffer.byteLength
-        };
-
-        mapFileDownloads.push(download);
-        mapId++;
-      }
-    }
-
-    return mapFileDownloads;
   }
 
   private getMapFileNameText(): string {
@@ -244,6 +153,6 @@ export default class UploadProgressPanel extends BaseContainer {
     this.statusHeading.classList.add('upload-progress-panel__status-heading_error');
     this.statusHeading.textContent = `Error - ${message}`;
 
-    this.downloadTitle.textContent = 'Error';
+    this.downloadBox.headingText = 'Error';
   }
 }

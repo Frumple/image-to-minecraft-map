@@ -8,32 +8,24 @@
   </div>
   <div class="upload-progress-panel__main-panel">
     <image-preview id="source-image-preview" class="upload-progress-panel__source-image-preview"></image-preview>
-    <span class="upload-progress-panel__source-image-preview-text">Source Image</span>
+    <span class="upload-progress-panel__source-image-text">Source Image</span>
 
     <step-arrow id="preprocess-step-arrow" class="upload-progress-panel__preprocess-step-arrow"></step-arrow>
     <span class="upload-progress-panel__preprocess-text">Preprocess</span>
 
     <image-preview id="intermediate-image-preview" class="upload-progress-panel__intermediate-image-preview"></image-preview>
-    <span class="upload-progress-panel__intermediate-image-preview-text">Intermediate Image</span>
+    <span class="upload-progress-panel__intermediate-image-text">Intermediate Image</span>
 
     <step-arrow id="reduce-colors-step-arrow" class="upload-progress-panel__reduce-colors-step-arrow"></step-arrow>
     <span class="upload-progress-panel__reduce-colors-text">Reduce Colors</span>
 
     <image-preview id="final-image-preview" class="upload-progress-panel__final-image-preview"></image-preview>
-    <span class="upload-progress-panel__final-image-preview-text">Final Image</span>
+    <span class="upload-progress-panel__final-image-text">Final Image</span>
 
     <step-arrow id="create-file-step-arrow" class="upload-progress-panel__create-file-step-arrow"></step-arrow>
     <span class="upload-progress-panel__create-file-text">Create Map Files</span>
 
-    <div class="upload-progress-panel__downloads">
-      <span id="download-title" class="upload-progress-panel__download-title">Please wait...</span>
-      <div id="download-button-container" class="upload-progress-panel__download-button-container upload-progress-panel__download-button-container_hidden">
-        <button id="download-as-dat-button" class="upload-progress-panel__download-as-dat-button">.dat file</button>
-        <button id="download-as-zip-button" class="upload-progress-panel__download-as-zip-button">.zip file</button>
-      </div>
-      <div id="download-dat-links" class="upload-progress-panel__download-dat-links"></div>
-      <a id="download-zip-link" class="upload-progress-panel__download-zip-link"></a>
-    </div>
-    <span class="upload-progress-panel__downloads-text">Downloads</span>
+    <download-box id="download-box" class="upload-progress-panel__download-box"></download-box>
+    <span class="upload-progress-panel__download-text">Downloads</span>
   </div>
 </div>

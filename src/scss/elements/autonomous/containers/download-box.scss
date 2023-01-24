@@ -1,0 +1,56 @@
+.download-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: white;
+  border: 1px solid black;
+  font-weight: bold;
+  white-space: nowrap;
+  width: 118px;
+  height: 118px;
+  padding: 5px;
+}
+
+.download-box__download-heading {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.download-box__download-button-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.download-box__download-button-container_hidden {
+  display: none;
+}
+
+.download-box__download-button {
+  font-weight: bold;
+  font-size: large;
+  width: 100%;
+  padding: 10px;
+}
+
+.download-box__download-as-dat-button {
+  @extend .download-box__download-button;
+}
+
+.download-box__download-as-zip-button {
+  @extend .download-box__download-button;
+}
+
+.download-box__download-links {
+  display: none;
+}
+
+.download-box__download-dat-links {
+  @extend .download-box__download-links;
+}
+
+.download-box__download-zip-link {
+  @extend .download-box__download-links;
+}

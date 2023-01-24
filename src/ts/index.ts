@@ -4,6 +4,7 @@ import SettingsPanel from '@elements/autonomous/containers/settings-panel';
 import UploadsPanel from '@elements/autonomous/containers/uploads-panel';
 import UploadProgressPanel from '@elements/autonomous/containers/upload-progress-panel';
 import ImagePreview from '@elements/autonomous/containers/image-preview';
+import DownloadBox from '@elements/autonomous/containers/download-box';
 
 import SettingsTooltip from '@elements/autonomous/hover/settings-tooltip';
 import MapPreview from '@elements/autonomous/hover/map-preview';
@@ -27,6 +28,7 @@ async function defineElements() {
     UploadsPanel,
     UploadProgressPanel,
     ImagePreview,
+    DownloadBox,
 
     SettingsTooltip,
     MapPreview,
