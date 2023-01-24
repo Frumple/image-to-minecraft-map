@@ -1,7 +1,32 @@
+import { MAP_SIDE_LENGTH, MAP_FULL_LENGTH } from '@helpers/image-helpers';
 import VersionLoader from '@loaders/version-loader';
+
 import { encode, Byte, Int, Short } from 'nbt-ts';
 
-export function encodeNbtMap(colorArray: Int8Array, minecraftVersion: string) {
+export function splitColorArrayIntoMaps(colorArray: Int8Array, numberOfMapsHorizontal: number, numberOfMapsVertical: number): Int8Array[][] {
+  const splitArray: Int8Array[][] = [];
+
+  for (let x = 0; x < numberOfMapsHorizontal; x++) {
+    splitArray[x] = [];
+
+    for (let y = 0; y < numberOfMapsVertical; y++) {
+      splitArray[x][y] = new Int8Array(MAP_FULL_LENGTH);
+
+      for (let row = 0; row < MAP_SIDE_LENGTH; row++) {
+        const globalRowStartIndex = (y * numberOfMapsHorizontal * MAP_FULL_LENGTH) + (row * numberOfMapsHorizontal * MAP_SIDE_LENGTH) + (x * MAP_SIDE_LENGTH);
+        const globalRowEndIndex = globalRowStartIndex + MAP_SIDE_LENGTH;
+        const rowArray = colorArray.subarray(globalRowStartIndex, globalRowEndIndex);
+
+        const localRowStartIndex = row * MAP_SIDE_LENGTH;
+        splitArray[x][y].set(rowArray, localRowStartIndex);
+      }
+    }
+  }
+
+  return splitArray;
+}
+
+export function encodeNbtMap(colorArray: Int8Array, minecraftVersion: string): Buffer {
   // Before Java Edition snapshot 20w21a, the dimension NBT field was a byte.
   // This byte could be set to 0 for overworld, -1 for nether, 1 for end, and any other value to represent a static image with no player pin.
 

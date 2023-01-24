@@ -2,7 +2,7 @@ import { calculateColorDifference } from '@helpers/color-difference-helpers';
 import { applyDitheringToImageData } from '@helpers/dithering-helpers';
 import { gzipData } from '@helpers/file-helpers';
 import { ImageDataPixel, drawAutoResizedImageToCanvas, getPixelFromImageData, setPixelToImageData } from '@helpers/image-helpers';
-import { encodeNbtMap } from '@helpers/nbt-helpers';
+import { encodeNbtMap, splitColorArrayIntoMaps } from '@helpers/nbt-helpers';
 
 import VersionLoader from '@loaders/version-loader';
 
@@ -21,9 +21,9 @@ export interface UploadWorkerIncomingMessageParameters {
 
 export interface UploadWorkerOutgoingMessageParameters {
   step: UploadStep;
-  data: ImageBitmap | ArrayBuffer | number | string;
-  timeElapsed?: number;
+  data: ImageBitmap | ArrayBuffer[][] | number | string;
   colorsProcessed?: number;
+  timeElapsed?: number;
 }
 
 class UploadWorker {
@@ -221,15 +221,23 @@ class UploadWorker {
     return nearestMapColorId;
   }
 
-  createNbtMapFileData(unsignedNbtColorArray: Uint8ClampedArray) {
+  createNbtMapFileData(unsignedNbtColorArray: Uint8ClampedArray): ArrayBuffer[][] {
     // Change the "view" of the color array from Uint8 to Int8 so that it can be written as an NBT byte array
     // i.e. Values 0 to 127 remain the same
     //      Values 128 to 255 wraparound to -128 to -1.
     const signedNbtColorArray = new Int8Array(unsignedNbtColorArray.buffer);
-    const encodedArray = encodeNbtMap(signedNbtColorArray, this.settings.minecraftVersion);
-    const gzippedArray = gzipData(encodedArray);
 
-    return gzippedArray;
+    const splitNbtColorArray = splitColorArrayIntoMaps(signedNbtColorArray, this.settings.numberOfMapsHorizontal, this.settings.numberOfMapsVertical);
+
+    const splitGzippedArray = splitNbtColorArray.map((column) => {
+      return column.map((colorArray) => {
+        const encodedArray = encodeNbtMap(colorArray, this.settings.minecraftVersion);
+        const gzippedArray = gzipData(encodedArray);
+        return gzippedArray.buffer;
+      });
+    });
+
+    return splitGzippedArray;
   }
 
   sendCanvasBitmapToMainThread(canvas: OffscreenCanvas, uploadStep: UploadStep) {
@@ -243,17 +251,18 @@ class UploadWorker {
     postMessage(messageData, [bitmap]);
   }
 
-  sendMapFileDataToMainThread(data: Uint8Array) {
-    const buffer = data.buffer;
+  sendMapFileDataToMainThread(data: ArrayBuffer[][]) {
     const timeElapsed = performance.now() - this.startTime;
     const colorsProcessed = this.colorCache.size;
     const messageData: UploadWorkerOutgoingMessageParameters = {
       step: 'download',
-      data: buffer,
+      data: data,
       timeElapsed: timeElapsed,
       colorsProcessed: colorsProcessed
     };
-    postMessage(messageData, [buffer]);
+
+    const transferableObjects = ([] as ArrayBuffer[]).concat(...data);
+    postMessage(messageData, transferableObjects);
   }
 
   sendProgressUpdateToMainThread(percent: number) {

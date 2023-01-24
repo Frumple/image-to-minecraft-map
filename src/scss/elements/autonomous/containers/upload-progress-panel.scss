@@ -81,19 +81,52 @@
   grid-area: final-image-preview;
 }
 
-.upload-progress-panel__download-file {
+.upload-progress-panel__downloads {
   grid-area: download-file;
-  font-size: 128px;
-  width: 128px;
-  height: 128px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background: white;
+  border: 1px solid black;
+  font-weight: bold;
+  white-space: nowrap;
+  width: 118px;
+  height: 118px;
+  padding: 5px;
 }
 
-.upload-progress-panel__download-file-link {
-  text-decoration: none;
+.upload-progress-panel__download-title {
+  text-align: center;
+}
+
+.upload-progress-panel__download-button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.upload-progress-panel__download-button-container_hidden {
+  display: none;
+}
+
+.upload-progress-panel__download-button {
+  font-weight: bold;
+  font-size: large;
+  width: 100%;
+  padding: 10px;
+}
+
+.upload-progress-panel__download-as-dat-button {
+  @extend .upload-progress-panel__download-button;
+}
+
+.upload-progress-panel__download-links {
+  display: none;
 }
 
 .upload-progress-panel__image-preview-text {
   font-weight: bold;
+  text-align: center;
 }
 
 .upload-progress-panel__source-image-preview-text {
@@ -111,7 +144,7 @@
   grid-area: final-image-preview-text;
 }
 
-.upload-progress-panel__download-file-text {
+.upload-progress-panel__downloads-text {
   @extend .upload-progress-panel__image-preview-text;
   grid-area: download-file-text;
 }
@@ -129,8 +162,8 @@
 }
 
 .upload-progress-panel__step-text {
-  text-align: center;
   font-style: italic;
+  text-align: center;
 }
 
 .upload-progress-panel__preprocess-text {

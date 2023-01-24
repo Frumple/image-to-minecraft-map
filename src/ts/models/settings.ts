@@ -1,4 +1,4 @@
-import { MAP_SIZE } from '@helpers/image-helpers';
+import { MAP_SIDE_LENGTH } from '@helpers/image-helpers';
 
 export type ResizeType = 'fit' | 'fill' | 'stretch';
 export type ResizeQualityType = 'pixelated' | 'low' | 'medium' | 'high';
@@ -64,42 +64,47 @@ export class Settings {
   dithering: DitheringType = 'floyd-steinberg';
   transparency: number = 128;
 
-  // Create Map File Settings
+  // Create Map Files Settings
   autoDownload: boolean = true;
 
   constructor(obj: Object) {
     Object.assign(this, obj);
   }
 
-  get canvasWidth() {
-    return this.numberOfMapsHorizontal * MAP_SIZE;
+  clone(): Settings {
+    const settingsObject = structuredClone(this);
+    return new Settings(settingsObject);
   }
 
-  get canvasHeight() {
-    return this.numberOfMapsVertical * MAP_SIZE;
+  get canvasWidth(): number {
+    return this.numberOfMapsHorizontal * MAP_SIDE_LENGTH;
   }
 
-  get resizeDisplayText() {
+  get canvasHeight(): number {
+    return this.numberOfMapsVertical * MAP_SIDE_LENGTH;
+  }
+
+  get resizeDisplayText(): string {
     return resizeAttributes.get(this.resize)?.displayText as string;
   }
 
-  get resizeQualityDisplayText() {
+  get resizeQualityDisplayText(): string {
     return resizeQualityAttributes.get(this.resizeQuality)?.displayText as string;
   }
 
-  get backgroundDisplayText() {
+  get backgroundDisplayText(): string {
     return backgroundAttributes.get(this.background)?.displayText as string;
   }
 
-  get colorDifferenceDisplayText() {
+  get colorDifferenceDisplayText(): string {
     return colorDifferenceAttributes.get(this.colorDifference)?.displayText as string;
   }
 
-  get ditheringDisplayText() {
+  get ditheringDisplayText(): string {
     return ditheringAttributes.get(this.dithering)?.displayText as string;
   }
 
-  get useLabColorSpace() {
+  get useLabColorSpace(): boolean {
     switch (this.colorDifference) {
       case 'compuphase':
       case 'euclidean':

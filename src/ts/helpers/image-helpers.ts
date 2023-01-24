@@ -3,7 +3,8 @@ import { ResizeType, ResizeQualityType } from '@models/settings';
 import { sRGB } from 'colorjs.io/fn';
 import { ColorObject } from 'colorjs.io/types/src/color';
 
-export const MAP_SIZE = 128;
+export const MAP_SIDE_LENGTH = 128;
+export const MAP_FULL_LENGTH = MAP_SIDE_LENGTH ** 2;
 
 export interface ImageDataPixel {
   key: string,
@@ -55,8 +56,8 @@ export function drawImageToCanvas(
   canvas: HTMLCanvasElement | OffscreenCanvas,
   x: number = 0,
   y: number = 0,
-  width: number = MAP_SIZE,
-  height: number = MAP_SIZE,
+  width: number = MAP_SIDE_LENGTH,
+  height: number = MAP_SIDE_LENGTH,
   resizeQualityType: ResizeQualityType = 'high') {
 
   const context = canvas.getContext('2d') as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;

@@ -1,7 +1,7 @@
 import BaseContainer from '@elements/autonomous/containers/base-container';
 
 import MapPreview from '@elements/autonomous/hover/map-preview';
-import { MAP_SIZE } from '@helpers/image-helpers';
+import { MAP_SIDE_LENGTH } from '@helpers/image-helpers';
 
 export default class ImagePreview extends BaseContainer {
   static get elementName() { return 'image-preview'; }
@@ -43,9 +43,9 @@ export default class ImagePreview extends BaseContainer {
   }
 
   async render(bitmap: ImageBitmap) {
-    for (let x = 0; x < this.numberOfMapsHorizontal; x++) {
-      for (let y = 0; y < this.numberOfMapsVertical; y++) {
-        const bitmapPortion = await createImageBitmap(bitmap, x * MAP_SIZE, y * MAP_SIZE, MAP_SIZE, MAP_SIZE);
+    for (let y = 0; y < this.numberOfMapsVertical; y++) {
+      for (let x = 0; x < this.numberOfMapsHorizontal; x++) {
+        const bitmapPortion = await createImageBitmap(bitmap, x * MAP_SIDE_LENGTH, y * MAP_SIDE_LENGTH, MAP_SIDE_LENGTH, MAP_SIDE_LENGTH);
         this.mapPreviews[x][y].render(bitmapPortion);
       }
     }

@@ -1,11 +1,10 @@
 import BaseContainer from '@elements/autonomous/containers/base-container';
 import UploadProgressPanel from '@elements/autonomous/containers/upload-progress-panel';
 
-import { createDownloadUrlFromData } from '@helpers/file-helpers';
 import LocalStorageProxy from '@helpers/local-storage-proxy';
 
 import CurrentContext from '@models/current-context';
-import * as Settings from '@models/settings';
+import { Settings } from '@models/settings';
 
 import { UploadWorkerIncomingMessageParameters, UploadWorkerOutgoingMessageParameters } from '@workers/upload-worker';
 
@@ -93,9 +92,13 @@ export default class UploadsPanel extends BaseContainer {
     const files = Array.from(fileList);
     const settings = CurrentContext.settings;
 
+    // TODO: Encapsulate all actions associated with incrementing the next map id into the Settings class
+
     for (const file of files) {
       await this.uploadFile(settings, file);
-      settings.mapId++;
+
+      const numberOfMapsToIncrement = settings.numberOfMapsHorizontal * settings.numberOfMapsVertical;
+      settings.mapId += numberOfMapsToIncrement;
     }
 
     LocalStorageProxy.saveSettings(settings);
@@ -111,9 +114,10 @@ export default class UploadsPanel extends BaseContainer {
     this.dispatchEvent(mapIdUpdatedEvent);
   }
 
-  async uploadFile(settings: Settings.Settings, file: File) {
+  async uploadFile(settings: Settings, file: File) {
     // Create and show the UI panel
-    const uploadProgressPanel = new UploadProgressPanel(settings, file.name, file.size);
+    const uploadSettings = settings.clone();
+    const uploadProgressPanel = new UploadProgressPanel(uploadSettings, file.name, file.size);
     this.uploadsContainer.appendChild(uploadProgressPanel);
 
     try {
@@ -143,13 +147,11 @@ export default class UploadsPanel extends BaseContainer {
             break;
 
           case 'download':
-            const data = parameters.data as ArrayBuffer;
-            const downloadUrl = createDownloadUrlFromData(data, 'application/octet-stream');
-            const mapFileSizeInBytes = data.byteLength;
-            const timeElapsed = parameters.timeElapsed as number;
+            const data = parameters.data as ArrayBuffer[][];
             const colorsProcessed = parameters.colorsProcessed as number;
+            const timeElapsed = parameters.timeElapsed as number;
 
-            uploadProgressPanel.completeUpload(downloadUrl, mapFileSizeInBytes, timeElapsed, colorsProcessed);
+            uploadProgressPanel.completeUpload(data, colorsProcessed, timeElapsed);
             break;
 
           case 'source':

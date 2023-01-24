@@ -1,4 +1,3 @@
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 <link href="/src/scss/elements/autonomous/containers/upload-progress-panel.scss" rel="stylesheet" />
 
 <div id="upload-progress-panel" class="upload-progress-panel">
@@ -24,13 +23,15 @@
     <span class="upload-progress-panel__final-image-preview-text">Final Image</span>
 
     <step-arrow id="create-file-step-arrow" class="upload-progress-panel__create-file-step-arrow"></step-arrow>
-    <span class="upload-progress-panel__create-file-text">Create Map File</span>
+    <span class="upload-progress-panel__create-file-text">Create Map Files</span>
 
-    <span class="upload-progress-panel__download-file material-symbols-outlined">
-      <a id="download-file-link" class="upload-progress-panel__download-file-link">draft</a>
-    </span>
-    <span class="upload-progress-panel__download-file-text">
-      <a id="download-file-text-link" class="upload-progress-panel__download-file-text-link">Download File</a>
-    </span>
+    <div class="upload-progress-panel__downloads">
+      <span id="download-title" class="upload-progress-panel__download-title">Please wait...</span>
+      <div id="download-button-container" class="upload-progress-panel__download-button-container upload-progress-panel__download-button-container_hidden">
+        <button id="download-as-dat-button" class="upload-progress-panel__download-as-dat-button">.dat files</button>
+      </div>
+      <div id="download-links" class="upload-progress-panel__download-links"></div>
+    </div>
+    <span class="upload-progress-panel__downloads-text">Downloads</span>
   </div>
 </div>
