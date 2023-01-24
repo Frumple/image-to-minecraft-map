@@ -76,6 +76,14 @@ export class Settings {
     return new Settings(settingsObject);
   }
 
+  get hasMultipleMaps(): boolean {
+    return this.numberOfMapsHorizontal > 1 || this.numberOfMapsVertical > 1;
+  }
+
+  get endingMapId(): number {
+    return this.mapId + (this.numberOfMapsHorizontal * this.numberOfMapsVertical) - 1;
+  }
+
   get canvasWidth(): number {
     return this.numberOfMapsHorizontal * MAP_SIDE_LENGTH;
   }

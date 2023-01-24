@@ -71,7 +71,7 @@
   grid-area: source-image-preview;
 }
 
-.upload-progress-panel__intermediate-image-preview{
+.upload-progress-panel__intermediate-image-preview {
   @extend .upload-progress-panel__image-preview;
   grid-area: intermediate-image-preview;
 }
@@ -85,7 +85,7 @@
   grid-area: download-file;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   background: white;
   border: 1px solid black;
   font-weight: bold;
@@ -96,13 +96,15 @@
 }
 
 .upload-progress-panel__download-title {
-  text-align: center;
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .upload-progress-panel__download-button-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
 }
 
 .upload-progress-panel__download-button-container_hidden {
@@ -120,8 +122,20 @@
   @extend .upload-progress-panel__download-button;
 }
 
+.upload-progress-panel__download-as-zip-button {
+  @extend .upload-progress-panel__download-button;
+}
+
 .upload-progress-panel__download-links {
   display: none;
+}
+
+.upload-progress-panel__download-dat-links {
+  @extend .upload-progress-panel__download-links;
+}
+
+.upload-progress-panel__download-zip-link {
+  @extend .upload-progress-panel__download-links;
 }
 
 .upload-progress-panel__image-preview-text {

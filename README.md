@@ -6,14 +6,14 @@
 
 A web application that converts images to Minecraft NBT map .dat files, allowing such images to be displayed in Minecraft.
 
-**This is an ALPHA release. This means that there may be bugs, and the functionality and user interface may change without prior notice.**
-
 If you think you've discovered a bug, please report it as an [issue][issues]. Be sure to provide as much detail as possible including exact steps to reproduce, settings, image file, and browser used.
 
 ## Features
 
-- Drag-and-drop multiple image files and process them simultaneously.
-- Supports various color difference algorithms: CompuPhase, Euclidean, DeltaE 1976 and 2000, and CMC 1986.
+- Drag-and-drop multiple image files at once and process them simultaneously.
+- Split an image into multiple maps arranged in a grid pattern, such as 2x2, 3x3, etc.
+- Download maps as .dat files or a .zip file containing the .dat files.
+- Supports various color difference algorithms: CompuPhase, Euclidean, DeltaE 1976 and 2000, and CMC 1984.
 - Supports Floyd-Steinberg dithering.
 
 ## Known Issues
@@ -22,7 +22,6 @@ If you think you've discovered a bug, please report it as an [issue][issues]. Be
 
 ## Future Improvements
 
-- Upload image over multiple maps (2x1, 2x2, 3x3, etc.).
 - Support SVG files.
 - Support Bedrock Edition.
 - Support additional dithering algorithms.
@@ -42,6 +41,7 @@ Start the development server:
 - [color.js][color.js] - Calculates color difference.
 - [nbt-ts][nbt-ts] - Encodes data to the NBT format.
 - [pako][pako] - Compresses NBT files using gzip.
+- [jszip][jszip] - Creates zip files for download.
 
 ## Credits
 
@@ -58,6 +58,7 @@ Image to Minecraft Map is not affiliated in any way with Mojang or Microsoft.
 [compuphase]: https://www.compuphase.com/cmetric.htm
 [cc-by-sa-3]: https://creativecommons.org/licenses/by-sa/3.0/
 [issues]: https://github.com/Frumple/image-to-minecraft-map/issues
+[jszip]: https://github.com/Stuk/jszip
 [mit]: https://choosealicense.com/licenses/mit/
 [nbt-ts]: https://github.com/janispritzkau/nbt-ts
 [pako]: https://github.com/nodeca/pako

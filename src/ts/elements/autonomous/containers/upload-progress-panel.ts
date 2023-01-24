@@ -9,7 +9,10 @@ import { Settings } from '@models/settings';
 
 import { UploadStep } from '@workers/upload-worker';
 
+import JSZip from 'jszip';
+
 interface MapFileDownload {
+  buffer: ArrayBuffer,
   url: string,
   filename: string,
   fileSizeInBytes: number
@@ -32,8 +35,10 @@ export default class UploadProgressPanel extends BaseContainer {
 
   downloadTitle: HTMLSpanElement;
   downloadButtonContainer: HTMLDivElement;
-  downloadAsDatButton: HTMLAnchorElement;
-  downloadLinks: HTMLDivElement;
+  downloadAsDatButton: HTMLButtonElement;
+  downloadAsZipButton: HTMLButtonElement;
+  downloadDatLinks: HTMLDivElement;
+  downloadZipLink: HTMLAnchorElement;
 
   preprocessStepArrow: StepArrow;
   reduceColorsStepArrow: StepArrow;
@@ -56,8 +61,10 @@ export default class UploadProgressPanel extends BaseContainer {
 
     this.downloadTitle = this.getShadowElement('download-title') as HTMLSpanElement;
     this.downloadButtonContainer = this.getShadowElement('download-button-container') as HTMLDivElement;
-    this.downloadAsDatButton = this.getShadowElement('download-as-dat-button') as HTMLAnchorElement;
-    this.downloadLinks = this.getShadowElement('download-links') as HTMLDivElement;
+    this.downloadAsDatButton = this.getShadowElement('download-as-dat-button') as HTMLButtonElement;
+    this.downloadAsZipButton = this.getShadowElement('download-as-zip-button') as HTMLButtonElement;
+    this.downloadDatLinks = this.getShadowElement('download-dat-links') as HTMLDivElement;
+    this.downloadZipLink = this.getShadowElement('download-zip-link') as HTMLAnchorElement;
 
     this.preprocessStepArrow = this.getShadowElement('preprocess-step-arrow') as StepArrow;
     this.reduceColorsStepArrow = this.getShadowElement('reduce-colors-step-arrow') as StepArrow;
@@ -110,25 +117,45 @@ export default class UploadProgressPanel extends BaseContainer {
   completeUpload(data: ArrayBuffer[][], colorsProcessed: number, timeElapsed: number) {
     const mapFileDownloads = this.createMapFileDownloads(data);
 
-    // Create a hidden download link for each map .dat file
+    // Create a hidden download link for each map .dat file, and
+    // create a zip file containing each map .dat file and set its hidden download link
+    const zipFile = new JSZip();
+
     for (const download of mapFileDownloads) {
-      const downloadLink = document.createElement('a') as HTMLAnchorElement;
-      downloadLink.href = download.url;
-      downloadLink.download = download.filename;
-      this.downloadLinks.append(downloadLink);
+      const downloadDatLink = document.createElement('a') as HTMLAnchorElement;
+      downloadDatLink.href = download.url;
+      downloadDatLink.download = download.filename;
+      this.downloadDatLinks.append(downloadDatLink);
+
+      zipFile.file(download.filename, download.buffer, { binary: true });
     }
+
+    zipFile.generateAsync({type: 'blob'}).then((blob) => {
+      const url = createDownloadUrlFromData(blob, 'application/octet-stream');
+      const startingMapId = this.uploadSettings.mapId;
+      const endingMapId = this.uploadSettings.endingMapId;
+      const zipFilename = `maps-${startingMapId}-to-${endingMapId}.zip`;
+
+      this.downloadZipLink.href = url;
+      this.downloadZipLink.download = zipFilename;
+    });
 
     // Setup "Download as .dat" button to click all of the hidden links
     this.downloadAsDatButton.addEventListener('click', () => {
-      for (const link of this.downloadLinks.children as HTMLCollectionOf<HTMLAnchorElement>) {
+      for (const link of this.downloadDatLinks.children as HTMLCollectionOf<HTMLAnchorElement>) {
         link.click();
       }
     });
 
+    // Setup "Download as .zip" button to click the zip hidden link
+    this.downloadAsZipButton.addEventListener('click', () => {
+      this.downloadZipLink.click();
+    });
+
     // Show the download buttons
     this.downloadTitle.textContent = 'Download as:';
-    if (this.uploadSettings.numberOfMapsHorizontal === 1 && this.uploadSettings.numberOfMapsVertical) {
-      this.downloadAsDatButton.textContent = '.dat file';
+    if (this.uploadSettings.hasMultipleMaps) {
+      this.downloadAsDatButton.textContent = '.dat files';
     }
     this.downloadButtonContainer.classList.remove('upload-progress-panel__download-button-container_hidden');
 
@@ -155,6 +182,7 @@ export default class UploadProgressPanel extends BaseContainer {
       for (let x = 0; x < this.uploadSettings.numberOfMapsHorizontal; x++) {
         const buffer = data[x][y];
         const download = {
+          buffer: buffer,
           url: createDownloadUrlFromData(buffer, 'application/octet-stream'),
           filename: getMapFilename(mapId),
           fileSizeInBytes: buffer.byteLength
@@ -169,16 +197,14 @@ export default class UploadProgressPanel extends BaseContainer {
   }
 
   private getMapFileNameText(): string {
-    const firstMapId = this.uploadSettings.mapId;
-    const numberOfMapsHorizontal = this.uploadSettings.numberOfMapsHorizontal;
-    const numberOfMapsVertical = this.uploadSettings.numberOfMapsVertical;
+    const startingMapId = this.uploadSettings.mapId;
 
-    let text = getMapFilename(firstMapId);
+    let text = getMapFilename(startingMapId);
 
-    if (numberOfMapsHorizontal > 1 || numberOfMapsVertical > 1) {
-      const lastMapId = firstMapId + (numberOfMapsHorizontal * numberOfMapsVertical) - 1;
-      const lastMapIdText = getMapFilename(lastMapId);
-      text += ` ➝ ${lastMapIdText}`;
+    if (this.uploadSettings.hasMultipleMaps) {
+      const endingMapId = this.uploadSettings.endingMapId;
+      const endingMapIdText = getMapFilename(endingMapId);
+      text += ` ➝ ${endingMapIdText}`;
     }
 
     return text;
