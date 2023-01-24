@@ -5,6 +5,7 @@ export type ResizeQualityType = 'pixelated' | 'low' | 'medium' | 'high';
 export type BackgroundType = 'transparent' | 'black' | 'white';
 export type ColorDifferenceType = 'compuphase' | 'euclidean' | 'deltae-1976' | 'cmc-1984' | 'deltae-2000';
 export type DitheringType = 'none' | 'floyd-steinberg';
+export type AutomaticDownloadType = 'off' | 'dat' | 'zip';
 
 export interface SettingAttributes {
   displayText: string;       // Text shown in select element options and each upload progress panel
@@ -44,6 +45,12 @@ export const ditheringAttributes = new Map<DitheringType, SettingAttributes>([
   ['floyd-steinberg', { displayText: 'Floyd-Steinberg', defaultSelected: true }]
 ]);
 
+export const automaticDownloadAttributes = new Map<AutomaticDownloadType, SettingAttributes>([
+  ['off', { displayText: 'Off', defaultSelected: true }],
+  ['dat', { displayText: '.dat files' }],
+  ['zip', { displayText: '.zip file' }],
+]);
+
 export class Settings {
   appVersion!: string;
 
@@ -65,7 +72,7 @@ export class Settings {
   transparency: number = 128;
 
   // Create Map Files Settings
-  autoDownload: boolean = true;
+  autoDownload: AutomaticDownloadType = 'off';
 
   constructor(obj: Object) {
     Object.assign(this, obj);
@@ -110,6 +117,10 @@ export class Settings {
 
   get ditheringDisplayText(): string {
     return ditheringAttributes.get(this.dithering)?.displayText as string;
+  }
+
+  get autoDownloadDisplayText(): string {
+    return automaticDownloadAttributes.get(this.autoDownload)?.displayText as string;
   }
 
   get useLabColorSpace(): boolean {

@@ -151,7 +151,7 @@ export default class UploadsPanel extends BaseContainer {
             const colorsProcessed = parameters.colorsProcessed as number;
             const timeElapsed = parameters.timeElapsed as number;
 
-            uploadProgressPanel.completeUpload(data, colorsProcessed, timeElapsed);
+            await uploadProgressPanel.completeUpload(data, colorsProcessed, timeElapsed);
             break;
 
           case 'source':

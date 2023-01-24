@@ -172,16 +172,16 @@
 .settings-panel__create-file-settings-container {
   @extend .settings-panel__settings-container;
   grid-template:
-    "auto-download-label auto-download-label auto-download-input" auto
-    / 50% 25% 25%;
+    "auto-download-label auto-download-select" auto
+    / 50% 50%;
 }
 
 .settings-panel__auto-download-label {
   grid-area: auto-download-label;
 }
 
-.settings-panel__auto-download-input {
-  grid-area: auto-download-input;
+.settings-panel__auto-download-select {
+  grid-area: auto-download-select;
 }
 
 settings-tooltip a {

@@ -88,7 +88,7 @@ export default class UploadProgressPanel extends BaseContainer {
     this.reduceColorsStepArrow.addSetting(`Dithering`, uploadSettings.ditheringDisplayText);
     this.reduceColorsStepArrow.addSetting(`Transparency`, uploadSettings.transparency.toString());
 
-    this.createFileStepArrow.addSetting(`Automatic Download`, uploadSettings.autoDownload ? 'Yes' : 'No');
+    this.createFileStepArrow.addSetting(`Automatic Download`, uploadSettings.autoDownloadDisplayText);
   }
 
   initialize() {
@@ -114,7 +114,7 @@ export default class UploadProgressPanel extends BaseContainer {
     }
   }
 
-  completeUpload(data: ArrayBuffer[][], colorsProcessed: number, timeElapsed: number) {
+  async completeUpload(data: ArrayBuffer[][], colorsProcessed: number, timeElapsed: number) {
     const mapFileDownloads = this.createMapFileDownloads(data);
 
     // Create a hidden download link for each map .dat file, and
@@ -130,7 +130,7 @@ export default class UploadProgressPanel extends BaseContainer {
       zipFile.file(download.filename, download.buffer, { binary: true });
     }
 
-    zipFile.generateAsync({type: 'blob'}).then((blob) => {
+    await zipFile.generateAsync({type: 'blob'}).then((blob) => {
       const url = createDownloadUrlFromData(blob, 'application/octet-stream');
       const startingMapId = this.uploadSettings.mapId;
       const endingMapId = this.uploadSettings.endingMapId;
@@ -159,8 +159,14 @@ export default class UploadProgressPanel extends BaseContainer {
     }
     this.downloadButtonContainer.classList.remove('upload-progress-panel__download-button-container_hidden');
 
-    if (this.uploadSettings.autoDownload) {
-      this.downloadAsDatButton.click();
+    // Start automatic download if enabled
+    switch (this.uploadSettings.autoDownload) {
+      case 'dat':
+        this.downloadAsDatButton.click();
+        break;
+      case 'zip':
+        this.downloadAsZipButton.click();
+        break;
     }
 
     this.progressPercentage = 100;

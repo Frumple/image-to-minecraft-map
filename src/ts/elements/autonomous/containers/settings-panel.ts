@@ -25,7 +25,7 @@ export default class SettingsPanel extends BaseContainer {
   transparencyInputText: HTMLInputElement;
   transparencyInputRange: HTMLInputElement;
 
-  autoDownloadInput: HTMLInputElement;
+  autoDownloadSelect: HTMLSelectElement;
 
   constructor() {
     super();
@@ -45,7 +45,7 @@ export default class SettingsPanel extends BaseContainer {
     this.transparencyInputText = this.getShadowElement('transparency-input-text') as HTMLInputElement;
     this.transparencyInputRange = this.getShadowElement('transparency-input-range') as HTMLInputElement;
 
-    this.autoDownloadInput = this.getShadowElement('auto-download-input') as HTMLInputElement;
+    this.autoDownloadSelect = this.getShadowElement('auto-download-select') as HTMLSelectElement;
   }
 
   initialize() {
@@ -57,6 +57,7 @@ export default class SettingsPanel extends BaseContainer {
 
     this.populateOptions(this.colorDifferenceSelect, Settings.colorDifferenceAttributes);
     this.populateOptions(this.ditheringSelect, Settings.ditheringAttributes);
+    this.populateOptions(this.autoDownloadSelect, Settings.automaticDownloadAttributes);
 
     this.populateSettings();
   }
@@ -106,7 +107,7 @@ export default class SettingsPanel extends BaseContainer {
     this.transparencyInputText.value = settings.transparency.toString();
     this.transparencyInputRange.value = settings.transparency.toString();
 
-    this.autoDownloadInput.checked = settings.autoDownload;
+    this.autoDownloadSelect.value = settings.autoDownload;
   }
 
   // These event listeners are explicitly registered after the IntegerInput event listeners.
@@ -128,7 +129,7 @@ export default class SettingsPanel extends BaseContainer {
     this.transparencyInputText.addEventListener('input', this.onChangeSettings);
     this.transparencyInputRange.addEventListener('input', this.onChangeSettings);
 
-    this.autoDownloadInput.addEventListener('input', this.onChangeSettings);
+    this.autoDownloadSelect.addEventListener('input', this.onChangeSettings);
   }
 
   onChangeSettings = (event: Event) => {
@@ -172,7 +173,7 @@ export default class SettingsPanel extends BaseContainer {
     }
     settings.transparency = transparency;
 
-    settings.autoDownload = this.autoDownloadInput.checked;
+    settings.autoDownload = this.autoDownloadSelect.value as Settings.AutomaticDownloadType;
 
     LocalStorageProxy.saveSettings(settings);
   }
