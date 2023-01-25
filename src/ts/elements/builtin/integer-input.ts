@@ -17,39 +17,59 @@ export default class IntegerInput extends HTMLInputElement {
   connectedCallback() {
     if (this.isConnected && ! this.isInitialized) {
       this.addEventListener('input', this.onInput);
+      this.addEventListener('blur', this.onBlur);
 
       this.isInitialized = true;
     }
   }
 
-  onInput() {
-    let value = this.valueAsInt;
+  onInput = () => {
+    let value = convertStringToInteger(this.value);
     const min = this.minAsInt;
     const max = this.maxAsInt;
 
     if (value !== null) {
-      if (min !== null && value < min) {
+      if (value < min) {
+        // Force values lower than minimum to be minimum
         this.value = this.min;
-      } else if (max !== null && value > max) {
+      } else if (value > max) {
+        // Force values higher than maximum to be maximum
         this.value = this.max;
       } else {
         // Eliminate leading zeroes from the inputted value
         this.value = value.toString();
       }
-    } else {
-      this.value = this.min;
     }
   }
 
-  get valueAsInt() {
-    return convertStringToInteger(this.value);
+  onBlur = () => {
+    const value = convertStringToInteger(this.value);
+    if (value === null) {
+      this.value = this.minAsInt.toString();
+    }
   }
 
-  get minAsInt() {
-    return convertStringToInteger(this.min);
+  set valueAsInt(value: number) {
+    this.value = value.toString();
   }
 
-  get maxAsInt() {
-    return convertStringToInteger(this.max);
+  set minAsInt(min: number) {
+    this.min = min.toString();
+  }
+
+  set maxAsInt(max: number) {
+    this.max = max.toString();
+  }
+
+  get valueAsInt(): number {
+    return convertStringToInteger(this.value) ?? this.minAsInt;
+  }
+
+  get minAsInt(): number {
+    return convertStringToInteger(this.min) ?? 0;
+  }
+
+  get maxAsInt(): number {
+    return convertStringToInteger(this.max) ?? 0;
   }
 }

@@ -1,20 +1,20 @@
 import BaseContainer from '@elements/autonomous/containers/base-container';
+import IntegerInput from '@elements/builtin/integer-input';
 
 import CurrentContext from '@models/current-context';
 import * as Settings from '@models/settings';
 
-import { convertStringToInteger } from '@helpers/number-helpers';
 import VersionLoader from '@loaders/version-loader';
 import LocalStorageProxy from '@helpers/local-storage-proxy';
 
 export default class SettingsPanel extends BaseContainer {
   static get elementName() { return 'settings-panel'; }
 
-  mapIdInput: HTMLInputElement;
+  mapIdInput: IntegerInput;
 
   minecraftVersionSelect: HTMLSelectElement;
-  numberOfMapsHorizontalInput: HTMLInputElement;
-  numberOfMapsVerticalInput: HTMLInputElement;
+  numberOfMapsHorizontalInput: IntegerInput;
+  numberOfMapsVerticalInput: IntegerInput;
 
   resizeSelect: HTMLSelectElement;
   resizeQualitySelect: HTMLSelectElement;
@@ -22,19 +22,19 @@ export default class SettingsPanel extends BaseContainer {
 
   colorDifferenceSelect: HTMLSelectElement;
   ditheringSelect: HTMLSelectElement;
-  transparencyInputText: HTMLInputElement;
-  transparencyInputRange: HTMLInputElement;
+  transparencyInputNumber: IntegerInput;
+  transparencyInputRange: IntegerInput;
 
   autoDownloadSelect: HTMLSelectElement;
 
   constructor() {
     super();
 
-    this.mapIdInput = this.getShadowElement('map-id-input') as HTMLInputElement;
+    this.mapIdInput = this.getShadowElement('map-id-input') as IntegerInput;
 
     this.minecraftVersionSelect = this.getShadowElement('minecraft-version-select') as HTMLSelectElement;
-    this.numberOfMapsHorizontalInput = this.getShadowElement('number-of-maps-horizontal-input') as HTMLInputElement;
-    this.numberOfMapsVerticalInput = this.getShadowElement('number-of-maps-vertical-input') as HTMLInputElement;
+    this.numberOfMapsHorizontalInput = this.getShadowElement('number-of-maps-horizontal-input') as IntegerInput;
+    this.numberOfMapsVerticalInput = this.getShadowElement('number-of-maps-vertical-input') as IntegerInput;
 
     this.resizeSelect = this.getShadowElement('resize-select') as HTMLSelectElement;
     this.resizeQualitySelect = this.getShadowElement('resize-quality-select') as HTMLSelectElement;
@@ -42,8 +42,8 @@ export default class SettingsPanel extends BaseContainer {
 
     this.colorDifferenceSelect = this.getShadowElement('color-difference-select') as HTMLSelectElement;
     this.ditheringSelect = this.getShadowElement('dithering-select') as HTMLSelectElement;
-    this.transparencyInputText = this.getShadowElement('transparency-input-text') as HTMLInputElement;
-    this.transparencyInputRange = this.getShadowElement('transparency-input-range') as HTMLInputElement;
+    this.transparencyInputNumber = this.getShadowElement('transparency-input-text') as IntegerInput;
+    this.transparencyInputRange = this.getShadowElement('transparency-input-range') as IntegerInput;
 
     this.autoDownloadSelect = this.getShadowElement('auto-download-select') as HTMLSelectElement;
   }
@@ -92,11 +92,11 @@ export default class SettingsPanel extends BaseContainer {
   private populateSettings() {
     const settings = CurrentContext.settings;
 
-    this.mapIdInput.value = settings.mapId.toString();
+    this.mapIdInput.valueAsInt = settings.mapId;
 
     this.minecraftVersionSelect.value = settings.minecraftVersion;
-    this.numberOfMapsHorizontalInput.value = settings.numberOfMapsHorizontal.toString();
-    this.numberOfMapsVerticalInput.value = settings.numberOfMapsVertical.toString();
+    this.numberOfMapsHorizontalInput.valueAsInt = settings.numberOfMapsHorizontal;
+    this.numberOfMapsVerticalInput.valueAsInt = settings.numberOfMapsVertical;
 
     this.resizeSelect.value = settings.resize;
     this.resizeQualitySelect.value = settings.resizeQuality;
@@ -104,8 +104,8 @@ export default class SettingsPanel extends BaseContainer {
 
     this.colorDifferenceSelect.value = settings.colorDifference;
     this.ditheringSelect.value = settings.dithering;
-    this.transparencyInputText.value = settings.transparency.toString();
-    this.transparencyInputRange.value = settings.transparency.toString();
+    this.transparencyInputNumber.valueAsInt = settings.transparency;
+    this.transparencyInputRange.valueAsInt = settings.transparency;
 
     this.autoDownloadSelect.value = settings.autoDownload;
   }
@@ -126,7 +126,7 @@ export default class SettingsPanel extends BaseContainer {
 
     this.colorDifferenceSelect.addEventListener('input', this.onChangeSettings);
     this.ditheringSelect.addEventListener('input', this.onChangeSettings);
-    this.transparencyInputText.addEventListener('input', this.onChangeSettings);
+    this.transparencyInputNumber.addEventListener('input', this.onChangeSettings);
     this.transparencyInputRange.addEventListener('input', this.onChangeSettings);
 
     this.autoDownloadSelect.addEventListener('input', this.onChangeSettings);
@@ -134,25 +134,11 @@ export default class SettingsPanel extends BaseContainer {
 
   onChangeSettings = (event: Event) => {
     const settings = CurrentContext.settings;
-
-    const mapId = convertStringToInteger(this.mapIdInput.value);
-    if (mapId === null) {
-      throw new Error('Map id is null.');
-    }
-    settings.mapId = mapId;
+    settings.mapId = this.mapIdInput.valueAsInt;
 
     settings.minecraftVersion = this.minecraftVersionSelect.value;
-    const mapsHorizontal = convertStringToInteger(this.numberOfMapsHorizontalInput.value);
-    const mapsVertical = convertStringToInteger(this.numberOfMapsVerticalInput.value);
-
-    if (mapsHorizontal === null) {
-      throw new Error('Number of horizontal maps is null.');
-    } else if (mapsVertical === null) {
-      throw new Error('Number of vertical maps is null.');
-    }
-
-    settings.numberOfMapsHorizontal = mapsHorizontal;
-    settings.numberOfMapsVertical = mapsVertical;
+    settings.numberOfMapsHorizontal = this.numberOfMapsHorizontalInput.valueAsInt;
+    settings.numberOfMapsVertical = this.numberOfMapsVerticalInput.valueAsInt;
 
     settings.resize = this.resizeSelect.value as Settings.ResizeType;
     settings.resizeQuality = this.resizeQualitySelect.value as Settings.ResizeQualityType;
@@ -161,17 +147,13 @@ export default class SettingsPanel extends BaseContainer {
     settings.colorDifference = this.colorDifferenceSelect.value as Settings.ColorDifferenceType;
     settings.dithering = this.ditheringSelect.value as Settings.DitheringType;
 
-    if (event.target === this.transparencyInputText) {
-      this.transparencyInputRange.value = this.transparencyInputText.value;
+    if (event.target === this.transparencyInputNumber) {
+      this.transparencyInputRange.valueAsInt = this.transparencyInputNumber.valueAsInt;
     } else if (event.target === this.transparencyInputRange) {
-      this.transparencyInputText.value = this.transparencyInputRange.value;
+      this.transparencyInputNumber.valueAsInt = this.transparencyInputRange.valueAsInt;
     }
 
-    const transparency = convertStringToInteger(this.transparencyInputText.value);
-    if (transparency === null) {
-      throw new Error('Transparency is null.');
-    }
-    settings.transparency = transparency;
+    settings.transparency = this.transparencyInputNumber.valueAsInt;
 
     settings.autoDownload = this.autoDownloadSelect.value as Settings.AutomaticDownloadType;
 
@@ -179,15 +161,10 @@ export default class SettingsPanel extends BaseContainer {
   }
 
   set mapId(mapId: number) {
-    this.mapIdInput.value = mapId.toString();
+    this.mapIdInput.valueAsInt = mapId;
   }
 
   get mapId(): number {
-    const value = this.mapIdInput.value;
-    const result = convertStringToInteger(value);
-    if (result === null) {
-      throw new Error(`Could not convert map id value '${value}' to integer.`);
-    }
-    return result;
+    return this.mapIdInput.valueAsInt;
   }
 }

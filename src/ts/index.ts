@@ -1,3 +1,5 @@
+import IntegerInput from '@elements/builtin/integer-input';
+
 import ApplicationContainer from '@elements/autonomous/containers/application-container';
 import TopPanel from '@elements/autonomous/containers/top-panel';
 import SettingsPanel from '@elements/autonomous/containers/settings-panel';
@@ -10,8 +12,6 @@ import SettingsTooltip from '@elements/autonomous/hover/settings-tooltip';
 import MapPreview from '@elements/autonomous/hover/map-preview';
 import StepArrow from '@elements/autonomous/hover/step-arrow';
 
-import IntegerInput from '@elements/builtin/integer-input';
-
 import CurrentContext from '@models/current-context';
 
 async function init() {
@@ -22,6 +22,8 @@ async function init() {
 
 async function defineElements() {
   const elementClasses = [
+    IntegerInput,
+
     ApplicationContainer,
     TopPanel,
     SettingsPanel,
@@ -33,8 +35,6 @@ async function defineElements() {
     SettingsTooltip,
     MapPreview,
     StepArrow,
-
-    IntegerInput
   ];
 
   for (const elementClass of elementClasses) {
