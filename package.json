@@ -8,8 +8,7 @@
   "scripts": {
     "tsc": "tsc",
     "start": "parcel serve src/html/**/**.html",
-    "build": "parcel build src/html/**/**.html --public-url ./",
-    "deploy": "gh-pages -d dist"
+    "build": "parcel build src/html/**/**.html --public-url ./"
   },
   "repository": {
     "type": "git",
@@ -35,7 +34,6 @@
     "@types/offscreencanvas": "^2019.7.0",
     "@types/pako": "^2.0.0",
     "buffer": "^6.0.3",
-    "gh-pages": "^4.0.0",
     "nodemon": "^2.0.20",
     "parcel": "^2.8.0",
     "parcel-resolver-tspaths": "^0.0.9",
