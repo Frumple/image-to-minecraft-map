@@ -1,6 +1,6 @@
 # Image to Minecraft Map
 
-### Live Demo: [https://frumple.github.io/image-to-minecraft-map][app]
+### Live App (Chrome recommended): [https://frumple.github.io/image-to-minecraft-map][app]
 
 ### Quick Start Instructions: [https://github.com/Frumple/image-to-minecraft-map/wiki][wiki]
 
@@ -22,7 +22,6 @@ If you think you've discovered a bug, please report it as an [issue][issues]. Be
 
 ## Future Improvements
 
-- Support SVG files.
 - Support Bedrock Edition.
 - Support additional dithering algorithms.
 
