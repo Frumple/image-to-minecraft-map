@@ -12,12 +12,10 @@ export interface ImageDataPixel {
 }
 
 export async function drawAutoResizedImageToCanvas(
-  source: ImageBitmapSource,
+  source: ImageBitmap | OffscreenCanvas,
   canvas: HTMLCanvasElement | OffscreenCanvas,
   resizeType: ResizeType = 'fit',
   resizeQualityType: ResizeQualityType = 'high') {
-
-  const bitmap = await createImageBitmap(source);
 
   let x: number;
   let y: number;
@@ -30,8 +28,8 @@ export async function drawAutoResizedImageToCanvas(
     width = canvas.width;
     height = canvas.height;
   } else {
-    const widthResizeFactor = canvas.width / bitmap.width;
-    const heightResizeFactor = canvas.height / bitmap.height;
+    const widthResizeFactor = canvas.width / source.width;
+    const heightResizeFactor = canvas.height / source.height;
 
     let resizeFactor: number;
     if (resizeType === 'fit') {
@@ -42,13 +40,13 @@ export async function drawAutoResizedImageToCanvas(
       throw new Error(`Unknown resize type: ${resizeType}`);
     }
 
-    x = (canvas.width / 2) - (bitmap.width / 2) * resizeFactor;
-    y = (canvas.height / 2) - (bitmap.height / 2) * resizeFactor;
-    width = bitmap.width * resizeFactor;
-    height = bitmap.height * resizeFactor;
+    x = (canvas.width / 2) - (source.width / 2) * resizeFactor;
+    y = (canvas.height / 2) - (source.height / 2) * resizeFactor;
+    width = source.width * resizeFactor;
+    height = source.height * resizeFactor;
   }
 
-  drawImageToCanvas(bitmap, canvas, x, y, width, height, resizeQualityType);
+  drawImageToCanvas(source, canvas, x, y, width, height, resizeQualityType);
 }
 
 export function drawImageToCanvas(
@@ -73,6 +71,50 @@ export function drawImageToCanvas(
   }
 
   context.drawImage(source, x, y, width, height);
+}
+
+export async function loadImageFromBlob(blob: Blob): Promise<HTMLImageElement> {
+  const url = URL.createObjectURL(blob);
+  const image = await loadImageFromUrl(url);
+  URL.revokeObjectURL(url);
+  return image;
+}
+
+export function loadImageFromUrl(url: string): Promise<HTMLImageElement> {
+  const image = new Image();
+  image.src = url;
+
+  return new Promise((resolve, reject) => {
+    image.onload = (event) => {
+      resolve(image);
+    };
+    image.onerror = (event) => {
+      const error = new DOMException("Unable to load image.");
+      reject(error);
+    }
+  });
+}
+
+export function imageToBuffer(image: HTMLImageElement): ArrayBuffer {
+  const canvas = new OffscreenCanvas(image.width, image.height);
+  const context = canvas.getContext('2d');
+  if (context === null) {
+    throw new Error('Canvas context is null.');
+  }
+  context.drawImage(image, 0, 0);
+  const imageData = context.getImageData(0, 0, image.width, image.height);
+  return imageData.data.buffer;
+}
+
+export function bufferToOffscreenCanvas(buffer: ArrayBuffer, width: number, height: number): OffscreenCanvas {
+  const imageData = new ImageData(new Uint8ClampedArray(buffer), width, height);
+  const canvas = new OffscreenCanvas(width, height);
+  const context = canvas.getContext('2d');
+  if (context === null) {
+    throw new Error('Canvas context is null.');
+  }
+  context.putImageData(imageData, 0, 0);
+  return canvas;
 }
 
 export function getPixelFromImageData(imageData: ImageData, pixelStartIndex: number): ImageDataPixel {

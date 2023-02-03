@@ -2,11 +2,12 @@ import BaseContainer from '@elements/autonomous/containers/base-container';
 import UploadProgressPanel from '@elements/autonomous/containers/upload-progress-panel';
 
 import LocalStorageProxy from '@helpers/local-storage-proxy';
+import { loadImageFromBlob, imageToBuffer } from '@helpers/image-helpers';
 
 import CurrentContext from '@models/current-context';
 import { Settings } from '@models/settings';
 
-import { UploadWorkerIncomingMessageParameters, UploadWorkerOutgoingMessageParameters } from '@workers/upload-worker';
+import { UploadWorkerIncomingMessage, UploadWorkerOutgoingMessage } from '@workers/upload-worker';
 
 const dragEnterClass = 'uploads-panel__file-upload-drop-zone_drag-enter';
 
@@ -122,7 +123,7 @@ export default class UploadsPanel extends BaseContainer {
 
     try {
       // Premptively fail the upload if the file is an invalid type
-      const validFileTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
+      const validFileTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/webp'];
       if (!validFileTypes.includes(file.type)) {
         throw new Error(`Invalid file type: ${file.type}`);
       }
@@ -135,21 +136,21 @@ export default class UploadsPanel extends BaseContainer {
 
       // Listen for messages from the worker to render images and update the UI panel
       worker.addEventListener('message', async (event: MessageEvent) => {
-        const parameters: UploadWorkerOutgoingMessageParameters = event.data;
+        const message: UploadWorkerOutgoingMessage = event.data;
 
-        switch (parameters.step) {
+        switch (message.step) {
           case 'error':
-            uploadProgressPanel.failUpload(parameters.data as string);
+            uploadProgressPanel.failUpload(message.data as string);
             break;
 
           case 'progress':
-            uploadProgressPanel.progressPercentage = parameters.data as number;
+            uploadProgressPanel.progressPercentage = message.data as number;
             break;
 
           case 'download':
-            const data = parameters.data as ArrayBuffer[][];
-            const colorsProcessed = parameters.colorsProcessed as number;
-            const timeElapsed = parameters.timeElapsed as number;
+            const data = message.data as ArrayBuffer[][];
+            const colorsProcessed = message.colorsProcessed as number;
+            const timeElapsed = message.timeElapsed as number;
 
             await uploadProgressPanel.completeUpload(data, colorsProcessed, timeElapsed);
             break;
@@ -157,21 +158,57 @@ export default class UploadsPanel extends BaseContainer {
           case 'source':
           case 'intermediate':
           case 'final':
-            await uploadProgressPanel.renderImagePreview(parameters.step, parameters.data as ImageBitmap);
+            await uploadProgressPanel.renderImagePreview(message.step, message.data as ImageBitmap);
             break;
 
           default:
-            throw new Error(`Invalid upload step: ${parameters.step}`);
+            throw new Error(`Invalid upload step: ${message.step}`);
         }
       });
 
-      // Send a message to the worker to start processing
-      const messageData: UploadWorkerIncomingMessageParameters = {
-        settings: settings,
-        file: file
-      };
-      // TODO: Try to send the file data as a transferable array buffer and measure processing time and memory usage.
-      worker.postMessage(messageData);
+      /*
+        Image files can be drawn on to a canvas in two ways:
+        #1. Blob/File => URL.createObjectURL(blob) => URL => Create an HTMLImageElement and set the src to the URL
+        This method works on most browsers, but cannot be run in a worker context.
+
+        #2. Blob/File => createImageBitmap(blob) => ImageBitmap
+        This can be run in a worker context, but has the following drawbacks:
+        - No browsers currently support SVG processing through createImageBitmap()
+          - Chromium bug from 2016: https://bugs.chromium.org/p/chromium/issues/detail?id=606319
+
+        Therefore, if the uploaded file is an SVG, we use method #1 here to create the image first before sending the
+        image data to the worker.
+
+        Otherwise for all other files, we use method #2 where the file data is sent to the worker, and then the worker
+        calls createImageBitmap() on that data.
+      */
+
+      let message: UploadWorkerIncomingMessage;
+
+      if (file.type === 'image/svg+xml') {
+        const image = await loadImageFromBlob(file);
+        const buffer = imageToBuffer(image);
+
+        message = {
+          type: 'image',
+          settings: settings,
+          buffer: buffer,
+          width: image.width,
+          height: image.height
+        }
+
+        worker.postMessage(message, [buffer]);
+      } else {
+        const stream = file.stream()
+
+        message = {
+          type: 'file',
+          settings: settings,
+          stream: stream,
+        }
+
+        worker.postMessage(message, [stream]);
+      }
 
     } catch (error) {
 

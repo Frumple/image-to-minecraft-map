@@ -1,25 +1,38 @@
 import { calculateColorDifference } from '@helpers/color-difference-helpers';
 import { applyDitheringToImageData } from '@helpers/dithering-helpers';
 import { gzipData } from '@helpers/file-helpers';
-import { ImageDataPixel, drawAutoResizedImageToCanvas, getPixelFromImageData, setPixelToImageData } from '@helpers/image-helpers';
+import { ImageDataPixel, drawAutoResizedImageToCanvas, getPixelFromImageData, setPixelToImageData, bufferToOffscreenCanvas } from '@helpers/image-helpers';
 import { encodeNbtMap, splitColorArrayIntoMaps } from '@helpers/nbt-helpers';
+import { readEntireStream } from '@helpers/stream-helpers';
 
 import VersionLoader from '@loaders/version-loader';
 
-import * as Settings from '@models/settings';
+import { Settings } from '@models/settings';
 import { JavaVersion } from '@models/versions/java-version';
 
 import { Lab, to } from 'colorjs.io/fn';
 import { ColorObject } from 'colorjs.io/types/src/color';
 
-export type UploadStep = 'source' | 'intermediate' | 'final' | 'download' | 'progress' | 'error';
+export type UploadWorkerIncomingMessage = UploadWorkerFileIncomingMessage | UploadWorkerImageIncomingMessage;
 
-export interface UploadWorkerIncomingMessageParameters {
-  settings: Settings.Settings;
-  file: File;
+export interface UploadWorkerFileIncomingMessage {
+  type: 'file';
+  settings: Settings;
+  stream: ReadableStream;
 }
 
-export interface UploadWorkerOutgoingMessageParameters {
+export interface UploadWorkerImageIncomingMessage {
+  type: 'image';
+  settings: Settings;
+  buffer: ArrayBuffer;
+  width: number;
+  height: number;
+}
+
+// TODO: Convert to union of interfaces
+export type UploadStep = 'source' | 'intermediate' | 'final' | 'download' | 'progress' | 'error';
+
+export interface UploadWorkerOutgoingMessage {
   step: UploadStep;
   data: ImageBitmap | ArrayBuffer[][] | number | string;
   colorsProcessed?: number;
@@ -27,8 +40,8 @@ export interface UploadWorkerOutgoingMessageParameters {
 }
 
 class UploadWorker {
-  settings!: Settings.Settings;
-  file!: File;
+  settings!: Settings;
+  originalImage!: ImageBitmap | OffscreenCanvas;
 
   minecraftVersion!: JavaVersion;
 
@@ -40,31 +53,28 @@ class UploadWorker {
     self.addEventListener('message', this.onMessageReceived);
   }
 
-  onMessageReceived = (event: MessageEvent) => {
-    const parameters: UploadWorkerIncomingMessageParameters = event.data;
-    this.settings = new Settings.Settings(parameters.settings);
-    this.file = parameters.file;
-
-    const minecraftVersion = VersionLoader.javaVersions.get(this.settings.minecraftVersion);
-    if (!minecraftVersion) {
-      throw new Error('Minecraft version is undefined.');
-    }
-    this.minecraftVersion = minecraftVersion;
-
-    this.run();
-  }
-
-  async run() {
+  onMessageReceived = async (event: MessageEvent) => {
     try {
+      const message: UploadWorkerIncomingMessage = event.data;
       this.startTime = performance.now();
+      this.settings = new Settings(message.settings);
 
-      await this.drawSourceImage();
-      const workCanvas = await this.processImage();
-      const nbtColorArray = await this.reduceColors(workCanvas);
-      const nbtMapFileData = this.createNbtMapFileData(nbtColorArray);
-      this.sendMapFileDataToMainThread(nbtMapFileData);
+      if (message.type === 'file') {
+        const blob = await readEntireStream(message.stream);
+        this.originalImage = await createImageBitmap(blob);
+      } else if (message.type === 'image') {
+        const canvas = bufferToOffscreenCanvas(message.buffer, message.width, message.height);
+        this.originalImage = canvas;
+      }
 
-    } catch (error) {
+      const minecraftVersion = VersionLoader.javaVersions.get(this.settings.minecraftVersion);
+      if (!minecraftVersion) {
+        throw new Error('Minecraft version is undefined.');
+      }
+      this.minecraftVersion = minecraftVersion;
+
+      await this.run();
+    } catch(error) {
 
       // TODO: Catch other types of errors and exceptions here
       // For now, we are handling the DOMException when a source image cannot be decoded.
@@ -77,11 +87,19 @@ class UploadWorker {
     }
   }
 
+  async run() {
+    await this.drawSourceImage();
+    const workCanvas = await this.processImage();
+    const nbtColorArray = await this.reduceColors(workCanvas);
+    const nbtMapFileData = this.createNbtMapFileData(nbtColorArray);
+    this.sendMapFileDataToMainThread(nbtMapFileData);
+  }
+
   async drawSourceImage() {
     const canvas = new OffscreenCanvas(this.settings.canvasWidth, this.settings.canvasHeight);
 
     await drawAutoResizedImageToCanvas(
-      this.file,
+      this.originalImage,
       canvas);
 
     this.sendCanvasBitmapToMainThread(canvas, 'source');
@@ -102,7 +120,7 @@ class UploadWorker {
 
     // Draw resized image to the work canvas for use in future "Reduce Colors" step
     await drawAutoResizedImageToCanvas(
-      this.file,
+      this.originalImage,
       workCanvas,
       this.settings.resize,
       this.settings.resizeQuality);
@@ -243,18 +261,18 @@ class UploadWorker {
   sendCanvasBitmapToMainThread(canvas: OffscreenCanvas, uploadStep: UploadStep) {
     const bitmap = canvas.transferToImageBitmap();
     const timeElapsed = performance.now() - this.startTime;
-    const messageData: UploadWorkerOutgoingMessageParameters = {
+    const message: UploadWorkerOutgoingMessage = {
       step: uploadStep,
       data: bitmap,
       timeElapsed: timeElapsed
     };
-    postMessage(messageData, [bitmap]);
+    postMessage(message, [bitmap]);
   }
 
   sendMapFileDataToMainThread(data: ArrayBuffer[][]) {
     const timeElapsed = performance.now() - this.startTime;
     const colorsProcessed = this.colorCache.size;
-    const messageData: UploadWorkerOutgoingMessageParameters = {
+    const message: UploadWorkerOutgoingMessage = {
       step: 'download',
       data: data,
       timeElapsed: timeElapsed,
@@ -262,23 +280,23 @@ class UploadWorker {
     };
 
     const transferableObjects = ([] as ArrayBuffer[]).concat(...data);
-    postMessage(messageData, transferableObjects);
+    postMessage(message, transferableObjects);
   }
 
   sendProgressUpdateToMainThread(percent: number) {
-    const messageData: UploadWorkerOutgoingMessageParameters = {
+    const message: UploadWorkerOutgoingMessage = {
       step: 'progress',
       data: percent
     };
-    postMessage(messageData);
+    postMessage(message);
   }
 
-  sendErrorToMainThread(message: string) {
-    const messageData: UploadWorkerOutgoingMessageParameters = {
+  sendErrorToMainThread(errorMessage: string) {
+    const message: UploadWorkerOutgoingMessage = {
       step: 'error',
-      data: message
+      data: errorMessage
     };
-    postMessage(messageData);
+    postMessage(message);
   }
 }
 

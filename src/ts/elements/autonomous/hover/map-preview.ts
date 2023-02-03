@@ -20,14 +20,16 @@ export default class MapPreview extends BaseHover {
   }
 
   async drawItemFrame(imageBlob: Blob) {
+    const bitmap = await createImageBitmap(imageBlob);
+
     await drawAutoResizedImageToCanvas(
-      imageBlob,
+      bitmap,
       this.mainCanvas,
       'fit',
       'pixelated');
 
     await drawAutoResizedImageToCanvas(
-      imageBlob,
+      bitmap,
       this.largeCanvas,
       'fit',
       'pixelated');
