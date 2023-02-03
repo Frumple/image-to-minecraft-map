@@ -138,31 +138,24 @@ export default class UploadsPanel extends BaseContainer {
       worker.addEventListener('message', async (event: MessageEvent) => {
         const message: UploadWorkerOutgoingMessage = event.data;
 
-        switch (message.step) {
-          case 'error':
-            uploadProgressPanel.failUpload(message.data as string);
-            break;
-
+        switch (message.type) {
           case 'progress':
-            uploadProgressPanel.progressPercentage = message.data as number;
-            break;
-
-          case 'download':
-            const data = message.data as ArrayBuffer[][];
-            const colorsProcessed = message.colorsProcessed as number;
-            const timeElapsed = message.timeElapsed as number;
-
-            await uploadProgressPanel.completeUpload(data, colorsProcessed, timeElapsed);
+            uploadProgressPanel.progressPercentage = message.percent;
             break;
 
           case 'source':
           case 'intermediate':
           case 'final':
-            await uploadProgressPanel.renderImagePreview(message.step, message.data as ImageBitmap);
+            await uploadProgressPanel.renderImagePreview(message.type, message.bitmap);
             break;
 
-          default:
-            throw new Error(`Invalid upload step: ${message.step}`);
+          case 'download':
+            await uploadProgressPanel.completeUpload(message.data, message.colorsProcessed, message.timeElapsed);
+            break;
+
+          case 'error':
+            uploadProgressPanel.failUpload(message.errorMessage);
+            break;
         }
       });
 

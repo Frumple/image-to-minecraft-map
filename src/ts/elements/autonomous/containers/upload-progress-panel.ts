@@ -9,7 +9,7 @@ import { roundToDecimalPlaces } from '@helpers/number-helpers';
 
 import { Settings } from '@models/settings';
 
-import { UploadStep } from '@workers/upload-worker';
+import { ImagePreviewType } from '@workers/upload-worker';
 
 export default class UploadProgressPanel extends BaseContainer {
   static get elementName() { return 'upload-progress-panel'; }
@@ -76,14 +76,14 @@ export default class UploadProgressPanel extends BaseContainer {
 
   }
 
-  async renderImagePreview(uploadStep: UploadStep, bitmap: ImageBitmap) {
-    const imagePreview = this.getImagePreview(uploadStep);
+  async renderImagePreview(imagePreviewType: ImagePreviewType, bitmap: ImageBitmap) {
+    const imagePreview = this.getImagePreview(imagePreviewType);
 
     await imagePreview.render(bitmap);
   }
 
-  private getImagePreview(uploadStep: UploadStep) {
-    switch (uploadStep) {
+  private getImagePreview(imagePreviewType: ImagePreviewType) {
+    switch (imagePreviewType) {
       case 'source':
         return this.sourceImagePreview;
       case 'intermediate' :
@@ -91,7 +91,7 @@ export default class UploadProgressPanel extends BaseContainer {
       case 'final':
         return this.finalImagePreview;
       default:
-        throw new Error(`Upload step has no canvas: ${uploadStep}`)
+        throw new Error(`Invalid image preview type: ${imagePreviewType}`)
     }
   }
 

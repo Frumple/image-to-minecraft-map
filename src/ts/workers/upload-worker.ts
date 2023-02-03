@@ -13,15 +13,15 @@ import { JavaVersion } from '@models/versions/java-version';
 import { Lab, to } from 'colorjs.io/fn';
 import { ColorObject } from 'colorjs.io/types/src/color';
 
-export type UploadWorkerIncomingMessage = UploadWorkerFileIncomingMessage | UploadWorkerImageIncomingMessage;
+export type UploadWorkerIncomingMessage = UploadWorkerIncomingFileMessage | UploadWorkerIncomingImageMessage;
 
-export interface UploadWorkerFileIncomingMessage {
+export interface UploadWorkerIncomingFileMessage {
   type: 'file';
   settings: Settings;
   stream: ReadableStream;
 }
 
-export interface UploadWorkerImageIncomingMessage {
+export interface UploadWorkerIncomingImageMessage {
   type: 'image';
   settings: Settings;
   buffer: ArrayBuffer;
@@ -29,14 +29,34 @@ export interface UploadWorkerImageIncomingMessage {
   height: number;
 }
 
-// TODO: Convert to union of interfaces
-export type UploadStep = 'source' | 'intermediate' | 'final' | 'download' | 'progress' | 'error';
+export type ImagePreviewType = 'source' | 'intermediate' | 'final';
 
-export interface UploadWorkerOutgoingMessage {
-  step: UploadStep;
-  data: ImageBitmap | ArrayBuffer[][] | number | string;
-  colorsProcessed?: number;
-  timeElapsed?: number;
+export type UploadWorkerOutgoingMessage =
+  UploadWorkerOutgoingProgressMessage |
+  UploadWorkerOutgoingImageMessage |
+  UploadWorkerOutgoingDownloadMessage |
+  UploadWorkerOutgoingErrorMessage;
+
+export interface UploadWorkerOutgoingProgressMessage {
+  type: 'progress';
+  percent: number;
+}
+
+export interface UploadWorkerOutgoingImageMessage {
+  type: ImagePreviewType;
+  bitmap: ImageBitmap;
+}
+
+export interface UploadWorkerOutgoingDownloadMessage {
+  type: 'download';
+  data: ArrayBuffer[][];
+  colorsProcessed: number;
+  timeElapsed: number;
+}
+
+export interface UploadWorkerOutgoingErrorMessage {
+  type: 'error';
+  errorMessage: string;
 }
 
 class UploadWorker {
@@ -102,7 +122,7 @@ class UploadWorker {
       this.originalImage,
       canvas);
 
-    this.sendCanvasBitmapToMainThread(canvas, 'source');
+    this.sendCanvasBitmapToMainThread('source', canvas);
   }
 
   async processImage() {
@@ -130,7 +150,7 @@ class UploadWorker {
     const canvasContext = canvas.getContext('2d');
     canvasContext?.drawImage(workCanvas, 0, 0);
 
-    this.sendCanvasBitmapToMainThread(canvas, 'intermediate');
+    this.sendCanvasBitmapToMainThread('intermediate', canvas);
 
     return workCanvas;
   }
@@ -169,7 +189,7 @@ class UploadWorker {
 
     context?.putImageData(outputImageData, 0, 0);
 
-    this.sendCanvasBitmapToMainThread(workCanvas, 'final');
+    this.sendCanvasBitmapToMainThread('final', workCanvas);
 
     return nbtColorArray;
   }
@@ -258,13 +278,19 @@ class UploadWorker {
     return splitGzippedArray;
   }
 
-  sendCanvasBitmapToMainThread(canvas: OffscreenCanvas, uploadStep: UploadStep) {
+  sendProgressUpdateToMainThread(percent: number) {
+    const message: UploadWorkerOutgoingProgressMessage = {
+      type: 'progress',
+      percent: percent
+    };
+    postMessage(message);
+  }
+
+  sendCanvasBitmapToMainThread(imagePreviewType: ImagePreviewType, canvas: OffscreenCanvas) {
     const bitmap = canvas.transferToImageBitmap();
-    const timeElapsed = performance.now() - this.startTime;
-    const message: UploadWorkerOutgoingMessage = {
-      step: uploadStep,
-      data: bitmap,
-      timeElapsed: timeElapsed
+    const message: UploadWorkerOutgoingImageMessage = {
+      type: imagePreviewType,
+      bitmap: bitmap
     };
     postMessage(message, [bitmap]);
   }
@@ -272,8 +298,8 @@ class UploadWorker {
   sendMapFileDataToMainThread(data: ArrayBuffer[][]) {
     const timeElapsed = performance.now() - this.startTime;
     const colorsProcessed = this.colorCache.size;
-    const message: UploadWorkerOutgoingMessage = {
-      step: 'download',
+    const message: UploadWorkerOutgoingDownloadMessage = {
+      type: 'download',
       data: data,
       timeElapsed: timeElapsed,
       colorsProcessed: colorsProcessed
@@ -283,18 +309,10 @@ class UploadWorker {
     postMessage(message, transferableObjects);
   }
 
-  sendProgressUpdateToMainThread(percent: number) {
-    const message: UploadWorkerOutgoingMessage = {
-      step: 'progress',
-      data: percent
-    };
-    postMessage(message);
-  }
-
   sendErrorToMainThread(errorMessage: string) {
-    const message: UploadWorkerOutgoingMessage = {
-      step: 'error',
-      data: errorMessage
+    const message: UploadWorkerOutgoingErrorMessage = {
+      type: 'error',
+      errorMessage: errorMessage
     };
     postMessage(message);
   }
