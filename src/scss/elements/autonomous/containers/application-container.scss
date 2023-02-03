@@ -8,6 +8,10 @@
   user-select: none;
 }
 
+.application-container_hidden {
+  display: none;
+}
+
 .application-container__main-panel {
   display: flex;
   padding-top: variables.$top-panel-height + (2 * variables.$top-panel-padding);

@@ -12,12 +12,23 @@ import SettingsTooltip from '@elements/autonomous/hover/settings-tooltip';
 import MapPreview from '@elements/autonomous/hover/map-preview';
 import StepArrow from '@elements/autonomous/hover/step-arrow';
 
+import LoadingScreen from '@elements/autonomous/loading-screen';
+
 import CurrentContext from '@models/current-context';
 
 async function init() {
   CurrentContext.init();
   await defineElements();
+
+  const loadingScreen = document.querySelector('loading-screen') as LoadingScreen;
+  const applicationContainer = document.querySelector('application-container') as ApplicationContainer;
+
   registerSettingsPanelEventListeners();
+
+  await waitForBodyLoaded();
+
+  applicationContainer.visible = true;
+  loadingScreen.visible = false;
 }
 
 async function defineElements() {
@@ -35,6 +46,8 @@ async function defineElements() {
     SettingsTooltip,
     MapPreview,
     StepArrow,
+
+    LoadingScreen
   ];
 
   for (const elementClass of elementClasses) {
@@ -45,6 +58,19 @@ async function defineElements() {
 function registerSettingsPanelEventListeners() {
   const applicationContainer = document.getElementById('application-container') as ApplicationContainer;
   applicationContainer.registerSettingsPanelEventListeners();
+}
+
+async function waitForBodyLoaded(): Promise<void> {
+  return new Promise((resolve) => {
+    const intervalId = window.setInterval(checkBodyLoaded, 1000);
+
+    function checkBodyLoaded() {
+      if (document.getElementsByTagName('body')[0] !== undefined) {
+        window.clearInterval(intervalId);
+        resolve();
+      }
+    }
+  });
 }
 
 init();

@@ -5,9 +5,12 @@ import UploadsPanel from '@elements/autonomous/containers/uploads-panel';
 
 import { isCustomEvent } from '@helpers/event-helpers';
 
+const hiddenClass = 'application-container_hidden';
+
 export default class ApplicationContainer extends BaseContainer {
   static get elementName() { return 'application-container'; }
 
+  container: HTMLDivElement;
   topPanel: TopPanel;
   settingsPanel: SettingsPanel;
   uploadsPanel: UploadsPanel;
@@ -15,6 +18,7 @@ export default class ApplicationContainer extends BaseContainer {
   constructor() {
     super();
 
+    this.container = this.getShadowElement('container') as HTMLDivElement;
     this.topPanel = this.getShadowElement('top-panel') as TopPanel;
     this.settingsPanel = this.getShadowElement('settings-panel') as SettingsPanel;
     this.uploadsPanel = this.getShadowElement('uploads-panel') as UploadsPanel;
@@ -42,6 +46,14 @@ export default class ApplicationContainer extends BaseContainer {
   }
   onFileDropped = (event: DragEvent) => {
     event.preventDefault();
+  }
+
+  set visible(isVisible: boolean) {
+    if(isVisible) {
+      this.container.classList.remove(hiddenClass);
+    } else {
+      this.container.classList.add(hiddenClass);
+    }
   }
 
   registerSettingsPanelEventListeners() {

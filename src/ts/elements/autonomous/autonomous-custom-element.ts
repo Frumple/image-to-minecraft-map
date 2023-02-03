@@ -9,7 +9,7 @@ export default class AutonomousCustomElement extends HTMLElement {
   }
 
   static get subdirectory(): string {
-    throw new Error(`The class '${this.name}' must implement the subdirectory getter.`);
+    return '';
   }
 
   private static get htmlPath(): string {
