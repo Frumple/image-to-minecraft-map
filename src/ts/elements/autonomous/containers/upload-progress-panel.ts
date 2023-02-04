@@ -76,7 +76,7 @@ export default class UploadProgressPanel extends BaseContainer {
 
   }
 
-  async renderImagePreview(imagePreviewType: ImagePreviewType, bitmap: ImageBitmap) {
+  async renderImagePreview(imagePreviewType: ImagePreviewType, bitmap: ImageBitmap): Promise<void> {
     const imagePreview = this.getImagePreview(imagePreviewType);
 
     await imagePreview.render(bitmap);
@@ -95,7 +95,7 @@ export default class UploadProgressPanel extends BaseContainer {
     }
   }
 
-  async completeUpload(data: ArrayBuffer[][], colorsProcessed: number, timeElapsed: number) {
+  async completeUpload(data: readonly ArrayBuffer[][], colorsProcessed: number, timeElapsed: number): Promise<void> {
     const mapFileDownloads = createMapFileDownloads(data, this.uploadSettings);
 
     await this.downloadBox.setupDownloadLinks(mapFileDownloads, this.uploadSettings);
@@ -125,7 +125,7 @@ export default class UploadProgressPanel extends BaseContainer {
     return text;
   }
 
-  private getMapFileSizeText(mapFileDownloads: MapFileDownload[]): string {
+  private getMapFileSizeText(mapFileDownloads: readonly MapFileDownload[]): string {
     const totalFileSizeInBytes = mapFileDownloads.reduce((accumulator, current) => accumulator + current.fileSizeInBytes, 0);
     return getFileSizeTextInReadableUnits(totalFileSizeInBytes);
   }
@@ -147,7 +147,7 @@ export default class UploadProgressPanel extends BaseContainer {
     this.statusHeading.textContent = `Processing... (${percent}%)`;
   }
 
-  failUpload(message: string) {
+  failUpload(message: string): void {
     this.uploadProgressPanel.classList.add('upload-progress-panel_error');
 
     this.statusHeading.classList.add('upload-progress-panel__status-heading_error');

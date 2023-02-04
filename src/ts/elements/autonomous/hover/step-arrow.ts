@@ -15,7 +15,7 @@ export default class StepArrow extends BaseHover {
 
   }
 
-  addSetting(settingName: string, settingValue: string) {
+  addSetting(settingName: string, settingValue: string): void {
     const settingNameElement = document.createElement('span');
     settingNameElement.classList.add('step-arrow__setting-name');
     settingNameElement.textContent = `${settingName}:`;

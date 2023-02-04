@@ -89,7 +89,7 @@ export default class UploadsPanel extends BaseContainer {
     }
   }
 
-  async uploadFiles(fileList: FileList) {
+  async uploadFiles(fileList: FileList): Promise<void> {
     const files = Array.from(fileList);
     const settings = CurrentContext.settings;
 
@@ -115,7 +115,7 @@ export default class UploadsPanel extends BaseContainer {
     this.dispatchEvent(mapIdUpdatedEvent);
   }
 
-  async uploadFile(settings: Settings, file: File) {
+  async uploadFile(settings: Settings, file: File): Promise<void> {
     // Create and show the UI panel
     const uploadSettings = settings.clone();
     const uploadProgressPanel = new UploadProgressPanel(uploadSettings, file.name, file.size);

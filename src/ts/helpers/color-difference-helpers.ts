@@ -17,7 +17,7 @@ import {
 ColorSpace.register(sRGB);
 ColorSpace.register(Lab);
 
-export function calculateColorDifference(color1: ColorObject, color2: ColorObject, colorDifference: ColorDifferenceType) {
+export function calculateColorDifference(color1: ColorObject, color2: ColorObject, colorDifference: ColorDifferenceType): number {
   // For some reason, we also have to recreate the color object after registering the color space
   const c1 = {space: color1.space, coords: color1.coords, alpha: color1.alpha};
   const c2 = {space: color2.space, coords: color2.coords, alpha: color2.alpha};
@@ -40,7 +40,7 @@ export function calculateColorDifference(color1: ColorObject, color2: ColorObjec
 
 // A "low-cost approximation" color difference algorithm
 // https://www.compuphase.com/cmetric.htm
-function compuPhase(color1: ColorObject, color2: ColorObject) {
+function compuPhase(color1: ColorObject, color2: ColorObject): number {
   const r1 = color1.coords[0] * 255;
   const r2 = color2.coords[0] * 255;
   const g1 = color1.coords[1] * 255;

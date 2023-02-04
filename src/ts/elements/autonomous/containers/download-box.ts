@@ -40,7 +40,7 @@ export default class DownloadBox extends BaseContainer {
     return this.downloadHeading.textContent;
   }
 
-  async setupDownloadLinks(mapFileDownloads: MapFileDownload[], settings: Settings) {
+  async setupDownloadLinks(mapFileDownloads: readonly MapFileDownload[], settings: Settings): Promise<void> {
     this.createHiddenDownloadDatLinks(mapFileDownloads);
     await this.createHiddenDownloadZipLink(mapFileDownloads, settings);
 
@@ -74,7 +74,7 @@ export default class DownloadBox extends BaseContainer {
     }
   }
 
-  private createHiddenDownloadDatLinks(mapFileDownloads: MapFileDownload[]) {
+  private createHiddenDownloadDatLinks(mapFileDownloads: readonly MapFileDownload[]): void {
     for (const download of mapFileDownloads) {
       const downloadDatLink = document.createElement('a') as HTMLAnchorElement;
       downloadDatLink.href = download.url;
@@ -83,7 +83,7 @@ export default class DownloadBox extends BaseContainer {
     }
   }
 
-  private async createHiddenDownloadZipLink(mapFileDownloads: MapFileDownload[], settings: Settings) {
+  private async createHiddenDownloadZipLink(mapFileDownloads: readonly MapFileDownload[], settings: Settings): Promise<void> {
     const zipFile = new JSZip();
     for (const download of mapFileDownloads) {
       zipFile.file(download.filename, download.buffer, { binary: true });

@@ -62,7 +62,7 @@ export default class SettingsPanel extends BaseContainer {
     this.populateSettings();
   }
 
-  private populateMinecraftVersions() {
+  private populateMinecraftVersions(): void {
     for (const minecraftVersion of VersionLoader.javaVersions.values()) {
       // Only add "major" versions with the name attribute, snapshots without the name attribute are intentionally excluded
       if (minecraftVersion.name !== null) {
@@ -77,7 +77,7 @@ export default class SettingsPanel extends BaseContainer {
     lastOptionElement.defaultSelected = true;
   }
 
-  private populateOptions(selectElement: HTMLSelectElement, displayTextMap: Map<string, Settings.SettingAttributes>) {
+  private populateOptions(selectElement: HTMLSelectElement, displayTextMap: Map<string, Settings.SettingAttributes>): void {
     for (const [key, value] of displayTextMap) {
       const optionElement = new Option(value.displayText, key);
       selectElement.add(optionElement);
@@ -89,7 +89,7 @@ export default class SettingsPanel extends BaseContainer {
     }
   }
 
-  private populateSettings() {
+  private populateSettings(): void {
     const settings = CurrentContext.settings;
 
     this.mapIdInput.valueAsInt = settings.mapId;
@@ -113,7 +113,7 @@ export default class SettingsPanel extends BaseContainer {
   // These event listeners are explicitly registered after the IntegerInput event listeners.
   // This ensures that IntegerInput can correct any invalid values ("null" or values outside minimum/maximum)
   // before the IntegerInput values are stored into the settings in local storage.
-  registerEventListeners() {
+  registerEventListeners(): void {
     this.mapIdInput.addEventListener('input', this.onChangeSettings);
 
     this.minecraftVersionSelect.addEventListener('input', this.onChangeSettings);

@@ -3,7 +3,7 @@ import { ColorObject } from 'colorjs.io/types/src/color';
 export type QuantizationError = [number, number, number, number];
 
 // TODO: Support other dithering algorithms
-export function applyDitheringToImageData(imageData: ImageData, pixelStartIndex: number, originalColor: ColorObject, newColor: ColorObject) {
+export function applyDitheringToImageData(imageData: ImageData, pixelStartIndex: number, originalColor: ColorObject, newColor: ColorObject): void {
   const floydSteinbergWeights = [7 / 16, 3 / 16, 5 / 16, 1 / 16];
 
   const quantizationError = getQuantizationError(originalColor, newColor);
@@ -44,7 +44,7 @@ function getQuantizationError(originalColor: ColorObject, newColor: ColorObject)
   ]
 }
 
-function applyQuantizationErrorToPixel(imageDataArray: Uint8ClampedArray, quantizationError: QuantizationError, pixelStartIndex: number, weight: number) {
+function applyQuantizationErrorToPixel(imageDataArray: Uint8ClampedArray, quantizationError: QuantizationError, pixelStartIndex: number, weight: number): void {
   for (let offset = 0; offset <= 3; offset++) {
     imageDataArray[pixelStartIndex + offset] += quantizationError[offset] * weight * 255;
   }

@@ -30,16 +30,16 @@ class LocalStorageProxy {
     }
   }
 
-  saveSettings(settings: Settings) {
+  saveSettings(settings: Settings): void {
     const settingsString = JSON.stringify(settings);
     localStorage.setItem(this.settingsKey, settingsString);
   }
 
-  clearSettings() {
+  clearSettings(): void {
     localStorage.remove(this.settingsKey);
   }
 
-  private static async getAppVersion() {
+  private static async getAppVersion(): Promise<string> {
     return appVersionJson.version;
   }
 }

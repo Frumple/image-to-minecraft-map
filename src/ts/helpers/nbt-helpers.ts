@@ -52,7 +52,7 @@ export function encodeNbtMap(colorArray: Int8Array, minecraftVersion: string): B
   return encode('root', nbtTree);
 }
 
-function isDimensionString(currentVersionKey: string) {
+function isDimensionString(currentVersionKey: string): boolean {
   const versionWhereDimensionBecameString = VersionLoader.javaVersions.get('20w21a');
   if (versionWhereDimensionBecameString === undefined) {
     throw new Error('20w21a is not defined in Java versions.')

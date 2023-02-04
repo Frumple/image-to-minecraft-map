@@ -8,7 +8,7 @@ export interface MapFileDownload {
   fileSizeInBytes: number
 }
 
-export function createMapFileDownloads(data: ArrayBuffer[][], settings: Settings): MapFileDownload[] {
+export function createMapFileDownloads(data: readonly ArrayBuffer[][], settings: Settings): MapFileDownload[] {
   const mapFileDownloads: MapFileDownload[] = [];
   let mapId = settings.mapId;
 

@@ -49,7 +49,7 @@ export interface UploadWorkerOutgoingImageMessage {
 
 export interface UploadWorkerOutgoingDownloadMessage {
   type: 'download';
-  data: ArrayBuffer[][];
+  data: readonly ArrayBuffer[][];
   colorsProcessed: number;
   timeElapsed: number;
 }
@@ -107,7 +107,7 @@ class UploadWorker {
     }
   }
 
-  async run() {
+  async run(): Promise<void> {
     await this.drawSourceImage();
     const workCanvas = await this.processImage();
     const nbtColorArray = await this.reduceColors(workCanvas);
@@ -115,7 +115,7 @@ class UploadWorker {
     this.sendMapFileDataToMainThread(nbtMapFileData);
   }
 
-  async drawSourceImage() {
+  async drawSourceImage(): Promise<void> {
     const canvas = new OffscreenCanvas(this.settings.canvasWidth, this.settings.canvasHeight);
 
     await drawAutoResizedImageToCanvas(
@@ -125,7 +125,7 @@ class UploadWorker {
     this.sendCanvasBitmapToMainThread('source', canvas);
   }
 
-  async processImage() {
+  async processImage(): Promise<OffscreenCanvas> {
     const workCanvas = new OffscreenCanvas(this.settings.canvasWidth, this.settings.canvasHeight);
     const workCanvasContext = workCanvas.getContext('2d');
 
@@ -155,7 +155,7 @@ class UploadWorker {
     return workCanvas;
   }
 
-  async reduceColors(workCanvas: OffscreenCanvas) {
+  async reduceColors(workCanvas: OffscreenCanvas): Promise<Uint8ClampedArray> {
     const nbtColorArray = new Uint8ClampedArray(this.settings.canvasWidth * this.settings.canvasHeight); // 16384 entries per map
 
     const context = workCanvas.getContext('2d');
@@ -197,8 +197,8 @@ class UploadWorker {
   reducePixelColor(
     inputImageData: ImageData,
     outputImageData: ImageData,
-    mapColors: ColorObject[],
-    pixelStartIndex: number) {
+    mapColors: readonly ColorObject[],
+    pixelStartIndex: number): number {
 
     const originalPixel = getPixelFromImageData(inputImageData, pixelStartIndex);
 
@@ -214,7 +214,7 @@ class UploadWorker {
     return nearestMapColorId;
   }
 
-  getNearestMapColorId(originalPixel: ImageDataPixel, mapColors: ColorObject[]) {
+  getNearestMapColorId(originalPixel: ImageDataPixel, mapColors: readonly ColorObject[]): number {
     const originalColor = originalPixel.color;
 
     // Return the transparent map color if the original color doesn't meet the transparency threshold
@@ -236,7 +236,7 @@ class UploadWorker {
     return nearestMapColorId;
   }
 
-  searchForNearestMapColorId(originalColor: ColorObject, mapColors: ColorObject[]) {
+  searchForNearestMapColorId(originalColor: ColorObject, mapColors: readonly ColorObject[]): number {
     let nearestDistance = Number.MAX_VALUE;
     let nearestMapColorId = 0;
 
@@ -278,7 +278,7 @@ class UploadWorker {
     return splitGzippedArray;
   }
 
-  sendProgressUpdateToMainThread(percent: number) {
+  sendProgressUpdateToMainThread(percent: number): void {
     const message: UploadWorkerOutgoingProgressMessage = {
       type: 'progress',
       percent: percent
@@ -286,7 +286,7 @@ class UploadWorker {
     postMessage(message);
   }
 
-  sendCanvasBitmapToMainThread(imagePreviewType: ImagePreviewType, canvas: OffscreenCanvas) {
+  sendCanvasBitmapToMainThread(imagePreviewType: ImagePreviewType, canvas: OffscreenCanvas): void {
     const bitmap = canvas.transferToImageBitmap();
     const message: UploadWorkerOutgoingImageMessage = {
       type: imagePreviewType,
@@ -295,7 +295,7 @@ class UploadWorker {
     postMessage(message, [bitmap]);
   }
 
-  sendMapFileDataToMainThread(data: ArrayBuffer[][]) {
+  sendMapFileDataToMainThread(data: readonly ArrayBuffer[][]): void {
     const timeElapsed = performance.now() - this.startTime;
     const colorsProcessed = this.colorCache.size;
     const message: UploadWorkerOutgoingDownloadMessage = {
@@ -309,7 +309,7 @@ class UploadWorker {
     postMessage(message, transferableObjects);
   }
 
-  sendErrorToMainThread(errorMessage: string) {
+  sendErrorToMainThread(errorMessage: string): void {
     const message: UploadWorkerOutgoingErrorMessage = {
       type: 'error',
       errorMessage: errorMessage

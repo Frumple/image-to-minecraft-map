@@ -24,19 +24,19 @@ export async function fetchBlob(path: string | URL): Promise<Blob> {
     .catch(error => { throw error; });
 }
 
-export function createDownloadUrlFromData(data: any, contentType: string) {
+export function createDownloadUrlFromData(data: any, contentType: string): string {
   const blob = new Blob([data], { type: contentType });
   return URL.createObjectURL(blob);
 }
 
-export function downloadDataAsFile(data: any, contentType: string, fileName: string) {
+export function downloadDataAsFile(data: any, contentType: string, fileName: string): void {
   const link = document.createElement('a');
   link.href = createDownloadUrlFromData(data, contentType);
   link.download = fileName;
   link.click();
 }
 
-export function gzipData(data: Uint8Array) {
+export function gzipData(data: Uint8Array): Uint8Array {
   // TODO: Replace pako with the Compressed Streams API when it becomes more widely supported (and is just as performant)
 
   // At the time of this writing, the Compressed Streams API is supported by Chrome, but not Firefox or Safari.

@@ -56,7 +56,7 @@ export default class ApplicationContainer extends BaseContainer {
     }
   }
 
-  registerSettingsPanelEventListeners() {
+  registerSettingsPanelEventListeners(): void {
     this.settingsPanel.registerEventListeners();
   }
 }

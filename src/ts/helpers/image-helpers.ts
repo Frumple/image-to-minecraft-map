@@ -15,7 +15,7 @@ export async function drawAutoResizedImageToCanvas(
   source: ImageBitmap | OffscreenCanvas,
   canvas: HTMLCanvasElement | OffscreenCanvas,
   resizeType: ResizeType = 'fit',
-  resizeQualityType: ResizeQualityType = 'high') {
+  resizeQualityType: ResizeQualityType = 'high'): Promise<void> {
 
   let x: number;
   let y: number;
@@ -56,7 +56,7 @@ export function drawImageToCanvas(
   y: number = 0,
   width: number = MAP_SIDE_LENGTH,
   height: number = MAP_SIDE_LENGTH,
-  resizeQualityType: ResizeQualityType = 'high') {
+  resizeQualityType: ResizeQualityType = 'high'): void {
 
   const context = canvas.getContext('2d') as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
@@ -137,7 +137,7 @@ export function getPixelFromImageData(imageData: ImageData, pixelStartIndex: num
   }
 }
 
-export function setPixelToImageData(imageData: ImageData,  pixelStartIndex: number, color: ColorObject) {
+export function setPixelToImageData(imageData: ImageData,  pixelStartIndex: number, color: ColorObject): void {
   const imageDataArray = imageData.data;
 
   imageDataArray[pixelStartIndex] = color.coords[0] * 255;

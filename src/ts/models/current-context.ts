@@ -7,7 +7,7 @@ class CurrentContext {
   constructor() {
   }
 
-  async init() {
+  async init(): Promise<void> {
     const settings = await LocalStorageProxy.loadSettings();
     this.settings = settings;
   }

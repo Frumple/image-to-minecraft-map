@@ -21,7 +21,7 @@ export default class LoadingScreen extends AutonomousCustomElement {
     }
   }
 
-  get visible() {
+  get visible(): boolean {
     return ! this.container.classList.contains(hiddenClass);
   }
 }

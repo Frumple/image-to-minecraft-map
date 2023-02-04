@@ -20,10 +20,10 @@ async function init() {
   CurrentContext.init();
   await defineElements();
 
-  const loadingScreen = document.querySelector('loading-screen') as LoadingScreen;
-  const applicationContainer = document.querySelector('application-container') as ApplicationContainer;
+  const loadingScreen = document.getElementById('loading-screen') as LoadingScreen;
+  const applicationContainer = document.getElementById('application-container') as ApplicationContainer;
 
-  registerSettingsPanelEventListeners();
+  applicationContainer.registerSettingsPanelEventListeners();
 
   await waitForBodyLoaded();
 
@@ -53,11 +53,6 @@ async function defineElements() {
   for (const elementClass of elementClasses) {
     await elementClass.define();
   }
-}
-
-function registerSettingsPanelEventListeners() {
-  const applicationContainer = document.getElementById('application-container') as ApplicationContainer;
-  applicationContainer.registerSettingsPanelEventListeners();
 }
 
 async function waitForBodyLoaded(): Promise<void> {
