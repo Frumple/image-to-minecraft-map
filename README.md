@@ -1,6 +1,8 @@
 # Image to Minecraft Map
 
-### Live App (Chrome recommended): [https://frumple.github.io/image-to-minecraft-map][app]
+### Live App: [https://frumple.github.io/image-to-minecraft-map][app]
+
+**Chrome and Edge are recommended.** Firefox has a known issue (see below). Safari is not currently supported.
 
 ### Quick Start Instructions: [https://github.com/Frumple/image-to-minecraft-map/wiki][wiki]
 
@@ -11,14 +13,14 @@ If you think you've discovered a bug, please report it as an [issue][issues]. Be
 ## Features
 
 - Drag-and-drop multiple image files at once and process them simultaneously.
-- Split an image into multiple maps arranged in a grid pattern, such as 2x2, 3x3, etc.
-- Download maps as .dat files or a .zip file containing the .dat files.
+- Split an image into multiple horizontal and vertical maps, in grid patterns such as 2x2, 3x3, etc.
+- Download maps as .dat files, or a .zip file containing the .dat files.
 - Supports various color difference algorithms: CompuPhase, Euclidean, DeltaE 1976 and 2000, and CMC 1984.
 - Supports Floyd-Steinberg dithering.
 
 ## Known Issues
 
-- Firefox: Scaling Quality is always "Pixelated" regardless of what is set. It is recommended to use Chrome instead for the time being.
+- Firefox: Scaling Quality always appears as "Pixelated" regardless of what is set.
 
 ## Future Improvements
 
