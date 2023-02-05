@@ -1,0 +1,2 @@
+.step-arrow{position:relative}.step-arrow__hover{z-index:1;display:none;position:absolute;top:64px;left:32px}.step-arrow:hover .step-arrow__hover{display:block}.step-arrow__settings-grid{white-space:nowrap;background:#fff;border:1px solid gray;grid-template-rows:repeat(auto-fill,1fr);grid-template-columns:1fr 1fr;column-gap:5px;margin:0;padding:5px;display:grid}.step-arrow__setting-value{font-weight:700}
+/*# sourceMappingURL=step-arrow.87fa1034.css.map */

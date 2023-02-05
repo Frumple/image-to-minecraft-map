@@ -1,2 +1,0 @@
-.image-preview{position:relative}.image-preview__hover{z-index:1;display:none;position:absolute;top:64px;left:64px;transform:scale(2)}.image-preview:hover .image-preview__hover{display:block}.image-preview__canvas,.image-preview__large-canvas,.image-preview__main-canvas{image-rendering:pixelated;background-image:url(../../../item-frame.ad6a02ff.png);background-repeat:no-repeat;background-size:contain;border:1px solid #000}
-/*# sourceMappingURL=image-preview.763f326e.css.map */
