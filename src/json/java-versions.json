@@ -2,8 +2,8 @@
   "versions": [
     {
       "id": "1.8.1-pre1",
-      "name": "Java 1.8.1 to 1.11",
-      "date": "2014-10-15T07:00:00.000Z",
+      "name": "Java 1.8.1 to 1.11.2",
+      "data_version": 100,
       "base_colors": [
         "transparent",
         "#7fb238",
@@ -45,8 +45,8 @@
     },
     {
       "id": "17w17a",
-      "name": "Java 1.12 to 1.15",
-      "date": "2017-04-26T07:00:00.000Z",
+      "name": "Java 1.12 to 1.15.2",
+      "data_version": 1128,
       "base_colors": [
         "#d1b1a1",
         "#9f5224",
@@ -69,13 +69,13 @@
     {
       "id": "20w21a",
       "name": null,
-      "date": "2020-05-20T07:00:00.000Z",
+      "data_version": 2554,
       "base_colors": []
     },
     {
       "id": "1.16-pre6",
-      "name": "Java 1.16",
-      "date": "2020-06-15T07:00:00.000Z",
+      "name": "Java 1.16 to 1.16.5",
+      "data_version": 2562,
       "base_colors": [
         "#bd3031",
         "#943f61",
@@ -89,7 +89,7 @@
     {
       "id": "21w15a",
       "name": null,
-      "date": "2021-04-14T07:00:00.000Z",
+      "data_version": 2709,
       "base_colors": [
         "#646464",
         "#d8af93"
@@ -97,8 +97,8 @@
     },
     {
       "id": "21w16a",
-      "name": "Java 1.17 to 1.19",
-      "date": "2021-04-21T07:00:00.000Z",
+      "name": "Java 1.17 or newer",
+      "data_version": 2711,
       "base_colors": [
         "#7fa796"
       ]

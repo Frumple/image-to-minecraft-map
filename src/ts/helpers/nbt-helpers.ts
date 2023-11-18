@@ -1,4 +1,5 @@
 import { MAP_SIDE_LENGTH, MAP_FULL_LENGTH } from '@helpers/image-helpers';
+import { JavaVersion } from '@models/versions/java-version';
 import VersionLoader from '@loaders/version-loader';
 
 import { encode, Byte, Int, Short } from 'nbt-ts';
@@ -26,13 +27,18 @@ export function splitColorArrayIntoMaps(colorArray: Int8Array, numberOfMapsHoriz
   return splitArray;
 }
 
-export function encodeNbtMap(colorArray: Int8Array, minecraftVersion: string): Buffer {
+export function encodeNbtMap(colorArray: Int8Array, minecraftVersionId: string): Buffer {
+  const minecraftVersion = VersionLoader.javaVersions.get(minecraftVersionId);
+  if (minecraftVersion === undefined) {
+    throw new Error(`${minecraftVersionId} is not a defined Java version.`);
+  }
+
   // Before Java Edition snapshot 20w21a, the dimension NBT field was a byte.
   // This byte could be set to 0 for overworld, -1 for nether, 1 for end, and any other value to represent a static image with no player pin.
 
   // From 20w21a onward, the dimension field became a string representing the resource location of the dimension.
   // This can be any string, as long as it begin with the prefix "minecraft:".
-  const dimension = isDimensionString(minecraftVersion) ? 'minecraft:imagetominecraftmap' : new Byte(0);
+  const dimension = isDimensionStringInThisVersion(minecraftVersion) ? 'minecraft:overworld' : new Byte(0);
 
   const nbtTree = {
     data: {
@@ -46,22 +52,18 @@ export function encodeNbtMap(colorArray: Int8Array, minecraftVersion: string): B
       width: new Short(128),
       xCenter: new Int(0),
       zCenter: new Int(0)
-    }
+    },
+    DataVersion: new Int(minecraftVersion.dataVersion)
   };
 
   return encode('root', nbtTree);
 }
 
-function isDimensionString(currentVersionKey: string): boolean {
+function isDimensionStringInThisVersion(minecraftVersion: JavaVersion): boolean {
   const versionWhereDimensionBecameString = VersionLoader.javaVersions.get('20w21a');
   if (versionWhereDimensionBecameString === undefined) {
-    throw new Error('20w21a is not defined in Java versions.')
+    throw new Error('20w21a is not a defined Java version.');
   }
 
-  const currentVersion = VersionLoader.javaVersions.get(currentVersionKey);
-  if (currentVersion === undefined) {
-    throw new Error(`${currentVersionKey} is not defined in Java versions.`);
-  }
-
-  return currentVersion.date >= versionWhereDimensionBecameString.date;
+  return minecraftVersion.dataVersion >= versionWhereDimensionBecameString.dataVersion
 }

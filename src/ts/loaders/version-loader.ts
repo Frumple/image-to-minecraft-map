@@ -48,7 +48,7 @@ class VersionLoader {
       const javaVersion = new JavaVersion(
         javaVersionJson.id,
         javaVersionJson.name,
-        new Date(javaVersionJson.date),
+        javaVersionJson.data_version,
         Array.from(accumulatedBaseColors),
         Array.from(accumulatedMapColorsRGB),
         Array.from(accumulatedMapColorsLab)
