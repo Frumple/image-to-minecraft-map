@@ -1,6 +1,7 @@
 import { ColorObject } from 'colorjs.io/types/src/color';
 
-export type QuantizationError = [number, number, number, number];
+// Quantization error consists of RGB but no alpha
+export type QuantizationError = [number, number, number];
 
 // TODO: Support other dithering algorithms
 export function applyDitheringToImageData(imageData: ImageData, pixelStartIndex: number, originalColor: ColorObject, newColor: ColorObject): void {
@@ -40,12 +41,11 @@ function getQuantizationError(originalColor: ColorObject, newColor: ColorObject)
     originalColor.coords[0] - newColor.coords[0],
     originalColor.coords[1] - newColor.coords[1],
     originalColor.coords[2] - newColor.coords[2],
-    (originalColor.alpha !== undefined && newColor.alpha !== undefined) ? originalColor.alpha - newColor.alpha : 0,
   ]
 }
 
 function applyQuantizationErrorToPixel(imageDataArray: Uint8ClampedArray, quantizationError: QuantizationError, pixelStartIndex: number, weight: number): void {
-  for (let offset = 0; offset <= 3; offset++) {
+  for (let offset = 0; offset <= 2; offset++) {
     imageDataArray[pixelStartIndex + offset] += quantizationError[offset] * weight * 255;
   }
 }

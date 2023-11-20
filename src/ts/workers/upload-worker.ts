@@ -208,7 +208,10 @@ class UploadWorker {
     setPixelToImageData(outputImageData, pixelStartIndex, nearestMapColor);
 
     if (this.settings.dithering === 'floyd-steinberg') {
-      applyDitheringToImageData(inputImageData, pixelStartIndex, originalPixel.color, nearestMapColor);
+      // Only apply dithering if the original pixel color meets the transparency threshold
+      if (this.doesColorMeetTransparencyThreshold(originalPixel.color)) {
+        applyDitheringToImageData(inputImageData, pixelStartIndex, originalPixel.color, nearestMapColor);
+      }
     }
 
     return nearestMapColorId;
@@ -218,7 +221,7 @@ class UploadWorker {
     const originalColor = originalPixel.color;
 
     // Return the transparent map color if the original color doesn't meet the transparency threshold
-    if (originalColor.alpha !== undefined && originalColor.alpha * 255 < this.settings.transparency) {
+    if (! this.doesColorMeetTransparencyThreshold(originalColor)) {
       return 0;
     }
 
@@ -234,6 +237,10 @@ class UploadWorker {
     this.colorCache.set(originalPixel.key, nearestMapColorId);
 
     return nearestMapColorId;
+  }
+
+  doesColorMeetTransparencyThreshold(originalColor: ColorObject): boolean {
+    return originalColor.alpha !== undefined && originalColor.alpha * 255 >= this.settings.transparency;
   }
 
   searchForNearestMapColorId(originalColor: ColorObject, mapColors: readonly ColorObject[]): number {
