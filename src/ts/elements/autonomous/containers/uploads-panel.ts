@@ -161,24 +161,48 @@ export default class UploadsPanel extends BaseContainer {
 
       /*
         Image files can be drawn on to a canvas in two ways:
-        #1. Blob/File => URL.createObjectURL(blob) => URL => Create an HTMLImageElement and set the src to the URL
-        This method works on most browsers, but cannot be run in a worker context.
 
-        #2. Blob/File => createImageBitmap(blob) => ImageBitmap
-        This can be run in a worker context, but has the following drawbacks:
-        - No browsers currently support SVG processing through createImageBitmap()
-          - Chromium bug from 2016: https://bugs.chromium.org/p/chromium/issues/detail?id=606319
+        #1. Blob/File => createImageBitmap(blob) => ImageBitmap
+          This can be run in a worker context, but does not work in the following conditions:
+          - SVG files do not work as no browsers currently support SVG processing using createImageBitmap()
+            - Chromium bug from 2016: https://bugs.chromium.org/p/chromium/issues/detail?id=606319
+          - Safari does not work because it does support transferable streams, which is needed for this method
+            - Webkit bug from 2020: https://bugs.webkit.org/show_bug.cgi?id=215485
 
-        Therefore, if the uploaded file is an SVG, we use method #1 here to create the image first before sending the
-        image data to the worker.
+        #2. Blob/File => URL.createObjectURL(blob) => URL => Create an HTMLImageElement and set the src to the URL
+          This cannot be run in a worker context, but works on most browsers.
 
-        Otherwise for all other files, we use method #2 where the file data is sent to the worker, and then the worker
-        calls createImageBitmap() on that data.
+        Therefore, in most circumstances we will use method #1 where the file data stream is sent to the worker, and
+        then the worker calls createImageBitmap() on that data.
+
+        Otherwise, if the uploaded file is an SVG or if we are on Safari, we will use method #2 to create the image
+        first and then send the image buffer to the worker.
       */
 
+      // If file is SVG, immediately fall back to method #2
+      let fallbackToObjectURL = file.type === 'image/svg+xml';
       let message: UploadWorkerIncomingMessage;
 
-      if (file.type === 'image/svg+xml') {
+      // Attempt to use method #1 first
+      if (! fallbackToObjectURL) {
+        const stream = file.stream();
+
+        message = {
+          type: 'file',
+          settings: settings,
+          stream: stream,
+        }
+
+        try {
+          worker.postMessage(message, [stream]);
+        } catch {
+          // If the stream is not transferable, fall back to method #2
+          fallbackToObjectURL = true;
+        }
+      }
+
+      // Use method #2 if necessary
+      if (fallbackToObjectURL) {
         const image = await loadImageFromBlob(file);
         const buffer = imageToBuffer(image);
 
@@ -191,18 +215,7 @@ export default class UploadsPanel extends BaseContainer {
         }
 
         worker.postMessage(message, [buffer]);
-      } else {
-        const stream = file.stream()
-
-        message = {
-          type: 'file',
-          settings: settings,
-          stream: stream,
-        }
-
-        worker.postMessage(message, [stream]);
       }
-
     } catch (error) {
 
       // TODO: Catch other types of errors and exceptions here
