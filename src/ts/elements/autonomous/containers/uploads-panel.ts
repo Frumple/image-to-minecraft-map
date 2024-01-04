@@ -164,10 +164,10 @@ export default class UploadsPanel extends BaseContainer {
 
         #1. Blob/File => createImageBitmap(blob) => ImageBitmap
           This can be run in a worker context, but does not work in the following conditions:
-          - SVG files do not work as no browsers currently support SVG processing using createImageBitmap()
-            - Chromium bug from 2016: https://bugs.chromium.org/p/chromium/issues/detail?id=606319
-          - Safari does not work because it does support transferable streams, which is needed for this method
-            - Webkit bug from 2020: https://bugs.webkit.org/show_bug.cgi?id=215485
+            - SVG files do not work as no browsers currently support SVG processing using createImageBitmap().
+              - Chromium bug from 2016: https://bugs.chromium.org/p/chromium/issues/detail?id=606319
+            - Safari does not work because it does not support transferable streams, which is needed for this method.
+              - Webkit bug from 2020: https://bugs.webkit.org/show_bug.cgi?id=215485
 
         #2. Blob/File => URL.createObjectURL(blob) => URL => Create an HTMLImageElement and set the src to the URL
           This cannot be run in a worker context, but works on most browsers.
