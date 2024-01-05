@@ -46,12 +46,12 @@ export default class UploadsPanel extends BaseContainer {
     this.fileInput.click();
   }
 
-  onFileSelected = () => {
+  onFileSelected = async () => {
     const files = this.fileInput.files;
     if (files === null) {
       throw new Error('No file selected.');
     }
-    this.uploadFiles(files);
+    await this.uploadFiles(files);
 
     // Be sure to clear the file input so that the same file(s) can be uploaded again
     this.fileInput.value = '';
@@ -74,7 +74,7 @@ export default class UploadsPanel extends BaseContainer {
     event.preventDefault();
   }
 
-  onFileDropped = (event: DragEvent) => {
+  onFileDropped = async (event: DragEvent) => {
     event.preventDefault();
 
     this.dragEnterCounter = 0;
@@ -83,7 +83,7 @@ export default class UploadsPanel extends BaseContainer {
     const files = event.dataTransfer?.files;
 
     if (files) {
-      this.uploadFiles(files);
+      await this.uploadFiles(files);
     } else {
       throw new Error('No file data found.');
     }
