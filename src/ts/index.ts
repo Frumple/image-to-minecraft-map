@@ -1,17 +1,17 @@
-import ApplicationContainer from '@elements/autonomous/containers/application-container';
-import TopPanel from '@elements/autonomous/containers/top-panel';
-import SettingsPanel from '@elements/autonomous/containers/settings-panel';
-import UploadsPanel from '@elements/autonomous/containers/uploads-panel';
-import UploadProgressPanel from '@elements/autonomous/containers/upload-progress-panel';
-import ImagePreview from '@elements/autonomous/containers/image-preview';
-import DownloadBox from '@elements/autonomous/containers/download-box';
+import ApplicationContainer from '@elements/containers/application-container';
+import TopPanel from '@elements/containers/top-panel';
+import SettingsPanel from '@elements/containers/settings-panel';
+import UploadsPanel from '@elements/containers/uploads-panel';
+import UploadProgressPanel from '@elements/containers/upload-progress-panel';
+import ImagePreview from '@elements/containers/image-preview';
+import DownloadBox from '@elements/containers/download-box';
 
-import SettingsTooltip from '@elements/autonomous/hover/settings-tooltip';
-import MapPreview from '@elements/autonomous/hover/map-preview';
-import StepArrow from '@elements/autonomous/hover/step-arrow';
+import SettingsTooltip from '@elements/hover/settings-tooltip';
+import MapPreview from '@elements/hover/map-preview';
+import StepArrow from '@elements/hover/step-arrow';
 
-import LoadingScreen from '@elements/autonomous/loading-screen';
-import IntegerInput from '@elements/autonomous/integer-input';
+import LoadingScreen from '@elements/loading-screen';
+import IntegerInput from '@elements/integer-input';
 
 import CurrentContext from '@models/current-context';
 
