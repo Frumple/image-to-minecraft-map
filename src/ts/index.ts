@@ -1,5 +1,3 @@
-import IntegerInput from '@elements/builtin/integer-input';
-
 import ApplicationContainer from '@elements/autonomous/containers/application-container';
 import TopPanel from '@elements/autonomous/containers/top-panel';
 import SettingsPanel from '@elements/autonomous/containers/settings-panel';
@@ -13,6 +11,7 @@ import MapPreview from '@elements/autonomous/hover/map-preview';
 import StepArrow from '@elements/autonomous/hover/step-arrow';
 
 import LoadingScreen from '@elements/autonomous/loading-screen';
+import IntegerInput from '@elements/autonomous/integer-input';
 
 import CurrentContext from '@models/current-context';
 

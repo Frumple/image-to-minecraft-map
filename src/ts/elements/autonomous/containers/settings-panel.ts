@@ -1,5 +1,5 @@
 import BaseContainer from '@elements/autonomous/containers/base-container';
-import IntegerInput from '@elements/builtin/integer-input';
+import IntegerInput from '@elements/autonomous/integer-input';
 
 import CurrentContext from '@models/current-context';
 import * as Settings from '@models/settings';
@@ -49,6 +49,32 @@ export default class SettingsPanel extends BaseContainer {
   }
 
   initialize() {
+    this.mapIdInput.width = '6em';
+    this.mapIdInput.value = 0;
+    this.mapIdInput.min = 0;
+    this.mapIdInput.max = 4294967296;
+
+    this.numberOfMapsHorizontalInput.width = '100%';
+    this.numberOfMapsHorizontalInput.value = 1;
+    this.numberOfMapsHorizontalInput.min = 1;
+    this.numberOfMapsHorizontalInput.max = 10;
+
+    this.numberOfMapsVerticalInput.width = '100%';
+    this.numberOfMapsVerticalInput.value = 1;
+    this.numberOfMapsVerticalInput.min = 1;
+    this.numberOfMapsVerticalInput.max = 10;
+
+    this.transparencyInputNumber.width = '100%';
+    this.transparencyInputNumber.value = 128;
+    this.transparencyInputNumber.min = 0;
+    this.transparencyInputNumber.max = 255;
+
+    this.transparencyInputRange.type = 'range';
+    this.transparencyInputRange.width = '100%';
+    this.transparencyInputRange.value = 128;
+    this.transparencyInputRange.min = 0;
+    this.transparencyInputRange.max = 255;
+
     this.populateMinecraftVersions();
 
     this.populateOptions(this.resizeSelect, Settings.resizeAttributes);
@@ -92,11 +118,11 @@ export default class SettingsPanel extends BaseContainer {
   private populateSettings(): void {
     const settings = CurrentContext.settings;
 
-    this.mapIdInput.valueAsInt = settings.mapId;
+    this.mapIdInput.value = settings.mapId;
 
     this.minecraftVersionSelect.value = settings.minecraftVersion;
-    this.numberOfMapsHorizontalInput.valueAsInt = settings.numberOfMapsHorizontal;
-    this.numberOfMapsVerticalInput.valueAsInt = settings.numberOfMapsVertical;
+    this.numberOfMapsHorizontalInput.value = settings.numberOfMapsHorizontal;
+    this.numberOfMapsVerticalInput.value = settings.numberOfMapsVertical;
 
     this.resizeSelect.value = settings.resize;
     this.resizeQualitySelect.value = settings.resizeQuality;
@@ -104,8 +130,8 @@ export default class SettingsPanel extends BaseContainer {
 
     this.colorDifferenceSelect.value = settings.colorDifference;
     this.ditheringSelect.value = settings.dithering;
-    this.transparencyInputNumber.valueAsInt = settings.transparency;
-    this.transparencyInputRange.valueAsInt = settings.transparency;
+    this.transparencyInputNumber.value = settings.transparency;
+    this.transparencyInputRange.value = settings.transparency;
 
     this.autoDownloadSelect.value = settings.autoDownload;
   }
@@ -134,11 +160,11 @@ export default class SettingsPanel extends BaseContainer {
 
   onChangeSettings = (event: Event) => {
     const settings = CurrentContext.settings;
-    settings.mapId = this.mapIdInput.valueAsInt;
+    settings.mapId = this.mapIdInput.value;
 
     settings.minecraftVersion = this.minecraftVersionSelect.value;
-    settings.numberOfMapsHorizontal = this.numberOfMapsHorizontalInput.valueAsInt;
-    settings.numberOfMapsVertical = this.numberOfMapsVerticalInput.valueAsInt;
+    settings.numberOfMapsHorizontal = this.numberOfMapsHorizontalInput.value;
+    settings.numberOfMapsVertical = this.numberOfMapsVerticalInput.value;
 
     settings.resize = this.resizeSelect.value as Settings.ResizeType;
     settings.resizeQuality = this.resizeQualitySelect.value as Settings.ResizeQualityType;
@@ -148,12 +174,12 @@ export default class SettingsPanel extends BaseContainer {
     settings.dithering = this.ditheringSelect.value as Settings.DitheringType;
 
     if (event.target === this.transparencyInputNumber) {
-      this.transparencyInputRange.valueAsInt = this.transparencyInputNumber.valueAsInt;
+      this.transparencyInputRange.value = this.transparencyInputNumber.value;
     } else if (event.target === this.transparencyInputRange) {
-      this.transparencyInputNumber.valueAsInt = this.transparencyInputRange.valueAsInt;
+      this.transparencyInputNumber.value = this.transparencyInputRange.value;
     }
 
-    settings.transparency = this.transparencyInputNumber.valueAsInt;
+    settings.transparency = this.transparencyInputNumber.value;
 
     settings.autoDownload = this.autoDownloadSelect.value as Settings.AutomaticDownloadType;
 
@@ -161,10 +187,10 @@ export default class SettingsPanel extends BaseContainer {
   }
 
   set mapId(mapId: number) {
-    this.mapIdInput.valueAsInt = mapId;
+    this.mapIdInput.value = mapId;
   }
 
   get mapId(): number {
-    return this.mapIdInput.valueAsInt;
+    return this.mapIdInput.value;
   }
 }

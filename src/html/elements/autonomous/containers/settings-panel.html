@@ -5,7 +5,7 @@
     <label class="settings-panel__map-id-label" for="map-id-input">Next Map ID #:</label>
     <div class="settings-panel__map-id-filename-container">
       <label class="settings-panel__map-id-filename">map_</label>
-      <input id="map-id-input" class="settings-panel__map-id-input" is="integer-input" type="number" value="0" min="0" max="4294967296" required />
+      <integer-input id="map-id-input" class="settings-panel__map-id-input"></integer-input>
       <label class="settings-panel__map-id-filename">.dat</label>
     </div>
   </div>
@@ -35,9 +35,9 @@
         </ul>
       </settings-tooltip>
     </label>
-    <input id="number-of-maps-horizontal-input" class="settings-panel__number-of-maps-horizontal-input" is="integer-input" type="number" value="1" min="1" max="10" required />
+    <integer-input id="number-of-maps-horizontal-input" class="settings-panel__number-of-maps-horizontal-input"></integer-input>
     <span class="settings-panel__number-of-maps-x ">x</span>
-    <input id="number-of-maps-vertical-input" class="settings-panel__number-of-maps-vertical-input" is="integer-input" type="number" value="1" min="1" max="10" required />
+    <integer-input id="number-of-maps-vertical-input" class="settings-panel__number-of-maps-vertical-input"></integer-input>
   </div>
 
   <hr />
@@ -118,8 +118,8 @@
         <span slot="description"><a href="https://github.com/Frumple/image-to-minecraft-map/wiki/Settings#transparency-threshold" target="settings">Transparency Threshold</a>: Pixels that have an alpha value less than this threshold will be fully transparent in the map file.</span>
       </settings-tooltip>
     </label>
-    <input id="transparency-input-text" class="settings-panel__transparency-input-text" is="integer-input" type="number" value="128" min="0" max="255" step="1" />
-    <input id="transparency-input-range" class="settings-panel__transparency-input-range" is="integer-input" type="range" value="128" min="0" max="255" step="1" />
+    <integer-input id="transparency-input-text" class="settings-panel__transparency-input-text"></integer-input>
+    <integer-input id="transparency-input-range" class="settings-panel__transparency-input-range"></integer-input>
   </div>
 
   <hr />
