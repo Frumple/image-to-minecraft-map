@@ -61,7 +61,7 @@
     <label class="settings-panel__resize-quality-label" for="resize-quality-select">
       <settings-tooltip>
         <span slot="name">Resize Quality</span>
-        <span slot="description"><a href="https://github.com/Frumple/image-to-minecraft-map/wiki/Settings#resize-quality" target="settings">Resize Quality</a>: Sets the amount of image smoothing when resizing the source image.</span>
+        <span slot="description"><a href="https://github.com/Frumple/image-to-minecraft-map/wiki/Settings#resize-quality" target="settings">Resize Quality</a>: Sets the amount of image smoothing when resizing the source image.<br /><br /><strong>Note: This setting only works on Chrome or Edge. It has no effect on Firefox or Safari.</strong></span>
         <ul slot="tips">
           <li>Use <strong>None (Pixelated)</strong> for pixel art.</li>
           <li>Use <strong>High</strong> for most other images.</li>
@@ -91,8 +91,8 @@
         <span slot="name">Color Difference</span>
         <span slot="description"><a href="https://github.com/Frumple/image-to-minecraft-map/wiki/Settings#color-difference" target="settings">Color Difference</a>: Sets the algorithm used to find the nearest color in a Minecraft map item.</span>
         <ul slot="tips">
-          <li>Use <strong>CompuPhase</strong> as it is "good enough" for most images.</li>
-          <li>Use <strong>DeltaE 2000</strong> for the best possible color accuracy.</li>
+          <li>Use <strong>CompuPhase</strong> for fast color accuracy that is "good enough" for most images.</li>
+          <li>Use <strong>DeltaE 2000</strong> for the best possible color accuracy at the cost of speed.</li>
         </ul>
       </settings-tooltip>
     </label>
@@ -105,7 +105,7 @@
         <span slot="description"><a href="https://github.com/Frumple/image-to-minecraft-map/wiki/Settings#dithering" target="settings">Dithering</a>: Adds noise to make the image appear smoother.</span>
         <ul slot="tips">
           <li>Use <strong>None</strong> for images with flat, solid colors.</li>
-          <li>Use <strong>Floyd-Steinberg</strong> for most other images.</li>
+          <li>Use <strong>Floyd-Steinberg</strong> for photographs.</li>
         </ul>
       </settings-tooltip>
     </label>
