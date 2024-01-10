@@ -9,9 +9,7 @@ A web application that converts images to Minecraft NBT map .dat files, allowing
 
 ### Live Application: [https://frumple.github.io/image-to-minecraft-map][app]
 
-**Chrome and Edge are recommended.** Firefox has a known issue (see below). Safari is not currently supported.
-
-### Quick Start Instructions: [https://github.com/Frumple/image-to-minecraft-map/wiki][wiki]
+### Wiki: [https://github.com/Frumple/image-to-minecraft-map/wiki][wiki]
 
 ## Features
 
@@ -20,10 +18,6 @@ A web application that converts images to Minecraft NBT map .dat files, allowing
 - Download maps as .dat files, or a .zip file containing the .dat files.
 - Supports various color difference algorithms: CompuPhase, Euclidean, DeltaE 1976 and 2000, and CMC 1984.
 - Supports Floyd-Steinberg dithering.
-
-## Known Issues
-
-- Firefox: Scaling Quality always appears as "Pixelated" regardless of what is set.
 
 ## Future Improvements
 
