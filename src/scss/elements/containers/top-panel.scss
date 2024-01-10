@@ -19,11 +19,21 @@
   z-index: 1;
 }
 
+.top-panel__header {
+  display: flex;
+  align-items: center;
+}
+
 .top-panel__title {
   font-size: 2em;
   font-weight: bold;
   vertical-align: middle;
   margin: 0;
+}
+
+.top-panel__version {
+  font-weight: bold;
+  margin-left: 10px;
 }
 
 .top-panel__links {
