@@ -112,14 +112,16 @@
     <select id="dithering-select" class="settings-panel__dithering-select">
     </select>
 
-    <label class="settings-panel__transparency-label" for="transparency-input-text">
+    <label class="settings-panel__transparency-label" for="transparency-number-input">
       <settings-tooltip>
         <span slot="name">Transparency Threshold</span>
         <span slot="description"><a href="https://github.com/Frumple/image-to-minecraft-map/wiki/Settings#transparency-threshold" target="settings">Transparency Threshold</a>: Pixels that have an alpha value less than this threshold will be fully transparent in the map file.</span>
       </settings-tooltip>
     </label>
-    <integer-input id="transparency-input-text" class="settings-panel__transparency-input-text"></integer-input>
-    <integer-input id="transparency-input-range" class="settings-panel__transparency-input-range"></integer-input>
+    <integer-input id="transparency-number-input" class="settings-panel__transparency-number-input"></integer-input>
+    <label class="settings-panel__transparency-min-range-label" for="transparency-range-input">0</label>
+    <integer-input id="transparency-range-input" class="settings-panel__transparency-range-input"></integer-input>
+    <label class="settings-panel__transparency-max-range-label" for="transparency-range-input">255</label>
   </div>
 
   <hr />

@@ -42,8 +42,8 @@ export default class SettingsPanel extends BaseContainer {
 
     this.colorDifferenceSelect = this.getShadowElement('color-difference-select') as HTMLSelectElement;
     this.ditheringSelect = this.getShadowElement('dithering-select') as HTMLSelectElement;
-    this.transparencyInputNumber = this.getShadowElement('transparency-input-text') as IntegerInput;
-    this.transparencyInputRange = this.getShadowElement('transparency-input-range') as IntegerInput;
+    this.transparencyInputNumber = this.getShadowElement('transparency-number-input') as IntegerInput;
+    this.transparencyInputRange = this.getShadowElement('transparency-range-input') as IntegerInput;
 
     this.autoDownloadSelect = this.getShadowElement('auto-download-select') as HTMLSelectElement;
   }

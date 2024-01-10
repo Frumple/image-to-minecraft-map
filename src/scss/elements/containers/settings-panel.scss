@@ -130,11 +130,11 @@
 .settings-panel__reduce-colors-settings-container {
   @extend .settings-panel__settings-container;
   grid-template:
-    "color-difference-label   color-difference-select  color-difference-select " auto
-    "dithering-label          dithering-select         dithering-select        " auto
-    "transparency-label       transparency-label       transparency-input-text " auto
-    "transparency-input-range transparency-input-range transparency-input-range" auto
-    / 50% 25% 25%;
+    "color-difference-label       color-difference-label   color-difference-select  color-difference-select     " auto
+    "dithering-label              dithering-label          dithering-select         dithering-select            " auto
+    "transparency-label           transparency-label       transparency-label       transparency-number-input   " auto
+    "transparency-min-range-label transparency-range-input transparency-range-input transparency-max-range-label" auto
+    / 20% 30% 30% 20%;
 }
 
 .settings-panel__color-difference-label {
@@ -157,12 +157,23 @@
   grid-area: transparency-label;
 }
 
-.settings-panel__transparency-input-text {
-  grid-area: transparency-input-text;
+.settings-panel__transparency-number-input {
+  grid-area: transparency-number-input;
 }
 
-.settings-panel__transparency-input-range {
-  grid-area: transparency-input-range;
+.settings-panel__transparency-min-range-label {
+  grid-area: transparency-min-range-label;
+  text-align: right;
+  margin-right: 5px;
+}
+
+.settings-panel__transparency-range-input {
+  grid-area: transparency-range-input;
+}
+
+.settings-panel__transparency-max-range-label {
+  grid-area: transparency-max-range-label;
+  margin-left: 5px;
 }
 
 .settings-panel__create-file-settings-container {
