@@ -7,8 +7,8 @@
   ],
   "scripts": {
     "tsc": "tsc",
-    "start": "parcel serve src/html/**/**.html",
-    "build": "parcel build src/html/**/**.html --public-url ./"
+    "start": "parcel serve src/html/**/*.html",
+    "build": "parcel build src/html/**/*.html --public-url ./"
   },
   "repository": {
     "type": "git",
