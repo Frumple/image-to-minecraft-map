@@ -42,8 +42,10 @@ export function encodeNbtMap(colorArray: Int8Array, minecraftVersionId: string):
 
   const nbtTree = {
     data: {
+      banners: [],
       colors: colorArray,
       dimension: dimension,
+      frames: [],
       locked: new Byte(1),
       height: new Short(128),
       scale: new Byte(0),
