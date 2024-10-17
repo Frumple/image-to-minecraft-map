@@ -105,3 +105,6 @@ dist
 
 # Typescript output
 build
+
+# Yarn optimization file
+.yarn/install-state.gz
