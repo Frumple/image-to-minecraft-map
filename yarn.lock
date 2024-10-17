@@ -1650,10 +1650,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"colorjs.io@npm:0.4.5":
-  version: 0.4.5
-  resolution: "colorjs.io@npm:0.4.5"
-  checksum: 10c0/4cc58d18223426bcb8caa558e7554002b62bf87bd20db06596abf5efe5ea65416266402db86b504ac5fa2c38360913dbb8e6ef7c4fa19a992fd1818d5710ef6f
+"colorjs.io@npm:0.5.2":
+  version: 0.5.2
+  resolution: "colorjs.io@npm:0.5.2"
+  checksum: 10c0/2e6ea43629e325e721b92429239de3a6f42fb6d88ba6e4c2aeff0288c196d876f2f7ee82aea95bd40072d5cdc8cb87f042f4d94c134dcabf0e34a717e4caacb9
   languageName: node
   linkType: hard
 
@@ -2164,7 +2164,7 @@ __metadata:
     "@types/offscreencanvas": "npm:2019.7.3"
     "@types/pako": "npm:2.0.3"
     buffer: "npm:6.0.3"
-    colorjs.io: "npm:0.4.5"
+    colorjs.io: "npm:0.5.2"
     jszip: "npm:3.10.1"
     nbt-ts: "npm:1.3.6"
     nodemon: "npm:3.1.7"
